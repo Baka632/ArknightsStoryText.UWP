@@ -11,8 +11,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Foundation.Metadata;
 using Windows.Storage;
 using Windows.Storage.Pickers;
+using Windows.System.Profile;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -33,6 +35,19 @@ namespace ArknightsStoryText.UWP
         public MainPage()
         {
             this.InitializeComponent();
+
+            if (ApiInformation.IsTypePresent(typeof(AcrylicBrush).FullName))
+            {
+                if (Application.Current.Resources["SystemControlAcrylicWindowBrush"] is AcrylicBrush brush)
+                {
+                    this.Background = brush;
+                }
+            }
+
+            if (AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Mobile")
+            {
+                TitleBarTextBlock.Visibility = Visibility.Collapsed;
+            }
         }
 
         private string _originStoryText = "";

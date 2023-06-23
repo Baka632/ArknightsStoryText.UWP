@@ -8,6 +8,7 @@ using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.System.Profile;
 using Windows.UI;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -79,7 +80,14 @@ namespace ArknightsStoryText.UWP
             ApplicationViewTitleBar PresentationTitleBar = ApplicationView.GetForCurrentView().TitleBar;
             PresentationTitleBar.ButtonBackgroundColor = Colors.Transparent;
             CoreApplicationViewTitleBar coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
-            coreTitleBar.ExtendViewIntoTitleBar = true;
+            if (AnalyticsInfo.VersionInfo.DeviceFamily != "Windows.Mobile")
+            {
+                coreTitleBar.ExtendViewIntoTitleBar = true;
+            }
+            else
+            {
+                coreTitleBar.ExtendViewIntoTitleBar = false;
+            }
             Color ForegroundColor;
             switch (Current.RequestedTheme)
             {

@@ -8,7 +8,9 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource SystemControlAcrylicWindowBrush}">
+    <Grid>
+        <!--#endregion-->
+
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -34,7 +36,10 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <StackPanel
+                x:Name="OperationStackPanel"
+                Grid.Row="0"
+                Orientation="Horizontal">
                 <Button
                     Width="130"
                     Height="32"
@@ -43,7 +48,6 @@
                     Click="OpenStoryTextFile"
                     Content="打开剧情文件" />
                 <TextBox
-                    x:Name="DoctorNameTextBox"
                     Width="150"
                     Margin="10,0,0,0"
                     HorizontalAlignment="Center"
@@ -51,12 +55,36 @@
                     PlaceholderText="键入博士名字"
                     Text="{x:Bind DoctorName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <CheckBox
-                    x:Name="TryParagraphCheckbox"
                     Margin="10,0,0,0"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     Content="尝试自动分段"
                     IsChecked="{x:Bind IsParagraph, Mode=TwoWay}" />
+            </StackPanel>
+
+            <StackPanel x:Name="OperationStackPanelMobile">
+                <StackPanel Grid.Row="0" Orientation="Horizontal">
+                    <Button
+                        Width="130"
+                        Height="32"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Click="OpenStoryTextFile"
+                        Content="打开剧情文件" />
+                    <TextBox
+                        Width="150"
+                        Margin="10,0,0,0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        PlaceholderText="键入博士名字"
+                        Text="{x:Bind DoctorName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+                <CheckBox
+                        Margin="0,5,0,0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        Content="尝试自动分段"
+                        IsChecked="{x:Bind IsParagraph, Mode=TwoWay}" />
             </StackPanel>
         </Grid>
 
@@ -70,5 +98,31 @@
                 </Paragraph>
             </RichTextBlock>
         </ScrollViewer>
+
+        <!--#region VisualStateManager-->
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+
+                    <VisualState.Setters>
+                        <Setter Target="OperationStackPanel.Visibility" Value="Collapsed" />
+                        <Setter Target="OperationStackPanelMobile.Visibility" Value="Visible" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="640" />
+                    </VisualState.StateTriggers>
+
+                    <VisualState.Setters>
+                        <Setter Target="OperationStackPanel.Visibility" Value="Visible" />
+                        <Setter Target="OperationStackPanelMobile.Visibility" Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
     </Grid>
 </Page>
