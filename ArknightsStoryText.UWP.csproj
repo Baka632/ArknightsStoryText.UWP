@@ -162,7 +162,7 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Models\StoryReader.cs" />
+    <Compile Include="Services\StoryReader.cs" />
     <Compile Include="Models\StoryScene.cs" />
   </ItemGroup>
   <ItemGroup>
