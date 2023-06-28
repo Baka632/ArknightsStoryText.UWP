@@ -1,4 +1,4 @@
-﻿//原项目：https://github.com/ArknightsResources/Utility
+﻿//原项目：https://github.com/ArknightsResources/StoriesModels
 //为了兼容 Windows 10 1703及以下版本， 我们无法直接引用 NuGet 包，所以只能复制源代码了（
 
 namespace ArknightsResources.Stories.Models
