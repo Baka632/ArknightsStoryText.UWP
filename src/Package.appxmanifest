@@ -9,7 +9,7 @@
   <Identity
     Name="e34e41f8-8622-4faf-9f0b-7b69d6c25374"
     Publisher="CN=Baka632"
-    Version="2.2.0.0" />
+    Version="3.0.0.0" />
 
   <mp:PhoneIdentity PhoneProductId="e34e41f8-8622-4faf-9f0b-7b69d6c25374" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
@@ -38,7 +38,13 @@
         Square44x44Logo="Assets\Square44x44Logo.png"
         Description="A plain-text reader for Arknights"
         BackgroundColor="transparent">
-        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png"/>
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square71x71Logo="Assets\SmallTile.png" Square310x310Logo="Assets\LargeTile.png" ShortName="Arknights Story Text">
+          <uap:ShowNameOnTiles>
+            <uap:ShowOn Tile="square150x150Logo"/>
+            <uap:ShowOn Tile="wide310x150Logo"/>
+            <uap:ShowOn Tile="square310x310Logo"/>
+          </uap:ShowNameOnTiles>
+        </uap:DefaultTile >
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
         <uap:InitialRotationPreference>
           <uap:Rotation Preference="landscape"/>
