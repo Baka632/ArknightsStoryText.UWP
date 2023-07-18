@@ -3,25 +3,20 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArknightsStoryText.UWP", "ArknightsStoryText.UWP.csproj", "{0F07BE62-3C94-4802-806D-670AD3F30CFE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArknightsStoryText.UWP", "src\ArknightsStoryText.UWP.csproj", "{0F07BE62-3C94-4802-806D-670AD3F30CFE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Any CPU = Debug|Any CPU
 		Debug|ARM = Debug|ARM
 		Debug|ARM64 = Debug|ARM64
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
-		Release|Any CPU = Release|Any CPU
 		Release|ARM = Release|ARM
 		Release|ARM64 = Release|ARM64
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{0F07BE62-3C94-4802-806D-670AD3F30CFE}.Debug|Any CPU.ActiveCfg = Debug|x64
-		{0F07BE62-3C94-4802-806D-670AD3F30CFE}.Debug|Any CPU.Build.0 = Debug|x64
-		{0F07BE62-3C94-4802-806D-670AD3F30CFE}.Debug|Any CPU.Deploy.0 = Debug|x64
 		{0F07BE62-3C94-4802-806D-670AD3F30CFE}.Debug|ARM.ActiveCfg = Debug|ARM
 		{0F07BE62-3C94-4802-806D-670AD3F30CFE}.Debug|ARM.Build.0 = Debug|ARM
 		{0F07BE62-3C94-4802-806D-670AD3F30CFE}.Debug|ARM.Deploy.0 = Debug|ARM
@@ -34,9 +29,6 @@ Global
 		{0F07BE62-3C94-4802-806D-670AD3F30CFE}.Debug|x86.ActiveCfg = Debug|x86
 		{0F07BE62-3C94-4802-806D-670AD3F30CFE}.Debug|x86.Build.0 = Debug|x86
 		{0F07BE62-3C94-4802-806D-670AD3F30CFE}.Debug|x86.Deploy.0 = Debug|x86
-		{0F07BE62-3C94-4802-806D-670AD3F30CFE}.Release|Any CPU.ActiveCfg = Release|x64
-		{0F07BE62-3C94-4802-806D-670AD3F30CFE}.Release|Any CPU.Build.0 = Release|x64
-		{0F07BE62-3C94-4802-806D-670AD3F30CFE}.Release|Any CPU.Deploy.0 = Release|x64
 		{0F07BE62-3C94-4802-806D-670AD3F30CFE}.Release|ARM.ActiveCfg = Release|ARM
 		{0F07BE62-3C94-4802-806D-670AD3F30CFE}.Release|ARM.Build.0 = Release|ARM
 		{0F07BE62-3C94-4802-806D-670AD3F30CFE}.Release|ARM.Deploy.0 = Release|ARM
