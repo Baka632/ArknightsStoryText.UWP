@@ -60,4 +60,10 @@
   <data name="Close" xml:space="preserve">
     <value>关闭</value>
   </data>
+  <data name="FileIsEmpty" xml:space="preserve">
+    <value>此文件没有任何内容</value>
+  </data>
+  <data name="InvaildFile" xml:space="preserve">
+    <value>此文件似乎不是有效的剧情文件</value>
+  </data>
 </root>

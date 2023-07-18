@@ -130,6 +130,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\LocalizationHelper.cs" />
     <Compile Include="Helpers\ReswHelper.cs" />
     <Compile Include="Models\CharacterIllustrationEnterStyle.cs" />
     <Compile Include="Models\Commands\DecisionCommand.cs" />

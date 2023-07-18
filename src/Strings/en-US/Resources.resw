@@ -60,4 +60,10 @@
   <data name="Close" xml:space="preserve">
     <value>Close</value>
   </data>
+  <data name="FileIsEmpty" xml:space="preserve">
+    <value>This file is empty</value>
+  </data>
+  <data name="InvaildFile" xml:space="preserve">
+    <value>This file seems invalid</value>
+  </data>
 </root>

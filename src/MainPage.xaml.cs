@@ -51,20 +51,9 @@ namespace ArknightsStoryText.UWP
             }
         }
 
-        private string _originStoryText = "";
         private string _transformedStoryText = "";
         private string _doctorName = string.Empty;
         private bool _isParagraph = false;
-
-        public string OriginStoryText
-        {
-            get => _originStoryText;
-            set
-            {
-                _originStoryText = value;
-                OnPropertiesChanged();
-            }
-        }
 
         public string TransformedStoryText
         {
@@ -115,11 +104,27 @@ namespace ArknightsStoryText.UWP
 
             if (storageFile is null)
             {
+                //用户取消了文件选择
                 return;
             }
 
-            string originText = await FileIO.ReadTextAsync(storageFile);
-            OriginStoryText = originText;
+            string originText;
+            try
+            {
+                originText = await FileIO.ReadTextAsync(storageFile);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                await ShowDialogAsync("InvaildFile".GetLocalized(), "OpenAnotherFileInstead".GetLocalized());
+                return;
+            }
+            
+
+            if (string.IsNullOrWhiteSpace(originText))
+            {
+                await ShowDialogAsync("FileIsEmpty".GetLocalized(), "OpenAnotherFileInstead".GetLocalized());
+                return;
+            }
 
             try
             {
@@ -134,15 +139,20 @@ namespace ArknightsStoryText.UWP
             }
             catch (ArgumentException)
             {
-                ContentDialog dialog = new()
-                {
-                    Title = ReswHelper.GetReswString("TutorialFileNotSupported"),
-                    Content = ReswHelper.GetReswString("OpenAnotherFileInstead"),
-                    PrimaryButtonText = ReswHelper.GetReswString("Close")
-                };
-
-                await dialog.ShowAsync();
+                await ShowDialogAsync("TutorialFileNotSupported".GetLocalized(), "OpenAnotherFileInstead".GetLocalized());
             }
+        }
+
+        private async static Task ShowDialogAsync(string title, string content)
+        {
+            ContentDialog dialog = new()
+            {
+                Title = title,
+                Content = content,
+                PrimaryButtonText = ReswHelper.GetReswString("Close")
+            };
+
+            await dialog.ShowAsync();
         }
     }
 }
