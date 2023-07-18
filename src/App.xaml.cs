@@ -50,11 +50,10 @@ namespace ArknightsStoryText.UWP
             //Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride = "zh-CN";
 #endif
 
-            Frame rootFrame = Window.Current.Content as Frame;
 
             // 不要在窗口已包含内容时重复应用程序初始化，
             // 只需确保窗口处于活动状态
-            if (rootFrame == null)
+            if (Window.Current.Content is not Frame rootFrame)
             {
                 // 创建要充当导航上下文的框架，并导航到第一页
                 rootFrame = new Frame();
@@ -95,19 +94,13 @@ namespace ArknightsStoryText.UWP
             {
                 coreTitleBar.ExtendViewIntoTitleBar = false;
             }
-            Color ForegroundColor;
-            switch (Current.RequestedTheme)
+
+            Color ForegroundColor = Current.RequestedTheme switch
             {
-                case ApplicationTheme.Light:
-                    ForegroundColor = Colors.Black;
-                    break;
-                case ApplicationTheme.Dark:
-                    ForegroundColor = Colors.White;
-                    break;
-                default:
-                    ForegroundColor = Colors.White;
-                    break;
-            }
+                ApplicationTheme.Light => Colors.Black,
+                ApplicationTheme.Dark => Colors.White,
+                _ => Colors.White,
+            };
             PresentationTitleBar.ButtonForegroundColor = ForegroundColor;
             #endregion
         }

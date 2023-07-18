@@ -48,4 +48,16 @@
   <data name="TryAutoParagraphCheckBox.Content" xml:space="preserve">
     <value>Try to automatically paragraph</value>
   </data>
+  <data name="TutorialFileNotSupported" xml:space="preserve">
+    <value>Tutorial file is not supported</value>
+  </data>
+  <data name="OpenAnotherFileInstead" xml:space="preserve">
+    <value>Please open another file.</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
 </root>

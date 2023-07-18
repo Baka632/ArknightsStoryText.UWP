@@ -10,6 +10,7 @@
     <RootNamespace>ArknightsStoryText.UWP</RootNamespace>
     <AssemblyName>ArknightsStoryText.UWP</AssemblyName>
     <DefaultLanguage>zh-CN</DefaultLanguage>
+    <LangVersion>latest</LangVersion>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.22621.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.16299.0</TargetPlatformMinVersion>
@@ -129,6 +130,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\ReswHelper.cs" />
     <Compile Include="Models\CharacterIllustrationEnterStyle.cs" />
     <Compile Include="Models\Commands\DecisionCommand.cs" />
     <Compile Include="Models\Commands\DelayCommand.cs" />

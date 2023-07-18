@@ -48,4 +48,16 @@
   <data name="TryAutoParagraphCheckBox.Content" xml:space="preserve">
     <value>尝试自动分段</value>
   </data>
+  <data name="TutorialFileNotSupported" xml:space="preserve">
+    <value>不支持教程文件</value>
+  </data>
+  <data name="OpenAnotherFileInstead" xml:space="preserve">
+    <value>请打开其他文件。</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>确定</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>关闭</value>
+  </data>
 </root>

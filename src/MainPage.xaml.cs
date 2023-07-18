@@ -1,5 +1,6 @@
 ﻿using ArknightsResources.Stories.Models;
 using ArknightsResources.Utility;
+using ArknightsStoryText.UWP.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -108,7 +109,7 @@ namespace ArknightsStoryText.UWP
 
         private async void OpenStoryTextFile(object sender, RoutedEventArgs e)
         {
-            FileOpenPicker fileOpenPicker = new FileOpenPicker();
+            FileOpenPicker fileOpenPicker = new();
             fileOpenPicker.FileTypeFilter.Add(".txt");
             StorageFile storageFile = await fileOpenPicker.PickSingleFileAsync();
 
@@ -119,15 +120,29 @@ namespace ArknightsStoryText.UWP
 
             string originText = await FileIO.ReadTextAsync(storageFile);
             OriginStoryText = originText;
-            StoryScene storyScene = await Task.Run(() =>
-            {
-                StoryReader storyReader = new StoryReader(originText, DoctorName);
-                StoryScene scene = storyReader.GetStoryScene();
-                return scene;
-            });
 
-            string transformedText = storyScene.GetStoryText(IsParagraph);
-            TransformedStoryText = transformedText;
+            try
+            {
+                StoryScene storyScene = await Task.Run(() =>
+                {
+                    StoryReader storyReader = new(originText, DoctorName);
+                    StoryScene scene = storyReader.GetStoryScene();
+                    return scene;
+                });
+                string transformedText = storyScene.GetStoryText(IsParagraph);
+                TransformedStoryText = transformedText;
+            }
+            catch (ArgumentException)
+            {
+                ContentDialog dialog = new()
+                {
+                    Title = ReswHelper.GetReswString("TutorialFileNotSupported"),
+                    Content = ReswHelper.GetReswString("OpenAnotherFileInstead"),
+                    PrimaryButtonText = ReswHelper.GetReswString("Close")
+                };
+
+                await dialog.ShowAsync();
+            }
         }
     }
 }

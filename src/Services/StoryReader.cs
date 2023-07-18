@@ -45,7 +45,7 @@ namespace ArknightsResources.Utility
 
             if (storyText.Contains("{@nickname}"))
             {
-                StringBuilder sb = new StringBuilder(storyText);
+                StringBuilder sb = new(storyText);
                 sb.Replace("{@nickname}", nickName);
                 stringReader = new StringReader(sb.ToString());
             }
@@ -63,7 +63,7 @@ namespace ArknightsResources.Utility
         /// <returns>一个<seealso cref="StoryScene"/>实例,其表示原始剧情文本</returns>
         public StoryScene GetStoryScene()
         {
-            List<StoryCommand> storyCommands = new List<StoryCommand>();
+            List<StoryCommand> storyCommands = new();
             bool IsHeaderInfoAdded = false;
             bool isSkippable = false;
             bool isAutoable = true;
@@ -127,13 +127,13 @@ namespace ArknightsResources.Utility
 
                             //键是选项(如“结果怎么样？”“......”“我的脑袋又热又胀，很不舒服。”)
                             //值为各选项分支的命令(如”[name="凯尔希"]并没有什么新的进展。“)
-                            Dictionary<string, StoryCommand[]> result = new Dictionary<string, StoryCommand[]>(values.Length);
+                            Dictionary<string, StoryCommand[]> result = new(values.Length);
 
                             //当前要处理的选项
                             List<string> currentKeys = null;
 
                             //用于临时放置各选项分支命令
-                            List<StoryCommand> temp = new List<StoryCommand>(5);
+                            List<StoryCommand> temp = new(5);
                             while (true)
                             {
                                 string str = ReadText();
@@ -193,7 +193,7 @@ namespace ArknightsResources.Utility
                                 }
                             }
 
-                            DecisionCommand decisionCommand = new DecisionCommand(result);
+                            DecisionCommand decisionCommand = new(result);
                             storyCommands.Add(decisionCommand);
                             continue;
                             #endregion
@@ -218,10 +218,10 @@ namespace ArknightsResources.Utility
                 }
             }
 
-            StoryScene scene = new StoryScene(storyCommands.ToArray(), isSkippable, isAutoable, fitMode, comment);
+            StoryScene scene = new(storyCommands.ToArray(), isSkippable, isAutoable, fitMode, comment);
             return scene;
 
-            void InitCurrentKeys(out List<string> currentKey, string[] options, string[] references)
+            static void InitCurrentKeys(out List<string> currentKey, string[] options, string[] references)
             {
                 currentKey = new List<string>(options.Length);
                 foreach (var item in references)
@@ -250,12 +250,12 @@ namespace ArknightsResources.Utility
                     string stopMusicArgs = matchStopMusic.Groups[1].Value;
                     var matchVolume = GetMatchByPattern(stopMusicArgs, $"volume=({MatchDecimalString})");
                     double fadeTime = matchVolume.Success ? GetDoubleFromMatch(matchVolume) : 0d;
-                    StopMusicCommand stopMusicCommandWithArg = new StopMusicCommand(fadeTime);
+                    StopMusicCommand stopMusicCommandWithArg = new(fadeTime);
                     return stopMusicCommandWithArg;
                 }
                 else if (GetMatchByPattern(strToAnalyse,@"\[stopmusic\]").Success)
                 {
-                    StopMusicCommand stopMusicCommand = new StopMusicCommand(0d);
+                    StopMusicCommand stopMusicCommand = new(0d);
                     return stopMusicCommand;
                 }
             }
@@ -300,12 +300,12 @@ namespace ArknightsResources.Utility
                 if (matchDelayWithArg.Success)
                 {
                     double delay = GetDoubleFromMatch(matchDelayWithArg);
-                    DelayCommand delayCommandWithArg = new DelayCommand(delay);
+                    DelayCommand delayCommandWithArg = new(delay);
                     return delayCommandWithArg;
                 }
                 else if (GetMatchByPattern(strToAnalyse, "\\[Delay").Success)
                 {
-                    DelayCommand delayCommand = new DelayCommand(0d);
+                    DelayCommand delayCommand = new(0d);
                     return delayCommand;
                 }
             }
@@ -318,7 +318,7 @@ namespace ArknightsResources.Utility
                 {
                     string name = matchName.Groups[1].Value;
                     string text = matchText.Groups[1].Value;
-                    ShowTextWithNameCommand textCommand = new ShowTextWithNameCommand(name, text);
+                    ShowTextWithNameCommand textCommand = new(name, text);
                     return textCommand;
                 }
             }
@@ -350,12 +350,12 @@ namespace ArknightsResources.Utility
 
                     if (string.IsNullOrEmpty(codeName2))
                     {
-                        ShowCharacterIllustrationCommand illustrationCommand = new ShowCharacterIllustrationCommand(codeName, fadeTime, isBlock, enterStyle);
+                        ShowCharacterIllustrationCommand illustrationCommand = new(codeName, fadeTime, isBlock, enterStyle);
                         return illustrationCommand;
                     }
                     else
                     {
-                        ShowCharacterIllustrationCommand illustrationCommand = new ShowCharacterIllustrationCommand(codeName,
+                        ShowCharacterIllustrationCommand illustrationCommand = new(codeName,
                             codeName2, fadeTime, isBlock, focus, enterStyle, enterStyle2);
                         return illustrationCommand;
                     }
@@ -365,7 +365,7 @@ namespace ArknightsResources.Utility
                     var matchHideCharacter = GetMatchByPattern(strToAnalyse, @"\[character\]");
                     if (matchHideCharacter.Success)
                     {
-                        HideCharacterIllustrationCommand hideCharacterCommand = new HideCharacterIllustrationCommand();
+                        HideCharacterIllustrationCommand hideCharacterCommand = new();
                         return hideCharacterCommand;
                     }
                 }
@@ -382,7 +382,7 @@ namespace ArknightsResources.Utility
 
                     double fadeTime = matchFadeTime.Success ? GetDoubleFromMatch(matchFadeTime) : 0;
                     bool isBlock = matchBlock.Success ? GetBooleanFromMatch(matchBlock) : false;
-                    HideDialogCommand hideDialogCommand = new HideDialogCommand(fadeTime, isBlock);
+                    HideDialogCommand hideDialogCommand = new(fadeTime, isBlock);
                     return hideDialogCommand;
                 }
                 else if (GetMatchByPattern(strToAnalyse,@"\[dialog\]").Success)
@@ -411,7 +411,7 @@ namespace ArknightsResources.Utility
                     double b = matchB.Success ? GetDoubleFromMatch(matchB) : 0;
                     double fadeTime = matchFadeTime.Success ? GetDoubleFromMatch(matchFadeTime) : 0.2;
                     bool isBlock = matchBlock.Success ? GetBooleanFromMatch(matchBlock) : false;
-                    ShowBlockerCommand blockerCommand = new ShowBlockerCommand(a, r, g, b, fadeTime, isBlock);
+                    ShowBlockerCommand blockerCommand = new(a, r, g, b, fadeTime, isBlock);
                     return blockerCommand;
                 }
             }
@@ -438,7 +438,7 @@ namespace ArknightsResources.Utility
                     double x = matchX.Success ? GetDoubleFromMatch(matchX) : 0;
                     double y = matchY.Success ? GetDoubleFromMatch(matchY) : 0;
 
-                    ShowBackgroundCommand backgroundCommand = new ShowBackgroundCommand(imageCodeName, screenAdaptMode,
+                    ShowBackgroundCommand backgroundCommand = new(imageCodeName, screenAdaptMode,
                         fadeTime, xScale, yScale, x, y);
                     return backgroundCommand;
                 }
@@ -473,7 +473,7 @@ namespace ArknightsResources.Utility
                     var matchHideSubtitle = GetMatchByPattern(strToAnalyse, "\\[subtitle\\]");
                     if (matchHideSubtitle.Success)
                     {
-                        HideSubtitleCommand hideSubtitleCommand = new HideSubtitleCommand();
+                        HideSubtitleCommand hideSubtitleCommand = new();
                         return hideSubtitleCommand;
                     }
                 }
@@ -498,7 +498,7 @@ namespace ArknightsResources.Utility
                     double delay = matchDelay.Success ? GetDoubleFromMatch(matchDelay) : 0;
                     bool isBlock = matchBlock.Success ? GetBooleanFromMatch(matchBlock) : false;
                     bool isLoop = matchLoop.Success ? GetBooleanFromMatch(matchLoop) : false;
-                    PlaySoundCommand playSoundCommand = new PlaySoundCommand(key, channel, volume, delay, isBlock, isLoop); ;
+                    PlaySoundCommand playSoundCommand = new(key, channel, volume, delay, isBlock, isLoop); ;
                     return playSoundCommand;
                 }
             }
@@ -529,7 +529,7 @@ namespace ArknightsResources.Utility
                     double x = matchX.Success ? GetDoubleFromMatch(matchX) : 0;
                     double y = matchY.Success ? GetDoubleFromMatch(matchY) : 0;
 
-                    ShowImageCommand showImageCommand = new ShowImageCommand(imageCodeName, screenAdaptMode, fadeTime,
+                    ShowImageCommand showImageCommand = new(imageCodeName, screenAdaptMode, fadeTime,
                         isBlock, isTiled, xScale, yScale, x, y);
                     return showImageCommand;
                 }
@@ -538,7 +538,7 @@ namespace ArknightsResources.Utility
                     var matchHideImage = GetMatchByPattern(strToAnalyse, "\\[image\\]");
                     if (matchHideImage.Success)
                     {
-                        HideImageCommand hideImageCommand = new HideImageCommand();
+                        HideImageCommand hideImageCommand = new();
                         return hideImageCommand;
                     }
                 }
@@ -577,7 +577,7 @@ namespace ArknightsResources.Utility
                     double duration = matchDuration.Success ? GetDoubleFromMatch(matchDuration) : 0d;
                     bool isBlock = matchBlock.Success ? GetBooleanFromMatch(matchBlock) : false;
 
-                    StartImageTweenCommand imageTweenCommand = new StartImageTweenCommand(imageCodename, isBlock,
+                    StartImageTweenCommand imageTweenCommand = new(imageCodename, isBlock,
                         fadeTime, duration, xScaleFrom, yScaleFrom, xScaleTo, yScaleTo, xFrom, yFrom, xTo, yTo);
                     return imageTweenCommand;
                 }
@@ -602,7 +602,7 @@ namespace ArknightsResources.Utility
                     double offsetX = matchOffsetX.Success ? GetDoubleFromMatch(matchOffsetX) : 0d;
                     string fadeStyle = matchFadeStyle.Success ? matchFadeStyle.Groups[1].Value : string.Empty;
 
-                    ShowItemCommand showItemCommand = new ShowItemCommand(imageCodename, isBlock, fadeTime, fadeStyle, offsetX);
+                    ShowItemCommand showItemCommand = new(imageCodename, isBlock, fadeTime, fadeStyle, offsetX);
                     return showItemCommand;
                 }
             }
@@ -612,7 +612,7 @@ namespace ArknightsResources.Utility
                 var matchHideItem = GetMatchByPattern(strToAnalyse, @"\[hideitem\]");
                 if (matchHideItem.Success)
                 {
-                    HideItemCommand hideItemCommand = new HideItemCommand();
+                    HideItemCommand hideItemCommand = new();
                     return hideItemCommand;
                 }
             }
@@ -642,7 +642,7 @@ namespace ArknightsResources.Utility
                     bool isBlock = matchBlock.Success ? GetBooleanFromMatch(matchBlock) : false;
                     bool isStop = matchStop.Success ? GetBooleanFromMatch(matchStop) : false;
 
-                    StartCameraShake cameraShakeCommand = new StartCameraShake(duration, xStrength, yStrength, vibrato, randomness, isFadeout, isBlock, isStop);
+                    StartCameraShake cameraShakeCommand = new(duration, xStrength, yStrength, vibrato, randomness, isFadeout, isBlock, isStop);
                     return cameraShakeCommand;
                 }
             }
@@ -667,7 +667,7 @@ namespace ArknightsResources.Utility
                 {
                     string VideoArgs = matchVideo.Groups[1].Value;
                     
-                    PlayVideoCommand playVideoCommand = new PlayVideoCommand(VideoArgs);
+                    PlayVideoCommand playVideoCommand = new(VideoArgs);
                     return playVideoCommand;
                 }
             }
@@ -695,7 +695,7 @@ namespace ArknightsResources.Utility
                     double delay = matchDelay.Success ? GetDoubleFromMatch(matchDelay) : 0;
                     double width = matchWidth.Success ? GetDoubleFromMatch(matchWidth) : 675;
                     string alignment = matchAlignment.Success ? matchAlignment.Groups[1].Value : string.Empty;
-                    ShowStickerCommand stickerCommand = new ShowStickerCommand(id, x, y, alignment, size, delay, width, text);
+                    ShowStickerCommand stickerCommand = new(id, x, y, alignment, size, delay, width, text);
                     return stickerCommand;
                 }
             }
@@ -705,7 +705,7 @@ namespace ArknightsResources.Utility
                 var matchHideSticker = GetMatchByPattern(strToAnalyse, @"\[stickerclear\]");
                 if (matchHideSticker.Success)
                 {
-                    HideStickerCommand hideStickerCommand = new HideStickerCommand();
+                    HideStickerCommand hideStickerCommand = new();
                     return hideStickerCommand;
                 }
             }
@@ -722,7 +722,7 @@ namespace ArknightsResources.Utility
                     string text = matchText.Groups[1].Value;
                     bool isEnd = matchEnd.Success ? GetBooleanFromMatch(matchEnd) : false;
                     double delay = matchDelay.Success ? GetDoubleFromMatch(matchDelay) : 0d;
-                    ShowMultilineCommand showMultiline = new ShowMultilineCommand(name, text, delay, isEnd);
+                    ShowMultilineCommand showMultiline = new(name, text, delay, isEnd);
                     return showMultiline;
                 }
             }

@@ -75,7 +75,7 @@ namespace ArknightsResources.Stories.Models
         /// <returns>剧情文件的纯文本</returns>
         public string GetStoryText(bool tryParagraph)
         {
-            StringBuilder builder = new StringBuilder(StoryCommands.Length);
+            StringBuilder builder = new(StoryCommands.Length);
             GetTextInternal(StoryCommands, builder, false, tryParagraph);
             return builder.ToString();
         }
@@ -135,7 +135,7 @@ namespace ArknightsResources.Stories.Models
                                          in textCommands.Skip(i + 1)
                                                         .TakeWhile((cmd) =>
                                                         {
-                                                            if (!(cmd is ShowMultilineCommand smc))
+                                                            if (cmd is not ShowMultilineCommand smc)
                                                             {
                                                                 //如果cmd不是ShowMultilineCommand命令,则返回false,结束Take操作
                                                                 return false;
@@ -205,12 +205,12 @@ namespace ArknightsResources.Stories.Models
                     {
                         //从完整的StoryCommand列表中选取从当前TextCommand到下一个TextCommand中的命令
                         IEnumerable<StoryCommand> cmdSegment = commands.Skip(totalCmdsIndex + 1)
-                                                                       .TakeWhile((cmd) => !(cmd is TextCommand));
+                                                                       .TakeWhile((cmd) => cmd is not TextCommand);
 
                         //如果当前命令是DecisionCommand,则不会进行下面的操作,因为我们在前面已经添加了空行
                         //接下来,如果cmdSegment中有DecisionCommand,操作同上
                         //最后,如果cmdSegment中有HideDialogCommand及ShowBackgroundCommand,才添加空行
-                        if (!(item is DecisionCommand)
+                        if (item is not DecisionCommand
                             && !cmdSegment.Any((cmd) => cmd is DecisionCommand)
                             && cmdSegment.Any((cmd) => cmd is HideDialogCommand)
                             && cmdSegment.Any((cmd) => cmd is ShowBackgroundCommand
