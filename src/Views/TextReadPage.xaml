@@ -25,10 +25,13 @@
                 x:Uid="OpenStoryText"
                 Command="{x:Bind ViewModel.OpenStoryTextFileCommand}"
                 Icon="OpenFile" />
+            
             <AppBarToggleButton
                 x:Uid="TryAutoParagraph"
+                Margin="5,0,5,0"
                 Icon="ShowResults"
                 IsChecked="{x:Bind ViewModel.IsParagraph, Mode=TwoWay}" />
+            
             <AppBarButton x:Uid="ChangeDoctorName" AllowFocusOnInteraction="True">
                 <AppBarButton.Icon>
                     <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE748;" />
@@ -38,7 +41,7 @@
                         <TextBox
                             x:Uid="DoctorNameTextBox"
                             MinWidth="150"
-                            Text="{x:Bind ViewModel.DoctorName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            Text="{x:Bind ViewModel.DoctorName, Mode=TwoWay}" />
                     </Flyout>
                 </AppBarButton.Flyout>
             </AppBarButton>
@@ -48,14 +51,18 @@
             Grid.Row="1"
             Margin="0,5,0,0"
             Background="Transparent">
-            <RichTextBlock
-                Margin="0,0,5,0"
-                FontSize="15"
-                TextWrapping="Wrap">
-                <Paragraph>
-                    <Run Text="{x:Bind ViewModel.TransformedStoryText, Mode=OneWay}" />
-                </Paragraph>
-            </RichTextBlock>
+            <Grid>
+                <RichTextBlock
+                    Margin="0,0,5,0"
+                    FontSize="15"
+                    TextWrapping="Wrap">
+                    <Paragraph>
+                        <Run Text="{x:Bind ViewModel.TransformedStoryText, Mode=OneWay}" />
+                    </Paragraph>
+                </RichTextBlock>
+
+                <ProgressRing IsActive="{x:Bind ViewModel.IsLoading, Mode=OneWay}" />
+            </Grid>
         </ScrollViewer>
     </Grid>
 </Page>

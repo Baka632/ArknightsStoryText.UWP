@@ -78,4 +78,43 @@
   <data name="ResultIsEmpty" xml:space="preserve">
     <value>Output is empty</value>
   </data>
+  <data name="AboutButton.Label" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="AppDisplayName" xml:space="preserve">
+    <value>Arknights Story Text</value>
+  </data>
+  <data name="AppDescription" xml:space="preserve">
+    <value>A plain-text toolkit for Arknights</value>
+  </data>
+  <data name="ParseStoryTextError" xml:space="preserve">
+    <value>An error occurred when parsing file</value>
+  </data>
+  <data name="SaveStoryText.Label" xml:space="preserve">
+    <value>Save story text file</value>
+  </data>
+  <data name="NoFileImported" xml:space="preserve">
+    <value>You didn't import any files</value>
+  </data>
+  <data name="AddSomeFiles" xml:space="preserve">
+    <value>Please add some files.</value>
+  </data>
+  <data name="FileIsEmpty_WithPlaceholder" xml:space="preserve">
+    <value>{0} is empty</value>
+  </data>
+  <data name="ContinueOrCancel" xml:space="preserve">
+    <value>Continue or cancel?</value>
+  </data>
+  <data name="Continue" xml:space="preserve">
+    <value>Continue</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="TutorialFileNotSupported_WithPlaceholder" xml:space="preserve">
+    <value>{0} is a not supported tutorial file</value>
+  </data>
+  <data name="InvaildFile_WithPlaceholder" xml:space="preserve">
+    <value>{0} seems invalid</value>
+  </data>
 </root>

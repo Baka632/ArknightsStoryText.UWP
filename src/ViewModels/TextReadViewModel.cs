@@ -17,10 +17,11 @@ namespace ArknightsStoryText.UWP.ViewModels
         private string _transformedStoryText = "";
         private string _doctorName = string.Empty;
         private bool _isParagraph = false;
+        private bool _isLoading = false;
 
         public TextReadViewModel()
         {
-            OpenStoryTextFileCommand = new DelegateCommand(async (obj) => await OpenStoryTextFile());
+            OpenStoryTextFileCommand = new DelegateCommand(async (obj) => await OpenStoryTextFileAsync());
         }
 
         public ICommand OpenStoryTextFileCommand { get; }
@@ -55,7 +56,7 @@ namespace ArknightsStoryText.UWP.ViewModels
 
                 if (!string.IsNullOrWhiteSpace(OriginStoryText))
                 {
-                    _ = ParseOriginText(OriginStoryText);
+                    _ = ParseOriginTextAsync(OriginStoryText);
                 }
             }
         }
@@ -70,12 +71,22 @@ namespace ArknightsStoryText.UWP.ViewModels
 
                 if (!string.IsNullOrWhiteSpace(OriginStoryText))
                 {
-                    _ = ParseOriginText(OriginStoryText);
+                    _ = ParseOriginTextAsync(OriginStoryText);
                 }
             }
         }
 
-        private async Task OpenStoryTextFile()
+        public bool IsLoading
+        {
+            get => _isLoading;
+            set
+            {
+                _isLoading = value;
+                OnPropertiesChanged();
+            }
+        }
+
+        private async Task OpenStoryTextFileAsync()
         {
             FileOpenPicker fileOpenPicker = new();
             fileOpenPicker.FileTypeFilter.Add(".txt");
@@ -86,6 +97,8 @@ namespace ArknightsStoryText.UWP.ViewModels
                 //用户取消了文件选择
                 return;
             }
+
+            IsLoading = true;
 
             string originText;
             try
@@ -105,31 +118,40 @@ namespace ArknightsStoryText.UWP.ViewModels
                 return;
             }
 
-            await ParseOriginText(originText);
+            await ParseOriginTextAsync(originText);
+
+            IsLoading = false;
         }
 
-        private async Task ParseOriginText(string originText)
+        private async Task ParseOriginTextAsync(string originText)
         {
+            if (IsLoading is not true)
+            {
+                IsLoading = true;
+            }
+            TransformedStoryText = string.Empty;
+
+            StoryReader storyReader = new(originText, DoctorName);
+            StoryScene storyScene;
             try
             {
-                StoryScene storyScene = await Task.Run(() =>
-                {
-                    StoryReader storyReader = new(originText, DoctorName);
-                    StoryScene scene = storyReader.GetStoryScene();
-                    return scene;
-                });
-                string transformedText = storyScene.GetStoryText(IsParagraph);
-                TransformedStoryText = transformedText;
-
-                if (string.IsNullOrWhiteSpace(transformedText))
-                {
-                    await ShowDialogAsync("ResultIsEmpty".GetLocalized(), "OpenAnotherFileInstead".GetLocalized());
-                }
+                storyScene = storyReader.GetStoryScene();
             }
             catch (ArgumentException)
             {
                 await ShowDialogAsync("TutorialFileNotSupported".GetLocalized(), "OpenAnotherFileInstead".GetLocalized());
+                return;
             }
+
+            string transformedText = StoryReader.GetStoryText(storyScene.StoryCommands, IsParagraph);
+            TransformedStoryText = transformedText;
+
+            if (string.IsNullOrWhiteSpace(transformedText))
+            {
+                await ShowDialogAsync("ResultIsEmpty".GetLocalized(), "OpenAnotherFileInstead".GetLocalized());
+            }
+
+            IsLoading = false;
         }
 
         private async static Task ShowDialogAsync(string title, string content)
@@ -138,7 +160,7 @@ namespace ArknightsStoryText.UWP.ViewModels
             {
                 Title = title,
                 Content = content,
-                PrimaryButtonText = ReswHelper.GetReswString("Close")
+                CloseButtonText = ReswHelper.GetReswString("Close")
             };
 
             await dialog.ShowAsync();

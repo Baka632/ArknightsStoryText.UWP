@@ -78,4 +78,43 @@
   <data name="ResultIsEmpty" xml:space="preserve">
     <value>输出为空</value>
   </data>
+  <data name="AboutButton.Label" xml:space="preserve">
+    <value>关于</value>
+  </data>
+  <data name="AppDisplayName" xml:space="preserve">
+    <value>Arknights Story Text</value>
+  </data>
+  <data name="AppDescription" xml:space="preserve">
+    <value>一个明日方舟的剧情纯文本工具</value>
+  </data>
+  <data name="ParseStoryTextError" xml:space="preserve">
+    <value>解析剧情文件时出错</value>
+  </data>
+  <data name="SaveStoryText.Label" xml:space="preserve">
+    <value>保存剧情文件</value>
+  </data>
+  <data name="NoFileImported" xml:space="preserve">
+    <value>你没有导入文件</value>
+  </data>
+  <data name="AddSomeFiles" xml:space="preserve">
+    <value>请添加一些文件。</value>
+  </data>
+  <data name="FileIsEmpty_WithPlaceholder" xml:space="preserve">
+    <value>{0} 没有任何内容</value>
+  </data>
+  <data name="ContinueOrCancel" xml:space="preserve">
+    <value>继续操作还是取消操作？</value>
+  </data>
+  <data name="Continue" xml:space="preserve">
+    <value>继续</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="TutorialFileNotSupported_WithPlaceholder" xml:space="preserve">
+    <value>{0} 为不支持的教程文件</value>
+  </data>
+  <data name="InvaildFile_WithPlaceholder" xml:space="preserve">
+    <value>{0} 似乎不是有效的剧情文件</value>
+  </data>
 </root>
