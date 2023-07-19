@@ -66,4 +66,10 @@
   <data name="InvaildFile" xml:space="preserve">
     <value>此文件似乎不是有效的剧情文件</value>
   </data>
+  <data name="ReadPivotItem.Header" xml:space="preserve">
+    <value>读取</value>
+  </data>
+  <data name="MergePivotItem.Header" xml:space="preserve">
+    <value>合并</value>
+  </data>
 </root>

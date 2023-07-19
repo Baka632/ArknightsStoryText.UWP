@@ -66,4 +66,10 @@
   <data name="InvaildFile" xml:space="preserve">
     <value>This file seems invalid</value>
   </data>
+  <data name="ReadPivotItem.Header" xml:space="preserve">
+    <value>Read</value>
+  </data>
+  <data name="MergePivotItem.Header" xml:space="preserve">
+    <value>Merge</value>
+  </data>
 </root>
