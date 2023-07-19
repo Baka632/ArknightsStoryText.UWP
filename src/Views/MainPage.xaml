@@ -24,11 +24,11 @@
             Text="Arknights Story Text" />
 
         <Pivot Grid.Row="1">
-            <PivotItem x:Uid="ReadPivotItem">
+            <PivotItem x:Uid="ReadPivotItem" Margin="11,0,0,0">
                 <Frame x:Name="TextReadPageFrame" />
             </PivotItem>
             <PivotItem x:Uid="MergePivotItem">
-                <TextBlock Text="placeholder" />
+                <Frame x:Name="TextMergePageFrame" />
             </PivotItem>
         </Pivot>
     </Grid>

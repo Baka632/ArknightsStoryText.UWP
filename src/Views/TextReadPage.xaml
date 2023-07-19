@@ -16,100 +16,46 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Grid
+        <CommandBar
+            x:Name="OperationCommandBar"
             Grid.Row="0"
-            Margin="0,10,0,5"
             HorizontalAlignment="Left"
-            VerticalAlignment="Center">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
+            DefaultLabelPosition="Right">
+            <AppBarButton
+                x:Uid="OpenStoryText"
+                Command="{x:Bind ViewModel.OpenStoryTextFileCommand}"
+                Icon="OpenFile" />
+            <AppBarToggleButton
+                x:Uid="TryAutoParagraph"
+                Icon="ShowResults"
+                IsChecked="{x:Bind ViewModel.IsParagraph, Mode=TwoWay}" />
+            <AppBarButton x:Uid="ChangeDoctorName" AllowFocusOnInteraction="True">
+                <AppBarButton.Icon>
+                    <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE748;" />
+                </AppBarButton.Icon>
+                <AppBarButton.Flyout>
+                    <Flyout>
+                        <TextBox
+                            x:Uid="DoctorNameTextBox"
+                            MinWidth="150"
+                            Text="{x:Bind ViewModel.DoctorName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    </Flyout>
+                </AppBarButton.Flyout>
+            </AppBarButton>
+        </CommandBar>
 
-            <StackPanel
-                x:Name="OperationStackPanel"
-                Grid.Row="0"
-                Orientation="Horizontal">
-                <Button
-                    x:Uid="OpenStoryTextButton"
-                    MinWidth="130"
-                    MinHeight="32"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Command="{x:Bind ViewModel.OpenStoryTextFileCommand}" />
-                <TextBox
-                    x:Uid="DoctorNameTextBox"
-                    MinWidth="150"
-                    Margin="10,0,0,0"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Text="{x:Bind ViewModel.DoctorName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                <CheckBox
-                    x:Uid="TryAutoParagraphCheckBox"
-                    Margin="10,0,0,0"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    IsChecked="{x:Bind ViewModel.IsParagraph, Mode=TwoWay}" />
-            </StackPanel>
-
-            <StackPanel x:Name="OperationStackPanelMobile">
-                <StackPanel Grid.Row="1" Orientation="Horizontal">
-                    <Button
-                        x:Uid="OpenStoryTextButton"
-                        MinWidth="130"
-                        MinHeight="32"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        Command="{x:Bind ViewModel.OpenStoryTextFileCommand}" />
-                    <TextBox
-                        x:Uid="DoctorNameTextBox"
-                        MinWidth="150"
-                        Margin="10,0,0,0"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        Text="{x:Bind ViewModel.DoctorName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                </StackPanel>
-                <CheckBox
-                    x:Uid="TryAutoParagraphCheckBox"
-                    Margin="0,5,0,0"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Center"
-                    IsChecked="{x:Bind ViewModel.IsParagraph, Mode=TwoWay}" />
-            </StackPanel>
-        </Grid>
-
-        <ScrollViewer Grid.Row="1" Background="Transparent">
-            <RichTextBlock FontSize="15" TextWrapping="Wrap">
+        <ScrollViewer
+            Grid.Row="1"
+            Margin="0,5,0,0"
+            Background="Transparent">
+            <RichTextBlock
+                Margin="0,0,5,0"
+                FontSize="15"
+                TextWrapping="Wrap">
                 <Paragraph>
                     <Run Text="{x:Bind ViewModel.TransformedStoryText, Mode=OneWay}" />
                 </Paragraph>
             </RichTextBlock>
         </ScrollViewer>
-
-        <!--#region VisualStateManager-->
-        <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup>
-                <VisualState>
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="0" />
-                    </VisualState.StateTriggers>
-
-                    <VisualState.Setters>
-                        <Setter Target="OperationStackPanel.Visibility" Value="Collapsed" />
-                        <Setter Target="OperationStackPanelMobile.Visibility" Value="Visible" />
-                    </VisualState.Setters>
-                </VisualState>
-                <VisualState>
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="640" />
-                    </VisualState.StateTriggers>
-
-                    <VisualState.Setters>
-                        <Setter Target="OperationStackPanel.Visibility" Value="Visible" />
-                        <Setter Target="OperationStackPanelMobile.Visibility" Value="Collapsed" />
-                    </VisualState.Setters>
-                </VisualState>
-            </VisualStateGroup>
-        </VisualStateManager.VisualStateGroups>
     </Grid>
 </Page>

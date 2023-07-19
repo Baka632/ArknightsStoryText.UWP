@@ -120,6 +120,11 @@ namespace ArknightsStoryText.UWP.ViewModels
                 });
                 string transformedText = storyScene.GetStoryText(IsParagraph);
                 TransformedStoryText = transformedText;
+
+                if (string.IsNullOrWhiteSpace(transformedText))
+                {
+                    await ShowDialogAsync("ResultIsEmpty".GetLocalized(), "OpenAnotherFileInstead".GetLocalized());
+                }
             }
             catch (ArgumentException)
             {

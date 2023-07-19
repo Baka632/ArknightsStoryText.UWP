@@ -39,13 +39,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="OpenStoryTextButton.Content" xml:space="preserve">
+  <data name="OpenStoryText.Label" xml:space="preserve">
     <value>Open story text file</value>
   </data>
   <data name="DoctorNameTextBox.PlaceholderText" xml:space="preserve">
     <value>Enter doctor's nickname</value>
   </data>
-  <data name="TryAutoParagraphCheckBox.Content" xml:space="preserve">
+  <data name="TryAutoParagraph.Label" xml:space="preserve">
     <value>Try to automatically paragraph</value>
   </data>
   <data name="TutorialFileNotSupported" xml:space="preserve">
@@ -71,5 +71,11 @@
   </data>
   <data name="MergePivotItem.Header" xml:space="preserve">
     <value>Merge</value>
+  </data>
+  <data name="ChangeDoctorName.Label" xml:space="preserve">
+    <value>Change doctor's nickname</value>
+  </data>
+  <data name="ResultIsEmpty" xml:space="preserve">
+    <value>Output is empty</value>
   </data>
 </root>

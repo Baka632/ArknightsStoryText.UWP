@@ -170,6 +170,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\StoryReader.cs" />
     <Compile Include="Models\StoryScene.cs" />
+    <Compile Include="Views\TextMergePage.xaml.cs">
+      <DependentUpon>TextMergePage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\TextReadPage.xaml.cs">
       <DependentUpon>TextReadPage.xaml</DependentUpon>
     </Compile>
@@ -246,6 +249,10 @@
     <Page Include="Views\MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\TextMergePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\TextReadPage.xaml">
       <SubType>Designer</SubType>
