@@ -8,6 +8,7 @@ using Windows.Storage;
 using Windows.UI.Xaml.Controls;
 using System.Windows.Input;
 using ArknightsStoryText.UWP.Commands;
+using System.Text;
 
 namespace ArknightsStoryText.UWP.ViewModels
 {
@@ -140,6 +141,12 @@ namespace ArknightsStoryText.UWP.ViewModels
             catch (ArgumentException)
             {
                 await ShowDialogAsync("TutorialFileNotSupported".GetLocalized(), "OpenAnotherFileInstead".GetLocalized());
+                return;
+            }
+            catch (Exception ex)
+            {
+                //TODO: Localize
+                await ShowDialogAsync($"解析文件时出错", $"{ex.Message}\n{ex.StackTrace}");
                 return;
             }
 

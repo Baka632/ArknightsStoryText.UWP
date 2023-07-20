@@ -13,6 +13,7 @@ using ArknightsResources.Stories.Models;
 using ArknightsResources.Utility;
 using ArknightsStoryText.UWP.Helpers;
 using Windows.UI.Xaml.Controls;
+using System.Diagnostics;
 
 namespace ArknightsStoryText.UWP.ViewModels
 {
@@ -163,6 +164,23 @@ namespace ArknightsStoryText.UWP.ViewModels
                     string title = string.Format("TutorialFileNotSupported_WithPlaceholder".GetLocalized(),item.File.Name);
                     ContentDialogResult result = await ShowDialogAsync(title,
                         "ContinueOrCancel".GetLocalized(), "Continue".GetLocalized(), closeText: "Cancel".GetLocalized());
+
+                    if (result == ContentDialogResult.None)
+                    {
+                        stringBuilder.Clear();
+                        return;
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    //TODO: Localize
+
+                    ContentDialogResult result = await ShowDialogAsync($"解析文件{item.File.Name}时出错",
+                        $"{ex.Message}\n{"ContinueOrCancel".GetLocalized()}", "Continue".GetLocalized(), closeText: "Cancel".GetLocalized());
 
                     if (result == ContentDialogResult.None)
                     {

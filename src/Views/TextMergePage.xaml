@@ -21,6 +21,7 @@
         <CommandBar
             x:Name="OperationCommandBar"
             Grid.Row="0"
+            Margin="0,0,0,5"
             HorizontalAlignment="Left"
             DefaultLabelPosition="Right">
             <AppBarButton
@@ -58,6 +59,7 @@
 
         <ListView
             Grid.Row="1"
+            Margin="1,0,0,0"
             AllowDrop="True"
             Background="Transparent"
             CanReorderItems="True"
@@ -87,6 +89,7 @@
                             Grid.Row="2"
                             Grid.Column="0"
                             Width="150"
+                            IsSpellCheckEnabled="False"
                             PlaceholderText="剧情标题"
                             Text="{x:Bind Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 

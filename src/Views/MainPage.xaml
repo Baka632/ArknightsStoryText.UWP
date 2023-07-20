@@ -27,7 +27,7 @@
             <PivotItem x:Uid="ReadPivotItem" Margin="11,0,0,0">
                 <Frame x:Name="TextReadPageFrame" />
             </PivotItem>
-            <PivotItem x:Uid="MergePivotItem">
+            <PivotItem x:Uid="MergePivotItem" Margin="11,0,0,0">
                 <Frame x:Name="TextMergePageFrame" />
             </PivotItem>
         </Pivot>
