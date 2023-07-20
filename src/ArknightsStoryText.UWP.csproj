@@ -130,43 +130,54 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Commands\DelegateCommand.cs" />
     <Compile Include="Helpers\LocalizationHelper.cs" />
     <Compile Include="Helpers\ReswHelper.cs" />
-    <Compile Include="Models\CharacterIllustrationEnterStyle.cs" />
-    <Compile Include="Models\Commands\DecisionCommand.cs" />
-    <Compile Include="Models\Commands\DelayCommand.cs" />
-    <Compile Include="Models\Commands\HideCharacterIllustrationCommand.cs" />
-    <Compile Include="Models\Commands\HideDialogCommand.cs" />
-    <Compile Include="Models\Commands\HideImageCommand.cs" />
-    <Compile Include="Models\Commands\HideItemCommand.cs" />
-    <Compile Include="Models\Commands\HideStickerCommand.cs" />
-    <Compile Include="Models\Commands\HideSubtitleCommand.cs" />
-    <Compile Include="Models\Commands\NoOperationCommand.cs" />
-    <Compile Include="Models\Commands\PlayMusicCommand.cs" />
-    <Compile Include="Models\Commands\PlaySoundCommand.cs" />
-    <Compile Include="Models\Commands\PlayVideoCommand.cs" />
-    <Compile Include="Models\Commands\ShowBackgroundCommand.cs" />
-    <Compile Include="Models\Commands\ShowBlockerCommand.cs" />
-    <Compile Include="Models\Commands\ShowCharacterIllustrationCommand.cs" />
-    <Compile Include="Models\Commands\ShowDialogCommand.cs" />
-    <Compile Include="Models\Commands\ShowImageCommand.cs" />
-    <Compile Include="Models\Commands\ShowItemCommand.cs" />
-    <Compile Include="Models\Commands\StartCameraShake.cs" />
-    <Compile Include="Models\Commands\StartImageTweenCommand.cs" />
-    <Compile Include="Models\Commands\StopMusicCommand.cs" />
-    <Compile Include="Models\Commands\StoryCommand.cs" />
-    <Compile Include="Models\Commands\TextCommand\ShowMultilineCommand.cs" />
-    <Compile Include="Models\Commands\TextCommand\ShowPlainTextCommand.cs" />
-    <Compile Include="Models\Commands\TextCommand\ShowStickerCommand.cs" />
-    <Compile Include="Models\Commands\TextCommand\ShowSubtitleCommand.cs" />
-    <Compile Include="Models\Commands\TextCommand\ShowTextWithNameCommand.cs" />
-    <Compile Include="Models\Commands\TextCommand\TextCommand.cs" />
-    <Compile Include="MainPage.xaml.cs">
+    <Compile Include="Models\ArknightsResources.Stories.Models\CharacterIllustrationEnterStyle.cs" />
+    <Compile Include="Models\ArknightsResources.Stories.Models\Commands\DecisionCommand.cs" />
+    <Compile Include="Models\ArknightsResources.Stories.Models\Commands\DelayCommand.cs" />
+    <Compile Include="Models\ArknightsResources.Stories.Models\Commands\HideCharacterIllustrationCommand.cs" />
+    <Compile Include="Models\ArknightsResources.Stories.Models\Commands\HideDialogCommand.cs" />
+    <Compile Include="Models\ArknightsResources.Stories.Models\Commands\HideImageCommand.cs" />
+    <Compile Include="Models\ArknightsResources.Stories.Models\Commands\HideItemCommand.cs" />
+    <Compile Include="Models\ArknightsResources.Stories.Models\Commands\HideStickerCommand.cs" />
+    <Compile Include="Models\ArknightsResources.Stories.Models\Commands\HideSubtitleCommand.cs" />
+    <Compile Include="Models\ArknightsResources.Stories.Models\Commands\NoOperationCommand.cs" />
+    <Compile Include="Models\ArknightsResources.Stories.Models\Commands\PlayMusicCommand.cs" />
+    <Compile Include="Models\ArknightsResources.Stories.Models\Commands\PlaySoundCommand.cs" />
+    <Compile Include="Models\ArknightsResources.Stories.Models\Commands\PlayVideoCommand.cs" />
+    <Compile Include="Models\ArknightsResources.Stories.Models\Commands\ShowBackgroundCommand.cs" />
+    <Compile Include="Models\ArknightsResources.Stories.Models\Commands\ShowBlockerCommand.cs" />
+    <Compile Include="Models\ArknightsResources.Stories.Models\Commands\ShowCharacterIllustrationCommand.cs" />
+    <Compile Include="Models\ArknightsResources.Stories.Models\Commands\ShowDialogCommand.cs" />
+    <Compile Include="Models\ArknightsResources.Stories.Models\Commands\ShowImageCommand.cs" />
+    <Compile Include="Models\ArknightsResources.Stories.Models\Commands\ShowItemCommand.cs" />
+    <Compile Include="Models\ArknightsResources.Stories.Models\Commands\StartCameraShake.cs" />
+    <Compile Include="Models\ArknightsResources.Stories.Models\Commands\StartImageTweenCommand.cs" />
+    <Compile Include="Models\ArknightsResources.Stories.Models\Commands\StopMusicCommand.cs" />
+    <Compile Include="Models\ArknightsResources.Stories.Models\Commands\StoryCommand.cs" />
+    <Compile Include="Models\ArknightsResources.Stories.Models\Commands\TextCommand\ShowMultilineCommand.cs" />
+    <Compile Include="Models\ArknightsResources.Stories.Models\Commands\TextCommand\ShowPlainTextCommand.cs" />
+    <Compile Include="Models\ArknightsResources.Stories.Models\Commands\TextCommand\ShowStickerCommand.cs" />
+    <Compile Include="Models\ArknightsResources.Stories.Models\Commands\TextCommand\ShowSubtitleCommand.cs" />
+    <Compile Include="Models\ArknightsResources.Stories.Models\Commands\TextCommand\ShowTextWithNameCommand.cs" />
+    <Compile Include="Models\ArknightsResources.Stories.Models\Commands\TextCommand\TextCommand.cs" />
+    <Compile Include="Models\ArknightsResources.Stories.Models\StoryScene.cs" />
+    <Compile Include="Models\StoryFileInfo.cs" />
+    <Compile Include="ViewModels\NotificationObject.cs" />
+    <Compile Include="ViewModels\TextMergeViewModel.cs" />
+    <Compile Include="ViewModels\TextReadViewModel.cs" />
+    <Compile Include="Views\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\StoryReader.cs" />
-    <Compile Include="Models\StoryScene.cs" />
+    <Compile Include="Views\TextMergePage.xaml.cs">
+      <DependentUpon>TextMergePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TextReadPage.xaml.cs">
+      <DependentUpon>TextReadPage.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -237,9 +248,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="MainPage.xaml">
+    <Page Include="Views\MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\TextMergePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\TextReadPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>

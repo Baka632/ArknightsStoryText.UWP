@@ -1,6 +1,8 @@
-﻿//原项目：https://github.com/ArknightsResources/Utility
-//为了兼容 Windows 10 1703及以下版本， 我们无法直接引用 NuGet 包，所以只能复制源代码了（
-
+﻿#if NET6_0_OR_GREATER
+#pragma warning disable IDE0090
+#pragma warning disable IDE0062
+#pragma warning disable IDE0083
+#endif
 #pragma warning disable IDE0075
 
 using ArknightsResources.Stories.Models;
@@ -117,92 +119,8 @@ namespace ArknightsResources.Utility
                     }
                     else
                     {
-                        //匹配Decision
-                        Match matchDecison = GetMatchByPattern(strToAnalyse, @"\[Decision\(options=""([\s\S]*)"", values=""([\s\S]*)""\)\]");
-                        if (matchDecison.Success)
-                        {
-                            #region MatchDecision
-                            string[] options = matchDecison.Groups[1].Value.Split(';');
-                            string[] values = matchDecison.Groups[2].Value.Split(';');
-
-                            //键是选项(如“结果怎么样？”“......”“我的脑袋又热又胀，很不舒服。”)
-                            //值为各选项分支的命令(如”[name="凯尔希"]并没有什么新的进展。“)
-                            Dictionary<string, StoryCommand[]> result = new(values.Length);
-
-                            //当前要处理的选项
-                            List<string> currentKeys = null;
-
-                            //用于临时放置各选项分支命令
-                            List<StoryCommand> temp = new(5);
-                            while (true)
-                            {
-                                string str = ReadText();
-                                Match matchPredicate = GetMatchByPattern(str, @"\[Predicate\(references=""([\s\S]*)""\)\]");
-                                if (matchPredicate.Success)
-                                {
-                                    string[] references = matchPredicate.Groups[1].Value.Split(';');
-                                    if (references.SequenceEqual(values))
-                                    {
-                                        /*
-                                         * 这种情况的例子:[Decision(options="XXX;YYY;ZZZ", values="1;2;3")]
-                                         * .......
-                                         * [Predicate(references="1;2;3")]
-                                        */
-
-                                        if (result.Count == 0)
-                                        {
-                                            //这种情况相当于Decision不对下面的剧情文本产生影响,因此这里全部填充为无操作
-                                            foreach (var item in options)
-                                            {
-                                                result[item] = new StoryCommand[] { new NoOperationCommand() };
-                                            }
-                                        }
-                                        else
-                                        {
-                                            foreach (var item in currentKeys)
-                                            {
-                                                result[item] = temp.ToArray();
-                                                temp.Clear();
-                                            }
-                                        }
-
-                                        break;
-                                    }
-
-                                    if (currentKeys is null)
-                                    {
-                                        InitCurrentKeys(out currentKeys, options, references);
-                                    }
-                                    else
-                                    {
-                                        temp.Insert(0, new ShowDialogCommand());
-                                        foreach (string item in currentKeys)
-                                        {
-                                            result[item] = temp.ToArray();
-                                        }
-                                        temp.Clear();
-                                        InitCurrentKeys(out currentKeys, options, references);
-                                    }
-                                    continue;
-                                }
-                                else
-                                {
-                                    //解析每一行文本所代表的命令
-                                    StoryCommand storyCommand = AnalyseCommandText(str);
-                                    temp.Add(storyCommand);
-                                }
-                            }
-
-                            DecisionCommand decisionCommand = new(result);
-                            storyCommands.Add(decisionCommand);
-                            continue;
-                            #endregion
-                        }
-                        else
-                        {
-                            StoryCommand storyCommand = AnalyseCommandText(strToAnalyse);
-                            storyCommands.Add(storyCommand);
-                        }
+                        StoryCommand storyCommand = AnalyseCommandText(strToAnalyse);
+                        storyCommands.Add(storyCommand);
                     }
                 }
                 else
@@ -220,14 +138,160 @@ namespace ArknightsResources.Utility
 
             StoryScene scene = new(storyCommands.ToArray(), isSkippable, isAutoable, fitMode, comment);
             return scene;
+        }
 
-            static void InitCurrentKeys(out List<string> currentKey, string[] options, string[] references)
+        /// <summary>
+        /// 获取剧情文件的纯文本形式
+        /// </summary>
+        /// <param name="storyCommands"></param>
+        /// <param name="tryParagraph">指示是否让StoryScene尝试自动断行的值</param>
+        /// <returns>剧情文件的纯文本</returns>
+        public static string GetStoryText(IEnumerable<StoryCommand> storyCommands, bool tryParagraph)
+        {
+            StringBuilder builder = new(storyCommands.Count());
+            GetTextInternal(storyCommands, builder, false, tryParagraph);
+            return builder.ToString();
+        }
+
+        private static void GetTextInternal(IEnumerable<StoryCommand> cmds, StringBuilder builder, bool cmdInDecision, bool tryParagraph)
+        {
+            //转换为List<T>的原因是:接下来的某些操作需要获取之后的项目,而IEnumerable不能进行这些操作
+            List<StoryCommand> commands = cmds.ToList();
+
+            List<StoryCommand> textCommands = (from textCmd
+                                               in commands
+                                               where textCmd is TextCommand || textCmd is DecisionCommand
+                                               select textCmd).ToList();
+
+            for (int i = 0; i < textCommands.Count; i++)
             {
-                currentKey = new List<string>(options.Length);
-                foreach (var item in references)
+                StoryCommand item = textCommands[i];
+                if (cmdInDecision)
                 {
-                    int index = int.Parse(item);
-                    currentKey.Add(options[index - 1]);
+                    _ = builder.Append('\t');
+                }
+
+                switch (item)
+                {
+                    case ShowTextWithNameCommand textWithNameCmd:
+                        _ = builder.AppendLine($"{textWithNameCmd.Name}: {textWithNameCmd.Text}");
+                        break;
+                    case ShowStickerCommand showStickerCmd:
+                        var matchPlainText = Regex.Match(showStickerCmd.Text, @"<[\s\S]*>([\s\S]*)<\/[\s\S]*>", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+                        if (matchPlainText.Success)
+                        {
+                            var stickerPlainText = matchPlainText.Groups[1].Value;
+                            _ = builder.AppendLine(stickerPlainText);
+                        }
+                        else
+                        {
+                            _ = builder.AppendLine(showStickerCmd.Text);
+                        }
+                        break;
+                    case ShowMultilineCommand showMultilineCmd:
+                        _ = builder.Append($"{showMultilineCmd.Name}: {showMultilineCmd.Text}");
+
+                        {
+                            //加大括号防止smcNext变量外溢
+                            if (textCommands.ElementAtOrDefault(i + 1) is ShowMultilineCommand smcNext && smcNext.IsEnd)
+                            {
+                                //如果下一个ShowMultilineCommand为结束命令,那么处理完这两个命令就完事了
+                                //i++是为了让for不获取已经处理过的ShowMultilineCommand命令
+                                i++;
+                                _ = builder.AppendLine(smcNext.Text);
+                                break;
+                            }
+                        }
+
+                        ShowMultilineCommand smcLast = null;
+                        IEnumerable<ShowMultilineCommand> cmdSegment = from cmd
+                                         in textCommands.Skip(i + 1)
+                                                        .TakeWhile((cmd) =>
+                                                        {
+                                                            if (!(cmd is ShowMultilineCommand smc))
+                                                            {
+                                                                //如果cmd不是ShowMultilineCommand命令,则返回false,结束Take操作
+                                                                return false;
+                                                            }
+                                                            else
+                                                            {
+                                                                //如果cmd是ShowMultilineCommand命令,那么我们需要进行特殊的处理
+                                                                bool isEnd = smc.IsEnd;
+                                                                if (isEnd)
+                                                                {
+                                                                    //当smc.IsEnd为true时,我们应当返回false来结束TakeWhile操作
+                                                                    //但是这样会丢失最后一个ShowMultilineCommand命令
+                                                                    //所以我们需要记录它,避免丢失数据
+                                                                    smcLast = smc;
+                                                                }
+
+                                                                //避免for获取已经处理过的ShowMultilineCommand命令
+                                                                i++;
+                                                                //如果ShowMultilineCommand命令为结束命令...
+                                                                //则返回false来结束TakeWhile操作
+                                                                //如果不为结束命令,则返回true继续
+                                                                return !isEnd;
+                                                            }
+                                                        })
+                                         where cmd is ShowMultilineCommand
+                                         select (cmd as ShowMultilineCommand);
+                        foreach (ShowMultilineCommand smc in cmdSegment)
+                        {
+                            _ = builder.Append(smc.Text);
+                        }
+
+                        if (smcLast != null)
+                        {
+                            //把cmdSegment中缺失的最后一个命令补上
+                            _ = builder.Append(smcLast.Text);
+                        }
+
+                        _ = builder.AppendLine();
+                        break;
+                    case TextCommand textCommand:
+                        _ = builder.AppendLine(textCommand.Text);
+                        break;
+                    case DecisionCommand decisionCmd:
+                        //添加空行来分隔选择文本与其他对话
+                        builder.AppendLine();
+                        foreach (var option in decisionCmd.AvailableOptions)
+                        {
+                            builder.AppendLine($"[{option}]");
+                            GetTextInternal(decisionCmd[option], builder, true, tryParagraph);
+                        }
+
+                        //如果下一条命令是DecisionCommand,则结束switch语句,避免写入多余的空行
+                        if (textCommands.ElementAtOrDefault(i + 1) is DecisionCommand)
+                        {
+                            break;
+                        }
+                        builder.AppendLine();
+                        break;
+                    default:
+                        break;
+                }
+
+                if (tryParagraph)
+                {
+                    int totalCmdsIndex = commands.IndexOf(item);
+                    if (totalCmdsIndex != -1)
+                    {
+                        //从完整的StoryCommand列表中选取从当前TextCommand到下一个TextCommand中的命令
+                        IEnumerable<StoryCommand> cmdSegment = commands.Skip(totalCmdsIndex + 1)
+                                                                       .TakeWhile((cmd) => !(cmd is TextCommand));
+
+                        //如果当前命令是DecisionCommand,则不会进行下面的操作,因为我们在前面已经添加了空行
+                        //接下来,如果cmdSegment中有DecisionCommand,操作同上
+                        //最后,如果cmdSegment中有HideDialogCommand及ShowBackgroundCommand,才添加空行
+                        if (!(item is DecisionCommand)
+                            && !cmdSegment.Any((cmd) => cmd is DecisionCommand)
+                            && cmdSegment.Any((cmd) => cmd is HideDialogCommand)
+                            && cmdSegment.Any((cmd) => cmd is ShowBackgroundCommand
+                                                       || cmd is ShowCharacterIllustrationCommand))
+                        {
+                            builder.AppendLine();
+                        }
+                    }
                 }
             }
         }
@@ -242,6 +306,111 @@ namespace ArknightsResources.Utility
         private StoryCommand AnalyseCommandText(string strToAnalyse)
         {
             // TODO: Add more...
+            #region MatchDecision
+            {
+                Match matchDecison = GetMatchByPattern(strToAnalyse, @"\[Decision\(options=""([\s\S]*)"", values=""([\s\S]*)""\)\]");
+                if (matchDecison.Success)
+                {
+                    #region MatchDecision
+                    string[] options = matchDecison.Groups[1].Value.Split(';');
+                    string[] values = matchDecison.Groups[2].Value.Split(';');
+
+                    //键是选项(如“结果怎么样？”“......”“我的脑袋又热又胀，很不舒服。”)
+                    //值为各选项分支的命令(如”[name="凯尔希"]并没有什么新的进展。“)
+                    Dictionary<string, StoryCommand[]> result = new(values.Length);
+
+                    //当前要处理的选项
+                    List<string> currentKeys = null;
+
+                    //用于临时放置各选项分支命令
+                    List<StoryCommand> temp = new(5);
+                    while (true)
+                    {
+                        if (options.Length < values.Length)
+                        {
+                            //选项的数量居然小于各选项分支的数量，这是不正常的
+                            //但是大坑比yj有时真能写出这种问题文件来，大概是序列化器有问题（
+                            //这种情况相当于Decision不对下面的剧情文本产生影响,因此这里全部填充为无操作
+                            foreach (var item in options)
+                            {
+                                result[item] = new StoryCommand[] { new NoOperationCommand() };
+                            }
+                            break;
+                        }
+
+                        string str = ReadText();
+                        Match matchPredicate = GetMatchByPattern(str, @"\[Predicate\(references=""([\s\S]*)""\)\]");
+                        if (matchPredicate.Success)
+                        {
+                            string[] references = matchPredicate.Groups[1].Value.Split(';');
+                            if (references.SequenceEqual(values))
+                            {
+                                /*
+                                 * 这种情况的例子:[Decision(options="XXX;YYY;ZZZ", values="1;2;3")]
+                                 * .......
+                                 * [Predicate(references="1;2;3")]
+                                */
+
+                                if (result.Count == 0)
+                                {
+                                    //这种情况相当于Decision不对下面的剧情文本产生影响,因此这里全部填充为无操作
+                                    foreach (var item in options)
+                                    {
+                                        result[item] = new StoryCommand[] { new NoOperationCommand() };
+                                    }
+                                }
+                                else
+                                {
+                                    foreach (var item in currentKeys)
+                                    {
+                                        result[item] = temp.ToArray();
+                                        temp.Clear();
+                                    }
+                                }
+
+                                break;
+                            }
+
+                            if (currentKeys is null)
+                            {
+                                InitCurrentKeys(out currentKeys, options, references);
+                            }
+                            else
+                            {
+                                temp.Insert(0, new ShowDialogCommand());
+                                foreach (string item in currentKeys)
+                                {
+                                    result[item] = temp.ToArray();
+                                }
+                                temp.Clear();
+                                InitCurrentKeys(out currentKeys, options, references);
+                            }
+                            continue;
+                        }
+                        else
+                        {
+                            //解析每一行文本所代表的命令
+                            StoryCommand storyCommand = AnalyseCommandText(str);
+                            temp.Add(storyCommand);
+                        }
+                    }
+
+                    DecisionCommand decisionCommand = new(result);
+                    return decisionCommand;
+                    #endregion
+                }
+
+                void InitCurrentKeys(out List<string> currentKey, string[] options, string[] references)
+                {
+                    currentKey = new List<string>(options.Length);
+                    foreach (var item in references)
+                    {
+                        int index = int.Parse(item);
+                        currentKey.Add(options[index - 1]);
+                    }
+                }
+            }
+            #endregion
             #region MatchStopMusic
             {
                 var matchStopMusic = GetMatchByPattern(strToAnalyse, @"\[stopmusic\(([\s\S]*)\)\]");
