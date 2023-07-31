@@ -19,11 +19,6 @@ namespace ArknightsStoryText.UWP.Views
         {
             ViewModel = new TextMergeViewModel();
             this.InitializeComponent();
-
-            if (AnalyticsInfo.VersionInfo.DeviceFamily != "Windows.Mobile")
-            {
-                OperationCommandBar.Background = new SolidColorBrush(Colors.Transparent);
-            }
         }
     }
 }

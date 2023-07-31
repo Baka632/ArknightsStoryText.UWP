@@ -86,6 +86,7 @@
                             Text="{x:Bind File.DisplayName}" />
 
                         <TextBox
+                            HorizontalAlignment="Left"
                             Grid.Row="2"
                             Grid.Column="0"
                             Width="150"
@@ -94,6 +95,7 @@
                             Text="{x:Bind Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
                         <Button
+                            HorizontalAlignment="Right"
                             Grid.Row="2"
                             Grid.Column="1"
                             Margin="10,0,0,0"
