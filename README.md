@@ -14,7 +14,7 @@
 
 Windows 10 1703 (15063)
 
-> 升级原因：为了使用通过 [WinUI 2](https://github.com/microsoft/microsoft-ui-xaml) 库。
+> 升级原因：为了使用 [WinUI 2](https://github.com/microsoft/microsoft-ui-xaml) 库。
 >
 >WinUI 2 库能让此程序在新版本系统上获得新外观，在旧版本系统上使用新版本的控件。
 
