@@ -1,5 +1,6 @@
 ﻿using System;
 using ArknightsStoryText.UWP.Views;
+using Microsoft.UI.Xaml.Controls;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
@@ -73,18 +74,17 @@ namespace ArknightsStoryText.UWP
                 Window.Current.Activate();
             }
 
+            bool isMobile = AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Mobile";
+            if (isMobile is not true)
+            {
+                Resources.MergedDictionaries.Add(new XamlControlsResources());
+            }
+
             #region TitleBarColor
             ApplicationViewTitleBar PresentationTitleBar = ApplicationView.GetForCurrentView().TitleBar;
             PresentationTitleBar.ButtonBackgroundColor = Colors.Transparent;
             CoreApplicationViewTitleBar coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
-            if (AnalyticsInfo.VersionInfo.DeviceFamily != "Windows.Mobile")
-            {
-                coreTitleBar.ExtendViewIntoTitleBar = true;
-            }
-            else
-            {
-                coreTitleBar.ExtendViewIntoTitleBar = false;
-            }
+            coreTitleBar.ExtendViewIntoTitleBar = isMobile is not true;
 
             Color ForegroundColor = Current.RequestedTheme switch
             {

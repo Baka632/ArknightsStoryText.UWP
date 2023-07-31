@@ -10,12 +10,18 @@
 </div>
 
 ## 最低支持平台
-Windows 10 1607 (14393)
+~~Windows 10 1607 (14393)~~
+
+Windows 10 1703 (15063)
+
+> 升级原因：为了使用通过 [WinUI 2](https://github.com/microsoft/microsoft-ui-xaml) 库。
+>
+>WinUI 2 库能让此程序在新版本系统上获得新外观，在旧版本系统上使用新版本的控件。
 
 ## 构建需求
 - Visual Studio 2022 及以上
 - .NET 7 SDK（为了使用最新的 C# 语言版本）
-- Windows 10 SDK (至少为 14393)
+- Windows 10 SDK (至少为 16299，因为需要生成 ARM64 版本的程序)
     - 需安装 Windows SDK for UWP Managed Apps
 
 ## 贡献者须知
@@ -23,7 +29,7 @@ Windows 10 1607 (14393)
 
 但是，为了兼容 Windows 10 Mobile 设备，我们不应：
 - 引用任何 .NET Standard 1.4 以上的库（不含 .NET Standard 1.4）
-- 在不添加兼容性检测的情况下，使用任何不支持 Windows 10 1607 (Build 14393) 的 API
+- 在不添加兼容性检测的情况下，使用任何不支持 Windows 10 1703 (Build 15063) 的 API
 
 ## 使用的开源项目
 [ArknightsResources/Utility](https://github.com/ArknightsResources/Utility) (MIT 许可证，以源代码形式使用)
