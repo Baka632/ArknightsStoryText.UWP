@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:ArknightsStoryText.UWP.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:ArknightsStoryText.UWP.Models"
     xmlns:viewmodels="using:ArknightsStoryText.UWP.ViewModels"
     d:DataContext="{d:DesignInstance Type=viewmodels:TextReadViewModel}"
     Background="Transparent"
@@ -25,13 +26,13 @@
                 x:Uid="OpenStoryText"
                 Command="{x:Bind ViewModel.OpenStoryTextFileCommand}"
                 Icon="OpenFile" />
-            
+
             <AppBarToggleButton
                 x:Uid="TryAutoParagraph"
                 Margin="5,0,5,0"
                 Icon="ShowResults"
                 IsChecked="{x:Bind ViewModel.IsParagraph, Mode=TwoWay}" />
-            
+
             <AppBarButton x:Uid="ChangeDoctorName" AllowFocusOnInteraction="True">
                 <AppBarButton.Icon>
                     <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE748;" />
@@ -45,6 +46,44 @@
                     </Flyout>
                 </AppBarButton.Flyout>
             </AppBarButton>
+
+            <CommandBar.SecondaryCommands>
+                <AppBarButton
+                    x:Uid="ChangeFontAndSize"
+                    AllowFocusOnInteraction="True"
+                    Icon="Font">
+                    <AppBarButton.Flyout>
+                        <Flyout>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <ComboBox
+                                    x:Name="SetFontComboBox"
+                                    x:Uid="SetFont"
+                                    Grid.Row="0"
+                                    Margin="0,0,0,5"
+                                    ItemsSource="{x:Bind ViewModel.Fonts}"
+                                    SelectedItem="{x:Bind viewmodels:TextReadViewModel.DefaultFont}"
+                                    SelectedValuePath="FontFamily">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate x:DataType="models:FontInfo">
+                                            <TextBlock FontFamily="{x:Bind FontFamily}" Text="{x:Bind DisplayFontName}" />
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+                                <ComboBox
+                                    x:Name="SetFontSizeComboBox"
+                                    x:Uid="SetFontSize"
+                                    Grid.Row="1"
+                                    ItemsSource="{x:Bind ViewModel.FontSizes}"
+                                    SelectedItem="{x:Bind viewmodels:TextReadViewModel.DefaultFontSize}" />
+                            </Grid>
+                        </Flyout>
+                    </AppBarButton.Flyout>
+                </AppBarButton>
+            </CommandBar.SecondaryCommands>
         </CommandBar>
 
         <ScrollViewer
@@ -52,15 +91,13 @@
             Margin="0,5,0,0"
             Background="Transparent">
             <Grid>
-                <RichTextBlock
+                <TextBlock
                     Margin="0,0,5,0"
-                    FontSize="15"
-                    TextWrapping="Wrap">
-                    <Paragraph>
-                        <Run Text="{x:Bind ViewModel.TransformedStoryText, Mode=OneWay}" />
-                    </Paragraph>
-                </RichTextBlock>
-
+                    FontFamily="{x:Bind (FontFamily)SetFontComboBox.SelectedValue, Mode=OneWay}"
+                    FontSize="{x:Bind (x:Double)SetFontSizeComboBox.SelectedValue, Mode=OneWay}"
+                    IsTextSelectionEnabled="True"
+                    Text="{x:Bind ViewModel.TransformedStoryText, Mode=OneWay}"
+                    TextWrapping="Wrap" />
                 <ProgressRing IsActive="{x:Bind ViewModel.IsLoading, Mode=OneWay}" />
             </Grid>
         </ScrollViewer>

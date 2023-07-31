@@ -13,13 +13,12 @@ using ArknightsResources.Stories.Models;
 using ArknightsResources.Utility;
 using ArknightsStoryText.UWP.Helpers;
 using Windows.UI.Xaml.Controls;
-using System.Diagnostics;
 
 namespace ArknightsStoryText.UWP.ViewModels
 {
     public class TextMergeViewModel : NotificationObject
     {
-        private string _transformedStoryText = "";
+        private string _transformedStoryText = string.Empty;
         private string _doctorName = string.Empty;
         private bool _isParagraph = false;
         private bool _isMerging = false;
@@ -177,9 +176,8 @@ namespace ArknightsStoryText.UWP.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    //TODO: Localize
-
-                    ContentDialogResult result = await ShowDialogAsync($"解析文件{item.File.Name}时出错",
+                    string title = string.Format("ErrorWhenParsing_WithPlaceholder".GetLocalized(), item.File.Name);
+                    ContentDialogResult result = await ShowDialogAsync(title,
                         $"{ex.Message}\n{"ContinueOrCancel".GetLocalized()}", "Continue".GetLocalized(), closeText: "Cancel".GetLocalized());
 
                     if (result == ContentDialogResult.None)

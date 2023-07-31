@@ -8,7 +8,12 @@ using Windows.Storage;
 using Windows.UI.Xaml.Controls;
 using System.Windows.Input;
 using ArknightsStoryText.UWP.Commands;
-using System.Text;
+using System.Collections.Generic;
+using Windows.UI.Xaml.Media;
+using ArknightsStoryText.UWP.Models;
+using Windows.UI.Xaml.Documents;
+using Windows.Globalization.Fonts;
+using System.Globalization;
 
 namespace ArknightsStoryText.UWP.ViewModels
 {
@@ -23,6 +28,10 @@ namespace ArknightsStoryText.UWP.ViewModels
         public TextReadViewModel()
         {
             OpenStoryTextFileCommand = new DelegateCommand(async (obj) => await OpenStoryTextFileAsync());
+
+            IReadOnlyList<FontInfo> fonts = FontHelper.GetSystemFonts();
+
+            Fonts = fonts;
         }
 
         public ICommand OpenStoryTextFileCommand { get; }
@@ -87,8 +96,24 @@ namespace ArknightsStoryText.UWP.ViewModels
             }
         }
 
-        private async Task OpenStoryTextFileAsync()
+        public List<double> FontSizes { get; } = new() { 8, 9, 10, 11, 12, 14, 16, 18, 20, 24, 28, 36, 48, 72 };
+
+        public IReadOnlyList<FontInfo> Fonts { get; }
+
+        public static FontInfo DefaultFont
         {
+            get
+            {
+                LanguageFontGroup languageFontGroup = new(CultureInfo.CurrentUICulture.Name);
+                FontFamily defaultFont = new(languageFontGroup.ModernDocumentFont.FontFamily);
+                return new(defaultFont.Source, defaultFont);
+            }
+        }
+
+        public static double DefaultFontSize => 16;
+
+        private async Task OpenStoryTextFileAsync()
+        {   
             FileOpenPicker fileOpenPicker = new();
             fileOpenPicker.FileTypeFilter.Add(".txt");
             StorageFile storageFile = await fileOpenPicker.PickSingleFileAsync();
@@ -145,8 +170,7 @@ namespace ArknightsStoryText.UWP.ViewModels
             }
             catch (Exception ex)
             {
-                //TODO: Localize
-                await ShowDialogAsync($"解析文件时出错", $"{ex.Message}\n{ex.StackTrace}");
+                await ShowDialogAsync("ErrorWhenParsing".GetLocalized(), $"{ex.Message}\n{ex.StackTrace}");
                 return;
             }
 

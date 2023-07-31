@@ -5,7 +5,7 @@
 <div align="center">
 
 # Arknights Story Text - UWP
-一个基于 UWP 的明日方舟纯文本剧情阅读器
+一个基于 UWP 的明日方舟纯文本剧情工具
 
 </div>
 
@@ -13,8 +13,9 @@
 Windows 10 1607 (14393)
 
 ## 构建需求
-- Visual Studio 2017 及以上
-- Windows 10 SDK (至少为14393)
+- Visual Studio 2022 及以上
+- .NET 7 SDK（为了使用最新的 C# 语言版本）
+- Windows 10 SDK (至少为 14393)
     - 需安装 Windows SDK for UWP Managed Apps
 
 ## 贡献者须知

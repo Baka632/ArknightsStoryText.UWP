@@ -117,4 +117,19 @@
   <data name="InvaildFile_WithPlaceholder" xml:space="preserve">
     <value>{0} 似乎不是有效的剧情文件</value>
   </data>
+  <data name="ChangeFontAndSize.Label" xml:space="preserve">
+    <value>更改字体与字号</value>
+  </data>
+  <data name="SetFontSize.Header" xml:space="preserve">
+    <value>字号</value>
+  </data>
+  <data name="SetFont.Header" xml:space="preserve">
+    <value>字体</value>
+  </data>
+  <data name="ErrorWhenParsing" xml:space="preserve">
+    <value>解析文件时出错</value>
+  </data>
+  <data name="ErrorWhenParsing_WithPlaceholder" xml:space="preserve">
+    <value>解析文件 {0} 时出错</value>
+  </data>
 </root>
