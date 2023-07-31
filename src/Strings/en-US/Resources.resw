@@ -117,4 +117,19 @@
   <data name="InvaildFile_WithPlaceholder" xml:space="preserve">
     <value>{0} seems invalid</value>
   </data>
+  <data name="ChangeFontAndSize.Label" xml:space="preserve">
+    <value>Change font and font size</value>
+  </data>
+  <data name="SetFontSize.Header" xml:space="preserve">
+    <value>Font size</value>
+  </data>
+  <data name="SetFont.Header" xml:space="preserve">
+    <value>Font</value>
+  </data>
+  <data name="ErrorWhenParsing" xml:space="preserve">
+    <value>When parsing file, an error occurred</value>
+  </data>
+  <data name="ErrorWhenParsing_WithPlaceholder" xml:space="preserve">
+    <value>When parsing file {0}, an error occurred</value>
+  </data>
 </root>

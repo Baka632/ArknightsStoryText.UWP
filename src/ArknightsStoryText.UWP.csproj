@@ -131,6 +131,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Commands\DelegateCommand.cs" />
+    <Compile Include="Helpers\FontHelper.cs" />
     <Compile Include="Helpers\LocalizationHelper.cs" />
     <Compile Include="Helpers\ReswHelper.cs" />
     <Compile Include="Models\ArknightsResources.Stories.Models\CharacterIllustrationEnterStyle.cs" />
@@ -163,6 +164,7 @@
     <Compile Include="Models\ArknightsResources.Stories.Models\Commands\TextCommand\ShowTextWithNameCommand.cs" />
     <Compile Include="Models\ArknightsResources.Stories.Models\Commands\TextCommand\TextCommand.cs" />
     <Compile Include="Models\ArknightsResources.Stories.Models\StoryScene.cs" />
+    <Compile Include="Models\FontInfo.cs" />
     <Compile Include="Models\StoryFileInfo.cs" />
     <Compile Include="ViewModels\NotificationObject.cs" />
     <Compile Include="ViewModels\TextMergeViewModel.cs" />
@@ -269,6 +271,9 @@
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.14</Version>
+    </PackageReference>
+    <PackageReference Include="SharpDX.Direct2D1">
+      <Version>4.2.0</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup />

@@ -1,4 +1,6 @@
-﻿using ArknightsStoryText.UWP.ViewModels;
+﻿using System.Globalization;
+using ArknightsStoryText.UWP.ViewModels;
+using Windows.Globalization.Fonts;
 using Windows.System.Profile;
 using Windows.UI;
 using Windows.UI.Xaml.Controls;
@@ -9,7 +11,7 @@ using Windows.UI.Xaml.Media;
 namespace ArknightsStoryText.UWP.Views
 {
     /// <summary>
-    /// 可用于自身或导航至 Frame 内部的空白页。
+    /// 剧情阅读页
     /// </summary>
     public sealed partial class TextReadPage : Page
     {
