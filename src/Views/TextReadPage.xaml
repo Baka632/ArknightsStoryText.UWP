@@ -77,8 +77,8 @@
                                     x:Name="SetFontSizeComboBox"
                                     x:Uid="SetFontSize"
                                     Grid.Row="1"
-                                    SelectedItem="{x:Bind viewmodels:TextReadViewModel.DefaultFontSize}"
-                                    ItemsSource="{x:Bind ViewModel.FontSizes}" />
+                                    ItemsSource="{x:Bind ViewModel.FontSizes}"
+                                    SelectedItem="{x:Bind viewmodels:TextReadViewModel.DefaultFontSize}" />
                             </Grid>
                         </Flyout>
                     </AppBarButton.Flyout>
@@ -91,16 +91,13 @@
             Margin="0,5,0,0"
             Background="Transparent">
             <Grid>
-                <RichTextBlock
+                <TextBlock
                     Margin="0,0,5,0"
                     FontFamily="{x:Bind (FontFamily)SetFontComboBox.SelectedValue, Mode=OneWay}"
                     FontSize="{x:Bind (x:Double)SetFontSizeComboBox.SelectedValue, Mode=OneWay}"
-                    TextWrapping="Wrap">
-                    <Paragraph>
-                        <Run Text="{x:Bind ViewModel.TransformedStoryText, Mode=OneWay}" />
-                    </Paragraph>
-                </RichTextBlock>
-
+                    IsTextSelectionEnabled="True"
+                    Text="{x:Bind ViewModel.TransformedStoryText, Mode=OneWay}"
+                    TextWrapping="Wrap" />
                 <ProgressRing IsActive="{x:Bind ViewModel.IsLoading, Mode=OneWay}" />
             </Grid>
         </ScrollViewer>
