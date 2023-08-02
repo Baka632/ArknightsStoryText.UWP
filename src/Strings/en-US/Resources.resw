@@ -132,4 +132,13 @@
   <data name="ErrorWhenParsing_WithPlaceholder" xml:space="preserve">
     <value>When parsing file {0}, an error occurred</value>
   </data>
+  <data name="StoryTitleTextBox.PlaceholderText" xml:space="preserve">
+    <value>Story title</value>
+  </data>
+  <data name="DeleteStoryTextButton.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Remove this story file from the list</value>
+  </data>
+  <data name="ParseFailed" xml:space="preserve">
+    <value>Failed to parse</value>
+  </data>
 </root>
