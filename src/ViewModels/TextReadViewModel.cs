@@ -195,6 +195,13 @@ namespace ArknightsStoryText.UWP.ViewModels
             }
 
             string storyText = StoryReader.GetStoryText(scene.StoryCommands, IsParagraph);
+
+            if (string.IsNullOrWhiteSpace(storyText))
+            {
+                Stories.Add(new($"{file.DisplayName} [{"ResultIsEmpty".GetLocalized()}]", storyText));
+                return false;
+            }
+
             Stories.Add(new(file.DisplayName, storyText));
 
             return true;

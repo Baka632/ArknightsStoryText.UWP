@@ -22,5 +22,14 @@ namespace ArknightsStoryText.UWP.Views
             ViewModel = new TextReadViewModel();
             this.InitializeComponent();
         }
+
+        private void OnDoctorNameTextBoxKeyDown(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.Enter)
+            {
+                DoctorNameFlyout.Hide();
+                e.Handled = true;
+            }
+        }
     }
 }

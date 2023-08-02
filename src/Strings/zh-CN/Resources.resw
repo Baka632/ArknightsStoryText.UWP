@@ -141,4 +141,7 @@
   <data name="ParseFailed" xml:space="preserve">
     <value>解析失败</value>
   </data>
+  <data name="OpenStoryFolder.Label" xml:space="preserve">
+    <value>打开文件夹</value>
+  </data>
 </root>
