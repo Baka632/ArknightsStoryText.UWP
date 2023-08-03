@@ -169,6 +169,9 @@
     <Compile Include="Models\FontInfo.cs" />
     <Compile Include="Models\StoryFileInfo.cs" />
     <Compile Include="Models\StoryInfo.cs" />
+    <Compile Include="Views\TextReadPage.Mobile.xaml.cs">
+      <DependentUpon>TextReadPage.Mobile.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModels\NotificationObject.cs" />
     <Compile Include="ViewModels\TextMergeViewModel.cs" />
     <Compile Include="ViewModels\TextReadViewModel.cs" />
@@ -253,6 +256,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Views\TextReadPage.Mobile.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
