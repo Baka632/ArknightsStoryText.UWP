@@ -132,4 +132,16 @@
   <data name="ErrorWhenParsing_WithPlaceholder" xml:space="preserve">
     <value>解析文件 {0} 时出错</value>
   </data>
+  <data name="StoryTitleTextBox.PlaceholderText" xml:space="preserve">
+    <value>剧情标题</value>
+  </data>
+  <data name="DeleteStoryTextButton.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>从列表中移除此剧情文件</value>
+  </data>
+  <data name="ParseFailed" xml:space="preserve">
+    <value>解析失败</value>
+  </data>
+  <data name="OpenStoryFolder.Label" xml:space="preserve">
+    <value>打开文件夹</value>
+  </data>
 </root>

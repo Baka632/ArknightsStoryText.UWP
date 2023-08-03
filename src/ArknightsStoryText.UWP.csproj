@@ -131,9 +131,11 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Commands\DelegateCommand.cs" />
+    <Compile Include="Helpers\Converter\ObjectToFontFamilyOrFontSizeConverter.cs" />
     <Compile Include="Helpers\FontHelper.cs" />
     <Compile Include="Helpers\LocalizationHelper.cs" />
     <Compile Include="Helpers\ReswHelper.cs" />
+    <Compile Include="Helpers\XamlHelper.cs" />
     <Compile Include="Models\ArknightsResources.Stories.Models\CharacterIllustrationEnterStyle.cs" />
     <Compile Include="Models\ArknightsResources.Stories.Models\Commands\DecisionCommand.cs" />
     <Compile Include="Models\ArknightsResources.Stories.Models\Commands\DelayCommand.cs" />
@@ -166,6 +168,11 @@
     <Compile Include="Models\ArknightsResources.Stories.Models\StoryScene.cs" />
     <Compile Include="Models\FontInfo.cs" />
     <Compile Include="Models\StoryFileInfo.cs" />
+    <Compile Include="Models\StoryInfo.cs" />
+    <Compile Include="ViewModels\TextReadViewModel.Mobile.cs" />
+    <Compile Include="Views\TextReadPage.Mobile.xaml.cs">
+      <DependentUpon>TextReadPage.Mobile.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModels\NotificationObject.cs" />
     <Compile Include="ViewModels\TextMergeViewModel.cs" />
     <Compile Include="ViewModels\TextReadViewModel.cs" />
@@ -250,6 +257,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Views\TextReadPage.Mobile.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

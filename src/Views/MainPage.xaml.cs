@@ -25,12 +25,21 @@ namespace ArknightsStoryText.UWP.Views
                 }
             }
 
-            if (AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Mobile")
+            bool isMobile = AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Mobile";
+            if (isMobile)
             {
                 TitleBarTextBlock.Visibility = Visibility.Collapsed;
             }
 
-            TextReadPageFrame.Navigate(typeof(TextReadPage));
+            if (isMobile)
+            {
+                TextReadPageFrame.Navigate(typeof(TextReadPage_Mobile));
+            }
+            else
+            {
+                TextReadPageFrame.Navigate(typeof(TextReadPage));
+            }
+
             TextMergePageFrame.Navigate(typeof(TextMergePage));
         }
     }
