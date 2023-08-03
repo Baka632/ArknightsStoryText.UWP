@@ -23,11 +23,11 @@ namespace ArknightsStoryText.UWP.Views
     /// </summary>
     public sealed partial class TextReadPage_Mobile : Page
     {
-        private TextReadViewModel ViewModel { get; }
+        private TextReadViewModel_Mobile ViewModel { get; }
 
         public TextReadPage_Mobile()
         {
-            ViewModel = new TextReadViewModel();
+            ViewModel = new TextReadViewModel_Mobile();
             this.InitializeComponent();
         }
     }

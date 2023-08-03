@@ -169,6 +169,7 @@
     <Compile Include="Models\FontInfo.cs" />
     <Compile Include="Models\StoryFileInfo.cs" />
     <Compile Include="Models\StoryInfo.cs" />
+    <Compile Include="ViewModels\TextReadViewModel.Mobile.cs" />
     <Compile Include="Views\TextReadPage.Mobile.xaml.cs">
       <DependentUpon>TextReadPage.Mobile.xaml</DependentUpon>
     </Compile>
