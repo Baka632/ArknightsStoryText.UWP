@@ -137,11 +137,20 @@
   </data>
   <data name="DeleteStoryTextButton.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>从列表中移除此剧情文件</value>
+    <comment>供无障碍设施使用</comment>
   </data>
   <data name="ParseFailed" xml:space="preserve">
     <value>解析失败</value>
   </data>
   <data name="OpenStoryFolder.Label" xml:space="preserve">
     <value>打开文件夹</value>
+  </data>
+  <data name="Accessibility_StoryFileTitle" xml:space="preserve">
+    <value>标题： {0}</value>
+    <comment>供无障碍设施使用</comment>
+  </data>
+  <data name="StoriesListView.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>剧情文本列表</value>
+    <comment>供无障碍设施使用</comment>
   </data>
 </root>

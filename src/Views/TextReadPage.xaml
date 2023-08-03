@@ -16,6 +16,7 @@
     <Page.Resources>
         <converter:ObjectToFontFamilyOrDoubleConverter x:Key="ObjToFontFamilyOrDouble" />
     </Page.Resources>
+
     <Grid Background="Transparent">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -102,6 +103,7 @@
         </CommandBar>
 
         <ListView
+            x:Uid="StoriesListView"
             Grid.Row="1"
             Margin="0,5,0,0"
             AllowDrop="True"
@@ -125,6 +127,7 @@
                             Header="{x:Bind Title}"
                             IsExpanded="True">
                             <TextBlock
+                                AutomationProperties.AccessibilityView="Raw"
                                 FontFamily="{Binding ElementName=SetFontComboBox, Path=SelectedValue, Converter={StaticResource ObjToFontFamilyOrDouble}, Mode=OneWay}"
                                 FontSize="{Binding ElementName=SetFontSizeComboBox, Path=SelectedValue, Converter={StaticResource ObjToFontFamilyOrDouble}, Mode=OneWay}"
                                 IsTextSelectionEnabled="True"

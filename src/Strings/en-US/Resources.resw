@@ -144,4 +144,10 @@
   <data name="OpenStoryFolder.Label" xml:space="preserve">
     <value>Open folder</value>
   </data>
+  <data name="Accessibility_StoryFileTitle" xml:space="preserve">
+    <value>Title: {0}</value>
+  </data>
+  <data name="StoriesListView.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>List of story text</value>
+  </data>
 </root>
