@@ -23,84 +23,82 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <CommandBar
-            x:Name="OperationCommandBar"
-            Grid.Row="0"
-            HorizontalAlignment="Left"
-            DefaultLabelPosition="Right">
-            <AppBarButton
-                x:Uid="OpenStoryText"
-                Command="{x:Bind ViewModel.OpenStoryTextFileCommand}"
-                Icon="OpenFile" />
-
-            <AppBarButton
-                x:Uid="OpenStoryFolder"
-                Command="{x:Bind ViewModel.OpenStoryTextFolderCommand}"
-                Icon="OpenLocal" />
-
-            <AppBarSeparator />
-
-            <AppBarToggleButton
-                x:Uid="TryAutoParagraph"
-                Margin="5,0,5,0"
-                Icon="ShowResults"
-                IsChecked="{x:Bind ViewModel.IsParagraph, Mode=TwoWay}" />
-
-            <AppBarButton x:Uid="ChangeDoctorName" AllowFocusOnInteraction="True">
-                <AppBarButton.Icon>
-                    <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE748;" />
-                </AppBarButton.Icon>
-                <AppBarButton.Flyout>
-                    <Flyout x:Name="DoctorNameFlyout">
-                        <TextBox
-                            x:Uid="DoctorNameTextBox"
-                            MinWidth="150"
-                            KeyDown="OnDoctorNameTextBoxKeyDown"
-                            Text="{x:Bind ViewModel.DoctorName, Mode=TwoWay}" />
-                    </Flyout>
-                </AppBarButton.Flyout>
-            </AppBarButton>
-
-            <CommandBar.SecondaryCommands>
+        <Grid Grid.Row="0" HorizontalAlignment="Left">
+            <CommandBar x:Name="OperationCommandBar" DefaultLabelPosition="Right">
                 <AppBarButton
-                    x:Uid="ChangeFontAndSize"
-                    AllowFocusOnInteraction="True"
-                    Icon="Font">
+                    x:Uid="OpenStoryText"
+                    Command="{x:Bind ViewModel.OpenStoryTextFileCommand}"
+                    Icon="OpenFile" />
+
+                <AppBarButton
+                    x:Uid="OpenStoryFolder"
+                    Command="{x:Bind ViewModel.OpenStoryTextFolderCommand}"
+                    Icon="OpenLocal" />
+
+                <AppBarSeparator />
+
+                <AppBarToggleButton
+                    x:Uid="TryAutoParagraph"
+                    Margin="5,0,5,0"
+                    Icon="ShowResults"
+                    IsChecked="{x:Bind ViewModel.IsParagraph, Mode=TwoWay}" />
+
+                <AppBarButton x:Uid="ChangeDoctorName" AllowFocusOnInteraction="True">
+                    <AppBarButton.Icon>
+                        <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE748;" />
+                    </AppBarButton.Icon>
                     <AppBarButton.Flyout>
-                        <Flyout>
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition />
-                                    <RowDefinition />
-                                </Grid.RowDefinitions>
-
-                                <ComboBox
-                                    x:Name="SetFontComboBox"
-                                    x:Uid="SetFont"
-                                    Grid.Row="0"
-                                    Margin="0,0,0,5"
-                                    ItemsSource="{x:Bind ViewModel.Fonts}"
-                                    SelectedItem="{x:Bind viewmodels:TextReadViewModel.DefaultFont}"
-                                    SelectedValuePath="FontFamily">
-                                    <ComboBox.ItemTemplate>
-                                        <DataTemplate x:DataType="models:FontInfo">
-                                            <TextBlock FontFamily="{x:Bind FontFamily}" Text="{x:Bind DisplayFontName}" />
-                                        </DataTemplate>
-                                    </ComboBox.ItemTemplate>
-                                </ComboBox>
-
-                                <ComboBox
-                                    x:Name="SetFontSizeComboBox"
-                                    x:Uid="SetFontSize"
-                                    Grid.Row="1"
-                                    ItemsSource="{x:Bind ViewModel.FontSizes}"
-                                    SelectedItem="{x:Bind viewmodels:TextReadViewModel.DefaultFontSize}" />
-                            </Grid>
+                        <Flyout x:Name="DoctorNameFlyout">
+                            <TextBox
+                                x:Uid="DoctorNameTextBox"
+                                MinWidth="150"
+                                KeyDown="OnDoctorNameTextBoxKeyDown"
+                                Text="{x:Bind ViewModel.DoctorName, Mode=TwoWay}" />
                         </Flyout>
                     </AppBarButton.Flyout>
                 </AppBarButton>
-            </CommandBar.SecondaryCommands>
-        </CommandBar>
+
+                <CommandBar.SecondaryCommands>
+                    <AppBarButton
+                        x:Uid="ChangeFontAndSize"
+                        AllowFocusOnInteraction="True"
+                        Icon="Font">
+                        <AppBarButton.Flyout>
+                            <Flyout>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                    </Grid.RowDefinitions>
+
+                                    <ComboBox
+                                        x:Name="SetFontComboBox"
+                                        x:Uid="SetFont"
+                                        Grid.Row="0"
+                                        Margin="0,0,0,5"
+                                        ItemsSource="{x:Bind ViewModel.Fonts}"
+                                        SelectedItem="{x:Bind viewmodels:TextReadViewModel.DefaultFont}"
+                                        SelectedValuePath="FontFamily">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate x:DataType="models:FontInfo">
+                                                <TextBlock FontFamily="{x:Bind FontFamily}" Text="{x:Bind DisplayFontName}" />
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
+
+                                    <ComboBox
+                                        x:Name="SetFontSizeComboBox"
+                                        x:Uid="SetFontSize"
+                                        Grid.Row="1"
+                                        ItemsSource="{x:Bind ViewModel.FontSizes}"
+                                        SelectedItem="{x:Bind viewmodels:TextReadViewModel.DefaultFontSize}" />
+                                </Grid>
+                            </Flyout>
+                        </AppBarButton.Flyout>
+                    </AppBarButton>
+                </CommandBar.SecondaryCommands>
+            </CommandBar>
+        </Grid>
 
         <ListView
             x:Uid="StoriesListView"
@@ -124,8 +122,7 @@
                             Grid.Column="0"
                             HorizontalAlignment="Stretch"
                             ExpandDirection="Down"
-                            Header="{x:Bind Title}"
-                            IsExpanded="True">
+                            Header="{x:Bind Title}">
                             <TextBlock
                                 AutomationProperties.AccessibilityView="Raw"
                                 FontFamily="{Binding ElementName=SetFontComboBox, Path=SelectedValue, Converter={StaticResource ObjToFontFamilyOrDouble}, Mode=OneWay}"

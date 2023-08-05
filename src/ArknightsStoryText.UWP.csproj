@@ -12,7 +12,7 @@
     <DefaultLanguage>zh-CN</DefaultLanguage>
     <LangVersion>latest</LangVersion>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.19041.0</TargetPlatformVersion>
+    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.22000.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.16299.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
@@ -169,10 +169,6 @@
     <Compile Include="Models\FontInfo.cs" />
     <Compile Include="Models\StoryFileInfo.cs" />
     <Compile Include="Models\StoryInfo.cs" />
-    <Compile Include="ViewModels\TextReadViewModel.Mobile.cs" />
-    <Compile Include="Views\TextReadPage.Mobile.xaml.cs">
-      <DependentUpon>TextReadPage.Mobile.xaml</DependentUpon>
-    </Compile>
     <Compile Include="ViewModels\NotificationObject.cs" />
     <Compile Include="ViewModels\TextMergeViewModel.cs" />
     <Compile Include="ViewModels\TextReadViewModel.cs" />
@@ -257,10 +253,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Views\TextReadPage.Mobile.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -284,7 +276,7 @@
       <Version>6.2.14</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.UI.Xaml">
-      <Version>2.6.3</Version>
+      <Version>2.7.3</Version>
     </PackageReference>
     <PackageReference Include="SharpDX.Direct2D1">
       <Version>4.2.0</Version>

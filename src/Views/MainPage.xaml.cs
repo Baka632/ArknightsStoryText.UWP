@@ -31,15 +31,7 @@ namespace ArknightsStoryText.UWP.Views
                 TitleBarTextBlock.Visibility = Visibility.Collapsed;
             }
 
-            if (isMobile)
-            {
-                TextReadPageFrame.Navigate(typeof(TextReadPage_Mobile));
-            }
-            else
-            {
-                TextReadPageFrame.Navigate(typeof(TextReadPage));
-            }
-
+            TextReadPageFrame.Navigate(typeof(TextReadPage));
             TextMergePageFrame.Navigate(typeof(TextMergePage));
         }
     }
