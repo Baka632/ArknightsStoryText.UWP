@@ -1,4 +1,6 @@
-﻿namespace ArknightsStoryText.UWP.Models;
+﻿using ArknightsStoryText.UWP.Helpers;
+
+namespace ArknightsStoryText.UWP.Models;
 
 /// <summary>
 /// 表示剧情信息的类
@@ -23,5 +25,11 @@ public sealed class StoryInfo
     {
         Title = title;
         Text = text;
+    }
+
+    public override string ToString()
+    {
+        string message = string.Format("Accessibility_StoryFileTitle".GetLocalized(), Title);
+        return message;
     }
 }

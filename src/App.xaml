@@ -2,6 +2,13 @@
     x:Class="ArknightsStoryText.UWP.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:contract5NotPresent="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract,5)"
     xmlns:local="using:ArknightsStoryText.UWP">
-    <Application.Resources />
+    <Application.Resources>
+        <contract5NotPresent:Style BasedOn="{x:Null}" TargetType="AppBarButton" />
+        <contract5NotPresent:Style BasedOn="{x:Null}" TargetType="AppBarToggleButton" />
+        <contract5NotPresent:Style BasedOn="{x:Null}" TargetType="CommandBar">
+            <Setter Property="Background" Value="Transparent" />
+        </contract5NotPresent:Style>
+    </Application.Resources>
 </Application>

@@ -20,10 +20,11 @@
             Margin="11,8,0,0"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Top"
+            AutomationProperties.AccessibilityView="Raw"
             Style="{StaticResource CaptionTextBlockStyle}"
             Text="Arknights Story Text" />
 
-        <Pivot Grid.Row="1">
+        <Pivot x:Uid="MainPagePivot" Grid.Row="1">
             <PivotItem x:Uid="ReadPivotItem" Margin="11,0,0,0">
                 <Frame x:Name="TextReadPageFrame" />
             </PivotItem>

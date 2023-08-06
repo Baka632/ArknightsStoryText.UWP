@@ -19,8 +19,7 @@ namespace ArknightsStoryText.UWP
     sealed partial class App : Application
     {
         /// <summary>
-        /// 初始化单一实例应用程序对象。这是执行的创作代码的第一行，
-        /// 已执行，逻辑上等同于 main() 或 WinMain()。
+        /// 初始化单一实例应用程序对象。这是执行的创作代码的第一行，已执行，逻辑上等同于 main() 或 WinMain()。
         /// </summary>
         public App()
         {
@@ -43,8 +42,7 @@ namespace ArknightsStoryText.UWP
 #endif
 
 
-            // 不要在窗口已包含内容时重复应用程序初始化，
-            // 只需确保窗口处于活动状态
+            // 不要在窗口已包含内容时重复应用程序初始化，只需确保窗口处于活动状态
             if (Window.Current.Content is not Frame rootFrame)
             {
                 // 创建要充当导航上下文的框架，并导航到第一页
@@ -65,9 +63,7 @@ namespace ArknightsStoryText.UWP
             {
                 if (rootFrame.Content == null)
                 {
-                    // 当导航堆栈尚未还原时，导航到第一页，
-                    // 并通过将所需信息作为导航参数传入来配置
-                    // 参数
+                    // 当导航堆栈尚未还原时，导航到第一页，并通过将所需信息作为导航参数传入来配置参数
                     rootFrame.Navigate(typeof(MainPage), e.Arguments);
                 }
                 // 确保当前窗口处于活动状态
@@ -75,10 +71,12 @@ namespace ArknightsStoryText.UWP
             }
 
             bool isMobile = AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Mobile";
-            if (isMobile is not true)
+
+            XamlControlsResources muxcStyle = new()
             {
-                Resources.MergedDictionaries.Add(new XamlControlsResources());
-            }
+                ControlsResourcesVersion = isMobile ? ControlsResourcesVersion.Version1 : ControlsResourcesVersion.Version2
+            };
+            Resources.MergedDictionaries.Add(muxcStyle);
 
             #region TitleBarColor
             ApplicationViewTitleBar PresentationTitleBar = ApplicationView.GetForCurrentView().TitleBar;
