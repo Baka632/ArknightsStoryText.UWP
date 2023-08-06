@@ -150,4 +150,10 @@
   <data name="StoriesListView.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>List of story text</value>
   </data>
+  <data name="ClickToExpand" xml:space="preserve">
+    <value>Click to expand</value>
+  </data>
+  <data name="ClickToCollapse" xml:space="preserve">
+    <value>Click to collapse</value>
+  </data>
 </root>

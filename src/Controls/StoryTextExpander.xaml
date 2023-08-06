@@ -1,0 +1,68 @@
+﻿<UserControl
+    x:Class="ArknightsStoryText.UWP.Controls.StoryTextExpander"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converter="using:ArknightsStoryText.UWP.Helpers.Converter"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helper="using:ArknightsStoryText.UWP.Helpers"
+    xmlns:local="using:ArknightsStoryText.UWP.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:ArknightsStoryText.UWP.Models"
+    d:DataContext="{d:DesignInstance Type=local:StoryTextExpander}"
+    d:DesignHeight="300"
+    d:DesignWidth="400"
+    mc:Ignorable="d">
+    <StackPanel>
+        <Grid Background="Transparent">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Grid
+                Grid.Column="0"
+                HorizontalAlignment="Stretch"
+                Background="Transparent"
+                Tapped="OnTitleGridTapped">
+                <TextBlock
+                    HorizontalAlignment="Left"
+                    AutomationProperties.AccessibilityView="Raw"
+                    Style="{StaticResource SubheaderTextBlockStyle}"
+                    Text="{x:Bind Title, Mode=OneWay}" />
+            </Grid>
+
+            <ToggleButton
+                Grid.Column="1"
+                Width="40"
+                Height="40"
+                HorizontalAlignment="Right"
+                AutomationProperties.Name="{x:Bind StoryTextViewableToggleButtonAutomationName, Mode=OneWay}"
+                Background="Transparent"
+                BorderThickness="0"
+                Click="OnStoryTextViewableToggleButtonClicked"
+                IsChecked="{x:Bind helper:XamlHelper.ReverseBoolean(IsExpanded), Mode=OneWay}"
+                ToolTipService.ToolTip="{x:Bind StoryTextViewableToggleButtonAutomationName, Mode=OneWay}">
+                <FontIcon
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    FontFamily="{ThemeResource SymbolThemeFontFamily}"
+                    Glyph="{x:Bind ChevronIcon, Mode=OneWay}" />
+            </ToggleButton>
+        </Grid>
+        <StackPanel
+            Height="2"
+            Margin="0,5,0,5"
+            HorizontalAlignment="Stretch"
+            Background="{StaticResource AppBarSeparatorForegroundThemeBrush}" />
+        <TextBlock
+            Grid.Column="0"
+            HorizontalAlignment="Stretch"
+            FontFamily="{x:Bind FontFamily, Mode=OneWay}"
+            FontSize="{x:Bind FontSize, Mode=OneWay}"
+            IsTextSelectionEnabled="True"
+            Style="{StaticResource BodyTextBlockStyle}"
+            Text="{x:Bind Text, Mode=OneWay}"
+            TextWrapping="Wrap"
+            Visibility="{x:Bind StoryTextVisibility, Mode=OneWay}" />
+    </StackPanel>
+</UserControl>

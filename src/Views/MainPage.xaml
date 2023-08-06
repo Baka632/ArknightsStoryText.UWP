@@ -20,6 +20,7 @@
             Margin="11,8,0,0"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Top"
+            AutomationProperties.AccessibilityView="Raw"
             Style="{StaticResource CaptionTextBlockStyle}"
             Text="Arknights Story Text" />
 

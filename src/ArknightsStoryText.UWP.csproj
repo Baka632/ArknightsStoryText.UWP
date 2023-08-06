@@ -131,6 +131,9 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Commands\DelegateCommand.cs" />
+    <Compile Include="Controls\StoryTextExpander.xaml.cs">
+      <DependentUpon>StoryTextExpander.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Helpers\Converter\ObjectToFontFamilyOrFontSizeConverter.cs" />
     <Compile Include="Helpers\FontHelper.cs" />
     <Compile Include="Helpers\LocalizationHelper.cs" />
@@ -253,6 +256,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Controls\StoryTextExpander.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

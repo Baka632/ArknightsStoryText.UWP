@@ -153,4 +153,12 @@
     <value>剧情文本列表</value>
     <comment>供无障碍设施使用</comment>
   </data>
+  <data name="ClickToExpand" xml:space="preserve">
+    <value>单击展开</value>
+    <comment>供无障碍设施使用</comment>
+  </data>
+  <data name="ClickToCollapse" xml:space="preserve">
+    <value>单击折叠</value>
+    <comment>供无障碍设施使用</comment>
+  </data>
 </root>
