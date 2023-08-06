@@ -161,4 +161,26 @@
     <value>单击折叠</value>
     <comment>供无障碍设施使用</comment>
   </data>
+  <data name="Accessibility_StoryFileInfo" xml:space="preserve">
+    <value>文件名：{0}</value>
+    <comment>供无障碍设施使用</comment>
+  </data>
+  <data name="FileSaveComplete" xml:space="preserve">
+    <value>剧情文件保存成功</value>
+  </data>
+  <data name="FileSavePathTip_WithPlaceholder" xml:space="preserve">
+    <value>文件已保存在 {0}</value>
+  </data>
+  <data name="FileListView.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>文件列表</value>
+    <comment>供无障碍设施使用</comment>
+  </data>
+  <data name="MainPagePivot.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>功能导航选项卡</value>
+    <comment>供无障碍设施使用</comment>
+  </data>
+  <data name="DefaultCommandBar.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>操作命令栏</value>
+    <comment>供无障碍设施使用</comment>
+  </data>
 </root>

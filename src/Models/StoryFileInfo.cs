@@ -1,4 +1,5 @@
 ﻿using System;
+using ArknightsStoryText.UWP.Helpers;
 using ArknightsStoryText.UWP.ViewModels;
 using Windows.Storage;
 
@@ -29,6 +30,12 @@ namespace ArknightsStoryText.UWP.Models
         {
             File = file ?? throw new ArgumentNullException(nameof(file));
             Title = title ?? throw new ArgumentNullException(nameof(title));
+        }
+
+        public override string ToString()
+        {
+            string message = string.Format("Accessibility_StoryFileInfo".GetLocalized(), File.DisplayName);
+            return message;
         }
     }
 }

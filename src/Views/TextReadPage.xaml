@@ -25,7 +25,11 @@
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0" HorizontalAlignment="Left">
-            <CommandBar x:Name="OperationCommandBar" DefaultLabelPosition="Right">
+            <CommandBar
+                x:Name="OperationCommandBar"
+                x:Uid="DefaultCommandBar"
+                HorizontalAlignment="Stretch"
+                DefaultLabelPosition="Right">
                 <AppBarButton
                     x:Uid="OpenStoryText"
                     Command="{x:Bind ViewModel.OpenStoryTextFileCommand}"
@@ -115,6 +119,7 @@
                 <DataTemplate x:DataType="models:StoryInfo">
                     <astc:StoryTextExpander
                         Title="{x:Bind Title}"
+                        HorizontalAlignment="Stretch"
                         FontFamily="{Binding ElementName=SetFontComboBox, Path=SelectedValue, Converter={StaticResource ObjToFontFamilyOrDouble}, Mode=OneWay}"
                         FontSize="{Binding ElementName=SetFontSizeComboBox, Path=SelectedValue, Converter={StaticResource ObjToFontFamilyOrDouble}, Mode=OneWay}"
                         Text="{x:Bind Text}" />
@@ -128,6 +133,7 @@
             Height="50"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
+            AutomationProperties.AccessibilityView="Raw"
             IsActive="{x:Bind ViewModel.IsLoading, Mode=OneWay}" />
     </Grid>
 </Page>

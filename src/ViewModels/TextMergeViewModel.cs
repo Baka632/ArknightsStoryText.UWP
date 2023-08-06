@@ -211,6 +211,9 @@ namespace ArknightsStoryText.UWP.ViewModels
             {
                 await FileIO.WriteTextAsync(saveFile, stringBuilder.ToString());
             }
+
+            string fileSaveLocationTip = string.Format("FileSavePathTip_WithPlaceholder".GetLocalized(), saveFile.Path);
+            await ShowDialogAsync("FileSaveComplete".GetLocalized(), fileSaveLocationTip, closeText: "OK".GetLocalized());
         }
 
         /// <summary>

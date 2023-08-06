@@ -12,8 +12,9 @@
     d:DesignHeight="300"
     d:DesignWidth="400"
     mc:Ignorable="d">
+
     <StackPanel>
-        <Grid Background="Transparent">
+        <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition Width="Auto" />
@@ -27,7 +28,7 @@
                 <TextBlock
                     HorizontalAlignment="Left"
                     AutomationProperties.AccessibilityView="Raw"
-                    Style="{StaticResource SubheaderTextBlockStyle}"
+                    Style="{StaticResource TitleTextBlockStyle}"
                     Text="{x:Bind Title, Mode=OneWay}" />
             </Grid>
 
@@ -41,6 +42,7 @@
                 BorderThickness="0"
                 Click="OnStoryTextViewableToggleButtonClicked"
                 IsChecked="{x:Bind helper:XamlHelper.ReverseBoolean(IsExpanded), Mode=OneWay}"
+                IsTabStop="False"
                 ToolTipService.ToolTip="{x:Bind StoryTextViewableToggleButtonAutomationName, Mode=OneWay}">
                 <FontIcon
                     HorizontalAlignment="Center"
@@ -54,15 +56,63 @@
             Margin="0,5,0,5"
             HorizontalAlignment="Stretch"
             Background="{StaticResource AppBarSeparatorForegroundThemeBrush}" />
-        <TextBlock
-            Grid.Column="0"
-            HorizontalAlignment="Stretch"
-            FontFamily="{x:Bind FontFamily, Mode=OneWay}"
-            FontSize="{x:Bind FontSize, Mode=OneWay}"
-            IsTextSelectionEnabled="True"
-            Style="{StaticResource BodyTextBlockStyle}"
-            Text="{x:Bind Text, Mode=OneWay}"
-            TextWrapping="Wrap"
-            Visibility="{x:Bind StoryTextVisibility, Mode=OneWay}" />
+        <Grid Grid.Column="0" HorizontalAlignment="Stretch">
+            <TextBlock
+                x:Name="StoryTextBlock"
+                Grid.Column="0"
+                HorizontalAlignment="Stretch"
+                FontFamily="{x:Bind FontFamily, Mode=OneWay}"
+                FontSize="{x:Bind FontSize, Mode=OneWay}"
+                IsTextSelectionEnabled="True"
+                Style="{StaticResource BodyTextBlockStyle}"
+                Text="{x:Bind Text, Mode=OneWay}"
+                TextWrapping="Wrap"
+                Visibility="{x:Bind StoryTextVisibility, Mode=OneWay}">
+                <TextBlock.RenderTransform>
+                    <CompositeTransform />
+                </TextBlock.RenderTransform>
+                <TextBlock.Resources>
+                    <Storyboard x:Name="StoryTextBlockShow">
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="StoryTextBlock" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="StoryTextBlock" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)">
+                            <DiscreteDoubleKeyFrame KeyTime="0" Value="-10" />
+                            <SplineDoubleKeyFrame
+                                KeySpline="0.0, 0.0, 0.0, 1.0"
+                                KeyTime="0:0:0.333"
+                                Value="0" />
+                        </DoubleAnimationUsingKeyFrames>
+                        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="StoryTextBlock" Storyboard.TargetProperty="Opacity">
+                            <DiscreteDoubleKeyFrame KeyTime="0" Value="0" />
+                            <SplineDoubleKeyFrame
+                                KeySpline="0.0, 0.0, 0.0, 1.0"
+                                KeyTime="0:0:0.333"
+                                Value="1" />
+                        </DoubleAnimationUsingKeyFrames>
+                    </Storyboard>
+
+                    <Storyboard x:Name="StoryTextBlockHide">
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="StoryTextBlock" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0.1" Value="Collapsed" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="StoryTextBlock" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)">
+                            <DiscreteDoubleKeyFrame KeyTime="0" Value="0" />
+                            <SplineDoubleKeyFrame
+                                KeySpline="0.0, 0.0, 0.0, 1.0"
+                                KeyTime="0:0:0.1"
+                                Value="-10" />
+                        </DoubleAnimationUsingKeyFrames>
+                        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="StoryTextBlock" Storyboard.TargetProperty="Opacity">
+                            <DiscreteDoubleKeyFrame KeyTime="0" Value="1" />
+                            <SplineDoubleKeyFrame
+                                KeySpline="0.0, 0.0, 0.0, 1.0"
+                                KeyTime="0:0:0.1"
+                                Value="0" />
+                        </DoubleAnimationUsingKeyFrames>
+                    </Storyboard>
+                </TextBlock.Resources>
+            </TextBlock>
+        </Grid>
     </StackPanel>
 </UserControl>

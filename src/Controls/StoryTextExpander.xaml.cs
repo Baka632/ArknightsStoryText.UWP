@@ -73,15 +73,17 @@ namespace ArknightsStoryText.UWP.Controls
             if (value)
             {
                 //状态：展开
+                StoryTextBlockShow.Begin();
+                //StoryTextVisibility = Visibility.Visible;
                 ChevronIcon = "\uE70E";
-                StoryTextVisibility = Visibility.Visible;
                 StoryTextViewableToggleButtonAutomationName = "ClickToCollapse".GetLocalized();
             }
             else
             {
                 //状态：折叠
+                StoryTextBlockHide.Begin();
+                //StoryTextVisibility = Visibility.Collapsed;
                 ChevronIcon = "\uE70D";
-                StoryTextVisibility = Visibility.Collapsed;
                 StoryTextViewableToggleButtonAutomationName = "ClickToExpand".GetLocalized();
             }
         }
@@ -91,7 +93,8 @@ namespace ArknightsStoryText.UWP.Controls
         /// </summary>
         public static readonly DependencyProperty IsExpandedProperty =
             DependencyProperty.Register("IsExpanded", typeof(bool), typeof(StoryTextExpander), new PropertyMetadata(true));
-
+        
+        #region Private Dependency Property
         private string ChevronIcon
         {
             get => (string)GetValue(ChevronIconProperty);
@@ -119,6 +122,7 @@ namespace ArknightsStoryText.UWP.Controls
         // Using a DependencyProperty as the backing store for StoryTextViewableToggleButtonAutomationName.  This enables animation, styling, binding, etc...
         private static readonly DependencyProperty StoryTextViewableToggleButtonAutomationNameProperty =
             DependencyProperty.Register("StoryTextViewableToggleButtonAutomationName", typeof(string), typeof(StoryTextExpander), new PropertyMetadata("ClickToCollapse".GetLocalized()));
+        #endregion
 
         private void OnTitleGridTapped(object sender, TappedRoutedEventArgs e)
         {

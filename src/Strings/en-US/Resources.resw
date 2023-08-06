@@ -156,4 +156,22 @@
   <data name="ClickToCollapse" xml:space="preserve">
     <value>Click to collapse</value>
   </data>
+  <data name="Accessibility_StoryFileInfo" xml:space="preserve">
+    <value>File name: {0}</value>
+  </data>
+  <data name="FileSaveComplete" xml:space="preserve">
+    <value>Story text file is successfully saved</value>
+  </data>
+  <data name="FileSavePathTip_WithPlaceholder" xml:space="preserve">
+    <value>The file is saved in {0}</value>
+  </data>
+  <data name="FileListView.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>File list</value>
+  </data>
+  <data name="MainPagePivot.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Function navigation tab</value>
+  </data>
+  <data name="DefaultCommandBar.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Operation command bar</value>
+  </data>
 </root>

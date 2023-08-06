@@ -7,6 +7,8 @@
     <Application.Resources>
         <contract5NotPresent:Style BasedOn="{x:Null}" TargetType="AppBarButton" />
         <contract5NotPresent:Style BasedOn="{x:Null}" TargetType="AppBarToggleButton" />
-        <contract5NotPresent:Style BasedOn="{x:Null}" TargetType="CommandBar" />
+        <contract5NotPresent:Style BasedOn="{x:Null}" TargetType="CommandBar">
+            <Setter Property="Background" Value="Transparent" />
+        </contract5NotPresent:Style>
     </Application.Resources>
 </Application>

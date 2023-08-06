@@ -24,7 +24,7 @@
             Style="{StaticResource CaptionTextBlockStyle}"
             Text="Arknights Story Text" />
 
-        <Pivot Grid.Row="1">
+        <Pivot x:Uid="MainPagePivot" Grid.Row="1">
             <PivotItem x:Uid="ReadPivotItem" Margin="11,0,0,0">
                 <Frame x:Name="TextReadPageFrame" />
             </PivotItem>
