@@ -23,7 +23,7 @@ namespace ArknightsStoryText.UWP.ViewModels
         private string _doctorName = string.Empty;
         private bool _isParagraph = false;
         private bool _isLoading = false;
-        private IList<StorageFile> _originalFileList;
+        private readonly List<StorageFile> _originalFileList = new(20);
 
         public TextReadViewModel()
         {
@@ -129,7 +129,7 @@ namespace ArknightsStoryText.UWP.ViewModels
                 await ParseOriginTextFromStorageFileAsync(file);
             }
 
-            _originalFileList = files.ToList();
+            _originalFileList.AddRange(files);
             IsLoading = false;
         }
 
@@ -152,14 +152,14 @@ namespace ArknightsStoryText.UWP.ViewModels
             {
                 await ParseOriginTextFromStorageFileAsync(file);
             }
-            _originalFileList = fileList.ToList();
+            _originalFileList.AddRange(fileList);
             IsLoading = false;
         }
 
         private void ClearStoryTexts()
         {
             IsLoading = true;
-            _originalFileList = null;
+            _originalFileList.Clear();
             Stories.Clear();
             IsLoading = false;
         }
@@ -239,7 +239,7 @@ namespace ArknightsStoryText.UWP.ViewModels
         {
             IsLoading = true;
 
-            if (_originalFileList is not null)
+            if (_originalFileList.Any())
             {
                 Stories.Clear();
 
