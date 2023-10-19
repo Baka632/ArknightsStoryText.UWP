@@ -18,17 +18,25 @@ using System.Linq;
 
 namespace ArknightsStoryText.UWP.ViewModels
 {
-    internal class TextReadViewModel : NotificationObject
+    public sealed class TextReadViewModel : NotificationObject
     {
         private string _doctorName = string.Empty;
         private bool _isParagraph = false;
         private bool _isLoading = false;
-        private IEnumerable<StorageFile> _originalFileList;
+        private IList<StorageFile> _originalFileList;
 
         public TextReadViewModel()
         {
             OpenStoryTextFileCommand = new DelegateCommand(async obj => await OpenStoryTextFileAsync());
             OpenStoryTextFolderCommand = new DelegateCommand(async obj => await OpenStoryTextFolderAsync());
+            ClearStoryTextsCommand = new DelegateCommand(obj => ClearStoryTexts());
+            RemoveSingleStoryTextCommand = new DelegateCommand(obj =>
+            {
+                if (obj is StoryInfo info)
+                {
+                    RemoveSingleStoryText(info);
+                }
+            });
 
             IReadOnlyList<FontInfo> fonts = FontHelper.GetSystemFonts();
 
@@ -37,6 +45,8 @@ namespace ArknightsStoryText.UWP.ViewModels
 
         public ICommand OpenStoryTextFileCommand { get; }
         public ICommand OpenStoryTextFolderCommand { get; }
+        public ICommand ClearStoryTextsCommand { get; }
+        public ICommand RemoveSingleStoryTextCommand { get; }
 
         public ObservableCollection<StoryInfo> Stories { get; } = new();
 
@@ -104,18 +114,23 @@ namespace ArknightsStoryText.UWP.ViewModels
         {
             FileOpenPicker fileOpenPicker = new();
             fileOpenPicker.FileTypeFilter.Add(".txt");
-            StorageFile file = await fileOpenPicker.PickSingleFileAsync();
+            IReadOnlyList<StorageFile> files = await fileOpenPicker.PickMultipleFilesAsync();
 
-            if (file is null)
+            if (files is null || files.Any() != true)
             {
-                //用户取消了文件选择
+                //用户取消了文件选择，或者文件列表为空
                 return;
             }
 
             IsLoading = true;
             Stories.Clear();
-            await ParseOriginTextFromStorageFileAsync(file);
-            _originalFileList = new StorageFile[] { file };
+
+            foreach (StorageFile file in files)
+            {
+                await ParseOriginTextFromStorageFileAsync(file);
+            }
+
+            _originalFileList = files.ToList();
             IsLoading = false;
         }
 
@@ -138,8 +153,22 @@ namespace ArknightsStoryText.UWP.ViewModels
             {
                 await ParseOriginTextFromStorageFileAsync(file);
             }
-            _originalFileList = fileList;
+            _originalFileList = fileList.ToList();
             IsLoading = false;
+        }
+
+        private void ClearStoryTexts()
+        {
+            IsLoading = true;
+            _originalFileList = null;
+            Stories.Clear();
+            IsLoading = false;
+        }
+
+        private void RemoveSingleStoryText(StoryInfo target)
+        {
+            _originalFileList.Remove(target.File);
+            Stories.Remove(target);
         }
 
         private async Task<bool> ParseOriginTextFromStorageFileAsync(StorageFile file)
@@ -155,7 +184,7 @@ namespace ArknightsStoryText.UWP.ViewModels
                 string message = "OpenAnotherFileInstead".GetLocalized();
                 await ShowDialogAsync(title, message, closeText: "OK".GetLocalized());
 
-                Stories.Add(new($"{file.DisplayName} [{"ParseFailed".GetLocalized()}]", $"{title}\n{message}"));
+                Stories.Add(new($"{file.DisplayName} [{"ParseFailed".GetLocalized()}]", $"{title}\n{message}", file));
                 return false;
             }
 
@@ -165,7 +194,7 @@ namespace ArknightsStoryText.UWP.ViewModels
                 string message = "OpenAnotherFileInstead".GetLocalized();
                 await ShowDialogAsync(title, message, closeText: "OK".GetLocalized());
 
-                Stories.Add(new($"{file.DisplayName} [{"ParseFailed".GetLocalized()}]", $"{title}\n{message}"));
+                Stories.Add(new($"{file.DisplayName} [{"ParseFailed".GetLocalized()}]", $"{title}\n{message}",file));
                 return false;
             }
 
@@ -181,7 +210,7 @@ namespace ArknightsStoryText.UWP.ViewModels
                 string message = "OpenAnotherFileInstead".GetLocalized();
                 await ShowDialogAsync(title, message, closeText: "OK".GetLocalized());
 
-                Stories.Add(new($"{file.DisplayName} [{"ParseFailed".GetLocalized()}]", $"{title}\n{message}"));
+                Stories.Add(new($"{file.DisplayName} [{"ParseFailed".GetLocalized()}]", $"{title}\n{message}", file));
                 return false;
             }
             catch (Exception ex)
@@ -190,7 +219,7 @@ namespace ArknightsStoryText.UWP.ViewModels
                 string message = $"{ex.Message}\n{"OpenAnotherFileInstead".GetLocalized()}";
                 await ShowDialogAsync(title, message, closeText: "OK".GetLocalized());
 
-                Stories.Add(new($"{file.DisplayName} [{"ParseFailed".GetLocalized()}]", $"{title}\n{message}"));
+                Stories.Add(new($"{file.DisplayName} [{"ParseFailed".GetLocalized()}]", $"{title}\n{message}", file));
                 return false;
             }
 
@@ -198,11 +227,11 @@ namespace ArknightsStoryText.UWP.ViewModels
 
             if (string.IsNullOrWhiteSpace(storyText))
             {
-                Stories.Add(new($"{file.DisplayName} [{"ResultIsEmpty".GetLocalized()}]", storyText));
+                Stories.Add(new($"{file.DisplayName} [{"ResultIsEmpty".GetLocalized()}]", storyText, file));
                 return false;
             }
 
-            Stories.Add(new(file.DisplayName, storyText));
+            Stories.Add(new(file.DisplayName, storyText, file));
 
             return true;
         }

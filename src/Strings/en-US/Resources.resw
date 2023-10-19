@@ -174,4 +174,10 @@
   <data name="DefaultCommandBar.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Operation command bar</value>
   </data>
+  <data name="ClearStoryTexts.Label" xml:space="preserve">
+    <value>Clear all items</value>
+  </data>
+  <data name="RemoveSingleStoryInfo.Label" xml:space="preserve">
+    <value>Remove this item</value>
+  </data>
 </root>

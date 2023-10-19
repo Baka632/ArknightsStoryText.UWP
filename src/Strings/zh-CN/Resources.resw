@@ -183,4 +183,10 @@
     <value>操作命令栏</value>
     <comment>供无障碍设施使用</comment>
   </data>
+  <data name="ClearStoryTexts.Label" xml:space="preserve">
+    <value>清空所有项</value>
+  </data>
+  <data name="RemoveSingleStoryInfo.Label" xml:space="preserve">
+    <value>移除此项</value>
+  </data>
 </root>
