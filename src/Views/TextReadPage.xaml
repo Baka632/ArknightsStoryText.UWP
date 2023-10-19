@@ -11,6 +11,7 @@
     xmlns:models="using:ArknightsStoryText.UWP.Models"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:viewmodels="using:ArknightsStoryText.UWP.ViewModels"
+    x:Name="Self"
     d:DataContext="{d:DesignInstance Type=viewmodels:TextReadViewModel}"
     Background="Transparent"
     mc:Ignorable="d">
@@ -101,6 +102,12 @@
                             </Flyout>
                         </AppBarButton.Flyout>
                     </AppBarButton>
+                    <AppBarSeparator />
+                    <AppBarButton
+                        x:Uid="ClearStoryTexts"
+                        Command="{x:Bind ViewModel.ClearStoryTextsCommand}"
+                        Icon="Cancel"
+                        IsEnabled="{x:Bind helper:XamlHelper.ReverseBoolean(ViewModel.IsLoading), Mode=OneWay}" />
                 </CommandBar.SecondaryCommands>
             </CommandBar>
         </Grid>
@@ -120,9 +127,22 @@
                     <astc:StoryTextExpander
                         Title="{x:Bind Title}"
                         HorizontalAlignment="Stretch"
+                        Background="Transparent"
                         FontFamily="{Binding ElementName=SetFontComboBox, Path=SelectedValue, Converter={StaticResource ObjToFontFamilyOrDouble}, Mode=OneWay}"
                         FontSize="{Binding ElementName=SetFontSizeComboBox, Path=SelectedValue, Converter={StaticResource ObjToFontFamilyOrDouble}, Mode=OneWay}"
-                        Text="{x:Bind Text}" />
+                        Text="{x:Bind Text}">
+                        <astc:StoryTextExpander.ContextFlyout>
+                            <muxc:CommandBarFlyout>
+                                <muxc:CommandBarFlyout.SecondaryCommands>
+                                    <AppBarButton
+                                        x:Uid="RemoveSingleStoryInfo"
+                                        Command="{Binding ElementName=Self, Path=ViewModel.RemoveSingleStoryTextCommand}"
+                                        CommandParameter="{x:Bind}"
+                                        Icon="Delete" />
+                                </muxc:CommandBarFlyout.SecondaryCommands>
+                            </muxc:CommandBarFlyout>
+                        </astc:StoryTextExpander.ContextFlyout>
+                    </astc:StoryTextExpander>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>

@@ -11,7 +11,7 @@ namespace ArknightsStoryText.UWP.Views
     /// </summary>
     public sealed partial class TextReadPage : Page
     {
-        private TextReadViewModel ViewModel { get; }
+        public TextReadViewModel ViewModel { get; }
 
         public TextReadPage()
         {
