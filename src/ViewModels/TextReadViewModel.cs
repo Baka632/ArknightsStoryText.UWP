@@ -123,7 +123,6 @@ namespace ArknightsStoryText.UWP.ViewModels
             }
 
             IsLoading = true;
-            Stories.Clear();
 
             foreach (StorageFile file in files)
             {
