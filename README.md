@@ -10,9 +10,9 @@
 </div>
 
 ## 最低支持平台
-~~Windows 10 1607 (14393)~~
+~~Windows 10 1607 (14393)~~（仅 4.2.0.0 以下版本）
 
-Windows 10 1703 (15063)
+Windows 10 1703 (15063) - 4.2.0.0 及以上版本
 
 > 升级原因：为了使用 [WinUI 2](https://github.com/microsoft/microsoft-ui-xaml) 库。
 >
@@ -27,9 +27,9 @@ Windows 10 1703 (15063)
 ## 贡献者须知
 为了兼容 ARM64 架构，我们将最低版本设置为了 Windows 10 1709 (Build 16299)。
 
-但是，为了兼容 Windows 10 Mobile 设备，我们不应：
-- 引用任何 .NET Standard 1.4 以上的库（不含 .NET Standard 1.4）
-- 在不添加兼容性检测的情况下，使用任何不支持 Windows 10 1703 (Build 15063) 的 API
+但是，为了兼容 Windows 10 Mobile 设备，我们不应在不添加兼容性检测的情况下，使用任何不支持 Windows 10 1703 (Build 15063) 的 API
+
+另外，若引用了 .NET Standard 2.0 库，在部署到 Windows 10 Mobile 设备时，应使用 `Release` 配置来进行部署或安装。
 
 ## 使用的开源项目
 [ArknightsResources/Utility](https://github.com/ArknightsResources/Utility) (MIT 许可证，以源代码形式使用)
