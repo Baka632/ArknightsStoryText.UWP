@@ -94,7 +94,7 @@ namespace ArknightsStoryText.UWP.ViewModels
             }
         }
 
-        public List<double> FontSizes { get; } = new() { 8d, 9d, 10d, 11d, 12d, 14d, 16d, 18d, 20d, 24d, 28d, 36d, 48d, 72d };
+        public List<double> FontSizes { get; } = [8d, 9d, 10d, 11d, 12d, 14d, 16d, 18d, 20d, 24d, 28d, 36d, 48d, 72d];
 
         public IReadOnlyList<FontInfo> Fonts { get; }
 
