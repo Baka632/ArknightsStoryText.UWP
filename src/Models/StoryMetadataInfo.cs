@@ -47,6 +47,9 @@ public struct StoryMetadataInfo
     public long RemakeEndTime { get; set; }
     public string StoryEntryPicId { get; set; }
     public string StoryPicId { get; set; }
+    /// <summary>
+    /// 剧情主题色的十六进制颜色代码
+    /// </summary>
     public string StoryMainColor { get; set; }
     public int CustomType { get; set; }
     public string StoryCompleteMedalId { get; set; }
@@ -74,6 +77,9 @@ public struct InfoUnlockData
     /// 剧情所属的组（剧情 ID）
     /// </summary>
     public string StoryGroup { get; set; }
+    /// <summary>
+    /// 剧情在一系列剧情的顺序
+    /// </summary>
     public int StorySort { get; set; }
     /// <summary>
     /// 剧情依赖项（上一个剧情）的 ID
@@ -103,8 +109,17 @@ public struct InfoUnlockData
     /// </summary>
     public string AvgTag { get; set; }
     public string UnLockType { get; set; }
+    /// <summary>
+    /// 解锁剧情所需要的物品类型
+    /// </summary>
     public string CostItemType { get; set; }
+    /// <summary>
+    /// 解锁剧情所需要的物品 ID
+    /// </summary>
     public string CostItemId { get; set; }
+    /// <summary>
+    /// 解锁剧情物品所要消耗的个数
+    /// </summary>
     public int CostItemCount { get; set; }
     public int StageCount { get; set; }
     /// <summary>
