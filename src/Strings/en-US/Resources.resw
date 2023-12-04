@@ -180,4 +180,7 @@
   <data name="RemoveSingleStoryInfo.Label" xml:space="preserve">
     <value>Remove this item</value>
   </data>
+  <data name="LoadStoryMetadata.Label" xml:space="preserve">
+    <value>Load story metadata file</value>
+  </data>
 </root>

@@ -189,4 +189,7 @@
   <data name="RemoveSingleStoryInfo.Label" xml:space="preserve">
     <value>移除此项</value>
   </data>
+  <data name="LoadStoryMetadata.Label" xml:space="preserve">
+    <value>加载剧情元数据文件</value>
+  </data>
 </root>

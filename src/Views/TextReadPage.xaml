@@ -102,6 +102,11 @@
                             </Flyout>
                         </AppBarButton.Flyout>
                     </AppBarButton>
+                    <AppBarButton x:Uid="LoadStoryMetadata" Command="{x:Bind ViewModel.LoadStoryMetadataCommand}">
+                        <AppBarButton.Icon>
+                            <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE943;" />
+                        </AppBarButton.Icon>
+                    </AppBarButton>
                     <AppBarSeparator />
                     <AppBarButton
                         x:Uid="ClearStoryTexts"
@@ -119,7 +124,7 @@
             AllowDrop="True"
             CanDragItems="True"
             CanReorderItems="True"
-            ItemsSource="{x:Bind ViewModel.Stories}"
+            ItemsSource="{x:Bind ViewModel.Stories, Mode=OneWay}"
             SelectionMode="None"
             Visibility="{x:Bind helper:XamlHelper.ReverseVisibility(ViewModel.IsLoading), Mode=OneWay}">
             <ListView.ItemTemplate>

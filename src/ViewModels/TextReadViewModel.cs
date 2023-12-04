@@ -15,6 +15,8 @@ using Windows.Globalization.Fonts;
 using System.Globalization;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text.Json;
+using System.IO;
 
 namespace ArknightsStoryText.UWP.ViewModels
 {
@@ -23,12 +25,15 @@ namespace ArknightsStoryText.UWP.ViewModels
         private string _doctorName = string.Empty;
         private bool _isParagraph = false;
         private bool _isLoading = false;
-        private readonly List<StorageFile> _originalFileList = new(20);
+        private Dictionary<string, StoryMetadataInfo> _storyMetadataDict;
+        private static readonly JsonSerializerOptions _defaultJsonOptions = new() { PropertyNameCaseInsensitive = true };
+        private ObservableCollection<StoryInfo> stories = [];
 
         public TextReadViewModel()
         {
             OpenStoryTextFileCommand = new DelegateCommand(async obj => await OpenStoryTextFileAsync());
             OpenStoryTextFolderCommand = new DelegateCommand(async obj => await OpenStoryTextFolderAsync());
+            LoadStoryMetadataCommand = new DelegateCommand(async obj => await OpenMetadataFileAsync());
             ClearStoryTextsCommand = new DelegateCommand(obj => ClearStoryTexts());
             RemoveSingleStoryTextCommand = new DelegateCommand(obj =>
             {
@@ -47,8 +52,17 @@ namespace ArknightsStoryText.UWP.ViewModels
         public ICommand OpenStoryTextFolderCommand { get; }
         public ICommand ClearStoryTextsCommand { get; }
         public ICommand RemoveSingleStoryTextCommand { get; }
+        public ICommand LoadStoryMetadataCommand { get; }
 
-        public ObservableCollection<StoryInfo> Stories { get; } = new();
+        public ObservableCollection<StoryInfo> Stories
+        {
+            get => stories;
+            set
+            {
+                stories = value;
+                OnPropertiesChanged();
+            }
+        }
 
         public string DoctorName
         {
@@ -128,8 +142,8 @@ namespace ArknightsStoryText.UWP.ViewModels
             {
                 await ParseOriginTextFromStorageFileAsync(file);
             }
+            SortStoryList();
 
-            _originalFileList.AddRange(files);
             IsLoading = false;
         }
 
@@ -152,26 +166,103 @@ namespace ArknightsStoryText.UWP.ViewModels
             {
                 await ParseOriginTextFromStorageFileAsync(file);
             }
-            _originalFileList.AddRange(fileList);
+            SortStoryList();
+
             IsLoading = false;
+        }
+
+        private async Task OpenMetadataFileAsync()
+        {
+            FileOpenPicker fileOpenPicker = new();
+            fileOpenPicker.FileTypeFilter.Add(".json");
+            StorageFile file = await fileOpenPicker.PickSingleFileAsync();
+
+            if (file is null)
+            {
+                //用户取消了文件选择
+                return;
+            }
+
+            IsLoading = true;
+
+            Stream utf8Json = await file.OpenStreamForReadAsync();
+
+            try
+            {
+                Dictionary<string, StoryMetadataInfo> metadataDict = await JsonSerializer.DeserializeAsync<Dictionary<string, StoryMetadataInfo>>(utf8Json, _defaultJsonOptions);
+
+                if (metadataDict.ContainsKey("1stact"))
+                {
+                    _storyMetadataDict = metadataDict;
+                }
+                else
+                {
+                    await ShowWrongMetadataDialog();
+                }
+            }
+            catch (JsonException)
+            {
+                await ShowWrongMetadataDialog();
+            }
+
+            await ReParseStoryTextAsync();
+
+            IsLoading = false;
+
+            static async Task ShowWrongMetadataDialog()
+            {
+                //TODO: Localize
+                await ShowDialogAsync("Error!", "Wrong metadata file");
+            }
         }
 
         private void ClearStoryTexts()
         {
             IsLoading = true;
-            _originalFileList.Clear();
             Stories.Clear();
             IsLoading = false;
         }
 
         private void RemoveSingleStoryText(StoryInfo target)
         {
-            _originalFileList.Remove(target.File);
             Stories.Remove(target);
         }
 
         private async Task<bool> ParseOriginTextFromStorageFileAsync(StorageFile file)
         {
+            string storyDisplayName;
+            StoryMetadataInfo? metadata;
+            InfoUnlockData? detailInfo;
+
+            if (TryGetMetadataFromMetadataDict(file.DisplayName, out (StoryMetadataInfo, InfoUnlockData) result))
+            {
+                InfoUnlockData item2 = result.Item2;
+                List<string> strParts = new(3);
+
+                if (string.IsNullOrWhiteSpace(item2.StoryCode) != true)
+                {
+                    strParts.Add(item2.StoryCode);
+                }
+
+                strParts.Add(item2.StoryName);
+
+                if (item2.AvgTag != "幕间")
+                {
+                    strParts.Add(item2.AvgTag);
+                }
+
+                storyDisplayName = string.Join(' ', strParts);
+
+                metadata = result.Item1;
+                detailInfo = result.Item2;
+            }
+            else
+            {
+                storyDisplayName = file.DisplayName;
+                metadata = null;
+                detailInfo = null;
+            }
+
             string text;
             try
             {
@@ -183,7 +274,7 @@ namespace ArknightsStoryText.UWP.ViewModels
                 string message = "OpenAnotherFileInstead".GetLocalized();
                 await ShowDialogAsync(title, message, closeText: "OK".GetLocalized());
 
-                Stories.Add(new($"{file.DisplayName} [{"ParseFailed".GetLocalized()}]", $"{title}\n{message}", file));
+                Stories.Add(new($"{storyDisplayName} [{"ParseFailed".GetLocalized()}]", $"{title}\n{message}", file, metadata, detailInfo));
                 return false;
             }
 
@@ -193,7 +284,7 @@ namespace ArknightsStoryText.UWP.ViewModels
                 string message = "OpenAnotherFileInstead".GetLocalized();
                 await ShowDialogAsync(title, message, closeText: "OK".GetLocalized());
 
-                Stories.Add(new($"{file.DisplayName} [{"ParseFailed".GetLocalized()}]", $"{title}\n{message}",file));
+                Stories.Add(new($"{storyDisplayName} [{"ParseFailed".GetLocalized()}]", $"{title}\n{message}", file, metadata, detailInfo));
                 return false;
             }
 
@@ -209,7 +300,7 @@ namespace ArknightsStoryText.UWP.ViewModels
                 string message = "OpenAnotherFileInstead".GetLocalized();
                 await ShowDialogAsync(title, message, closeText: "OK".GetLocalized());
 
-                Stories.Add(new($"{file.DisplayName} [{"ParseFailed".GetLocalized()}]", $"{title}\n{message}", file));
+                Stories.Add(new($"{storyDisplayName} [{"ParseFailed".GetLocalized()}]", $"{title}\n{message}", file, metadata, detailInfo));
                 return false;
             }
             catch (Exception ex)
@@ -218,7 +309,7 @@ namespace ArknightsStoryText.UWP.ViewModels
                 string message = $"{ex.Message}\n{"OpenAnotherFileInstead".GetLocalized()}";
                 await ShowDialogAsync(title, message, closeText: "OK".GetLocalized());
 
-                Stories.Add(new($"{file.DisplayName} [{"ParseFailed".GetLocalized()}]", $"{title}\n{message}", file));
+                Stories.Add(new($"{storyDisplayName} [{"ParseFailed".GetLocalized()}]", $"{title}\n{message}", file, metadata, detailInfo));
                 return false;
             }
 
@@ -226,11 +317,11 @@ namespace ArknightsStoryText.UWP.ViewModels
 
             if (string.IsNullOrWhiteSpace(storyText))
             {
-                Stories.Add(new($"{file.DisplayName} [{"ResultIsEmpty".GetLocalized()}]", storyText, file));
+                Stories.Add(new($"{storyDisplayName} [{"ResultIsEmpty".GetLocalized()}]", storyText, file, metadata, detailInfo));
                 return false;
             }
 
-            Stories.Add(new(file.DisplayName, storyText, file));
+            Stories.Add(new(storyDisplayName, storyText, file, metadata, detailInfo));
 
             return true;
         }
@@ -239,17 +330,53 @@ namespace ArknightsStoryText.UWP.ViewModels
         {
             IsLoading = true;
 
-            if (_originalFileList.Any())
+            if (Stories.Count > 0)
             {
+                StorageFile[] _originalFileList = (from info in Stories select info.File).ToArray();
                 Stories.Clear();
 
                 foreach (StorageFile file in _originalFileList)
                 {
                     await ParseOriginTextFromStorageFileAsync(file);
                 }
+
+                SortStoryList();
             }
 
             IsLoading = false;
+        }
+
+        private bool TryGetMetadataFromMetadataDict(string storyFileName, out (StoryMetadataInfo, InfoUnlockData) result)
+        {
+            if (_storyMetadataDict is not null && string.IsNullOrWhiteSpace(storyFileName) != true)
+            {
+                foreach (StoryMetadataInfo info in _storyMetadataDict.Values)
+                {
+                    foreach (InfoUnlockData data in info.InfoUnlockDatas)
+                    {
+                        if (data.StoryTxt.AsSpan().EndsWith(storyFileName.AsSpan()))
+                        {
+                            result = (info, data);
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            result = default;
+            return false;
+        }
+
+        private void SortStoryList()
+        {
+            //TODO: 优化一下
+            if (_storyMetadataDict is not null)
+            {
+                List<StoryInfo> storyList = [..Stories];
+                storyList.Sort(new StoryInfoComparer());
+
+                Stories = new(storyList);
+            }
         }
 
         /// <summary>
@@ -278,6 +405,53 @@ namespace ArknightsStoryText.UWP.ViewModels
             };
 
             return await dialog.ShowAsync();
+        }
+    }
+
+    file sealed class StoryInfoComparer : IComparer<StoryInfo>
+    {
+        /// <inheritdoc/>
+        public int Compare(StoryInfo x, StoryInfo y)
+        {
+            if (x.MetadataInfo.HasValue && y.MetadataInfo.HasValue != true)
+            {
+                return 1;
+            }
+            else if (x.MetadataInfo.HasValue != true && y.MetadataInfo.HasValue)
+            {
+                return -1;
+            }
+            else if (x.MetadataInfo.HasValue == false && y.MetadataInfo.HasValue == false)
+            {
+                return 0;
+            }
+
+            string xId = x.MetadataInfo.Value.Id;
+            string yId = y.MetadataInfo.Value.Id;
+
+            if (x.DetailInfo.HasValue == false || y.DetailInfo.HasValue == false)
+            {
+                return string.CompareOrdinal(xId, yId);
+            }
+
+            if (xId == yId)
+            {
+                int xSort = x.DetailInfo.Value.StorySort;
+                int ySort = y.DetailInfo.Value.StorySort;
+
+                if (xSort == ySort)
+                {
+                    return 0;
+                }
+                else
+                {
+                    return Comparer<int>.Default.Compare(xSort, ySort);
+                }
+            }
+            else
+            {
+                return string.CompareOrdinal(xId, yId);
+            }
         }
     }
 }
