@@ -192,4 +192,7 @@
   <data name="LoadStoryMetadata.Label" xml:space="preserve">
     <value>加载剧情元数据文件</value>
   </data>
+  <data name="InvaildMetadataFile_WithPlaceholder" xml:space="preserve">
+    <value>{0} 似乎不是有效的剧情元数据文件</value>
+  </data>
 </root>

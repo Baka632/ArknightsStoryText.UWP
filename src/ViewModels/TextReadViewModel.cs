@@ -197,22 +197,23 @@ namespace ArknightsStoryText.UWP.ViewModels
                 }
                 else
                 {
-                    await ShowWrongMetadataDialog();
+                    await ShowWrongMetadataDialog(file.Name);
                 }
             }
             catch (JsonException)
             {
-                await ShowWrongMetadataDialog();
+                await ShowWrongMetadataDialog(file.Name);
             }
 
             await ReParseStoryTextAsync();
 
             IsLoading = false;
 
-            static async Task ShowWrongMetadataDialog()
+            static async Task ShowWrongMetadataDialog(string fileName)
             {
-                //TODO: Localize
-                await ShowDialogAsync("Error!", "Wrong metadata file");
+                string title = string.Format("InvaildMetadataFile_WithPlaceholder".GetLocalized(), fileName);
+                string message = "OpenAnotherFileInstead".GetLocalized();
+                await ShowDialogAsync(title, message, closeText: "OK".GetLocalized());
             }
         }
 
