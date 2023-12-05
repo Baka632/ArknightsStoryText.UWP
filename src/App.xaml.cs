@@ -1,10 +1,13 @@
-﻿using Microsoft.UI.Xaml.Controls;
+﻿using System.IO;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.Toolkit.Uwp.Notifications;
 using Windows.System.Profile;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.ViewManagement;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
+using Windows.UI.Notifications;
 
 namespace ArknightsStoryText.UWP;
 
@@ -19,7 +22,69 @@ sealed partial class App : Application
     public App()
     {
         this.InitializeComponent();
+
+        UnhandledException += OnUnhandledException;
         this.Suspending += OnSuspending;
+    }
+
+    private async void OnUnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
+    {
+        e.Handled = true;
+
+        Exception exception = e.Exception;
+        ToastContent toastContent = new()
+        {
+            Visual = new ToastVisual()
+            {
+                BindingGeneric = new ToastBindingGeneric()
+                {
+                    Children =
+                    {
+                        new AdaptiveText()
+                        {
+                            Text = exception.GetType().Name
+                        },
+                        new AdaptiveText()
+                        {
+                            Text = exception.Message
+                        },
+                        new AdaptiveText()
+                        {
+                            Text = exception.StackTrace
+                        }
+                    }
+                }
+            }
+        };
+
+        ToastNotification toastNotif = new(toastContent.GetXml());
+        ToastNotificationManager.CreateToastNotifier().Show(toastNotif);
+
+        StorageFolder temporaryFolder = ApplicationData.Current.TemporaryFolder;
+        StorageFolder logFolder = await temporaryFolder.CreateFolderAsync("Log", CreationCollisionOption.OpenIfExists);
+        StorageFile logFile = await logFolder.CreateFileAsync($"Log-{DateTimeOffset.UtcNow:yyyy-MM-dd HH,mm,ss.fff}.log");
+
+        using StorageStreamTransaction transaction = await logFile.OpenTransactedWriteAsync();
+        using Stream target = transaction.Stream.AsStreamForWrite();
+        target.Seek(0, SeekOrigin.Begin);
+
+        using StreamWriter writer = new(target);
+        await writer.WriteAsync($"""
+            [Exception Detail]
+            {exception.GetType().Name}: {exception.Message}
+            ======
+            Source: {exception.Source}
+            HResult: {exception.HResult}
+            TargetSite Info:
+                Name: {exception?.TargetSite.Name}
+                Module Name: {exception?.TargetSite?.Module.Name}
+                DeclaringType: {exception?.TargetSite?.DeclaringType.Name}
+            StackTrace:
+            {exception.StackTrace}
+            """);
+        await writer.FlushAsync();
+
+        await transaction.CommitAsync();
     }
 
     /// <summary>
