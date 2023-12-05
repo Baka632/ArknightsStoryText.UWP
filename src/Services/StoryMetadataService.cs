@@ -8,7 +8,7 @@ namespace ArknightsStoryText.UWP.Services;
 /// </summary>
 public sealed class StoryMetadataService
 {
-    private ImmutableDictionary<string, StoryMetadataInfo> _storyMetadataDict;
+    private ReadOnlyDictionary<string, StoryMetadataInfo> _storyMetadataDict;
     private static readonly JsonSerializerOptions _defaultJsonOptions = new() { PropertyNameCaseInsensitive = true };
 
     /// <summary>
@@ -22,7 +22,7 @@ public sealed class StoryMetadataService
     /// <summary>
     /// 包含剧情元数据的不可变字典。如果尚未初始化当前的 <see cref="StoryMetadataService"/> 实例，则此属性为 <see langword="null"/>。
     /// </summary>
-    public ImmutableDictionary<string, StoryMetadataInfo> StoryMetadata { get; }
+    public ReadOnlyDictionary<string, StoryMetadataInfo> StoryMetadata { get; }
 
     /// <summary>
     /// 尝试将此实例初始化
@@ -33,11 +33,11 @@ public sealed class StoryMetadataService
     {
         try
         {
-            ImmutableDictionary<string, StoryMetadataInfo> metadataDict = JsonSerializer.Deserialize<ImmutableDictionary<string, StoryMetadataInfo>>(utf8Json, _defaultJsonOptions);
+            Dictionary<string, StoryMetadataInfo> metadataDict = JsonSerializer.Deserialize<Dictionary<string, StoryMetadataInfo>>(utf8Json, _defaultJsonOptions);
 
             if (metadataDict.ContainsKey("1stact"))
             {
-                _storyMetadataDict = metadataDict;
+                _storyMetadataDict = new ReadOnlyDictionary<string, StoryMetadataInfo>(metadataDict);
                 return true;
             }
             else
