@@ -186,4 +186,7 @@
   <data name="InvaildMetadataFile_WithPlaceholder" xml:space="preserve">
     <value>{0} seems to be invalid story metadata file</value>
   </data>
+  <data name="PickMetadataFileButtonText" xml:space="preserve">
+    <value>Pick "story_review_table.json" file</value>
+  </data>
 </root>

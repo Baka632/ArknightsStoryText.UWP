@@ -175,6 +175,7 @@
     <Compile Include="Models\StoryFileInfo.cs" />
     <Compile Include="Models\StoryInfo.cs" />
     <Compile Include="Models\StoryMetadataInfo.cs" />
+    <Compile Include="Services\StoryMetadataService.cs" />
     <Compile Include="ViewModels\NotificationObject.cs" />
     <Compile Include="ViewModels\TextMergeViewModel.cs" />
     <Compile Include="ViewModels\TextReadViewModel.cs" />

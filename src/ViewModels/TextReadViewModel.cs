@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using Windows.Storage.Pickers;
 using Windows.Globalization.Fonts;
+using ArknightsStoryText.UWP.Services;
 
 namespace ArknightsStoryText.UWP.ViewModels;
 
@@ -9,9 +10,8 @@ public sealed class TextReadViewModel : NotificationObject
     private string _doctorName = string.Empty;
     private bool _isParagraph = false;
     private bool _isLoading = false;
-    private Dictionary<string, StoryMetadataInfo> _storyMetadataDict;
-    private static readonly JsonSerializerOptions _defaultJsonOptions = new() { PropertyNameCaseInsensitive = true };
     private ObservableCollection<StoryInfo> stories = [];
+    private readonly StoryMetadataService metadataService = new();
 
     public TextReadViewModel()
     {
@@ -159,6 +159,7 @@ public sealed class TextReadViewModel : NotificationObject
     {
         FileOpenPicker fileOpenPicker = new();
         fileOpenPicker.FileTypeFilter.Add(".json");
+        fileOpenPicker.CommitButtonText = "PickMetadataFileButtonText".GetLocalized();
         StorageFile file = await fileOpenPicker.PickSingleFileAsync();
 
         if (file is null)
@@ -171,34 +172,18 @@ public sealed class TextReadViewModel : NotificationObject
 
         Stream utf8Json = await file.OpenStreamForReadAsync();
 
-        try
+        if (metadataService.TryInitialize(utf8Json))
         {
-            Dictionary<string, StoryMetadataInfo> metadataDict = await JsonSerializer.DeserializeAsync<Dictionary<string, StoryMetadataInfo>>(utf8Json, _defaultJsonOptions);
-
-            if (metadataDict.ContainsKey("1stact"))
-            {
-                _storyMetadataDict = metadataDict;
-            }
-            else
-            {
-                await ShowWrongMetadataDialog(file.Name);
-            }
+            await ReParseStoryTextAsync();
         }
-        catch (JsonException)
+        else
         {
-            await ShowWrongMetadataDialog(file.Name);
-        }
-
-        await ReParseStoryTextAsync();
-
-        IsLoading = false;
-
-        static async Task ShowWrongMetadataDialog(string fileName)
-        {
-            string title = string.Format("InvaildMetadataFile_WithPlaceholder".GetLocalized(), fileName);
+            string title = string.Format("InvaildMetadataFile_WithPlaceholder".GetLocalized(), file.Name);
             string message = "OpenAnotherFileInstead".GetLocalized();
             await ShowDialogAsync(title, message, closeText: "OK".GetLocalized());
         }
+
+        IsLoading = false;
     }
 
     private void ClearStoryTexts()
@@ -219,7 +204,7 @@ public sealed class TextReadViewModel : NotificationObject
         StoryMetadataInfo? metadata;
         InfoUnlockData? detailInfo;
 
-        if (TryGetMetadataFromMetadataDict(file.DisplayName, out (StoryMetadataInfo, InfoUnlockData) result))
+        if (metadataService.TryGetMetadata(file.DisplayName, out (StoryMetadataInfo, InfoUnlockData) result))
         {
             InfoUnlockData item2 = result.Item2;
             List<string> strParts = new(3);
@@ -331,31 +316,10 @@ public sealed class TextReadViewModel : NotificationObject
         IsLoading = false;
     }
 
-    private bool TryGetMetadataFromMetadataDict(string storyFileName, out (StoryMetadataInfo, InfoUnlockData) result)
-    {
-        if (_storyMetadataDict is not null && string.IsNullOrWhiteSpace(storyFileName) != true)
-        {
-            foreach (StoryMetadataInfo info in _storyMetadataDict.Values)
-            {
-                foreach (InfoUnlockData data in info.InfoUnlockDatas)
-                {
-                    if (data.StoryTxt.AsSpan().EndsWith(storyFileName.AsSpan()))
-                    {
-                        result = (info, data);
-                        return true;
-                    }
-                }
-            }
-        }
-
-        result = default;
-        return false;
-    }
-
     private void SortStoryList()
     {
         //TODO: 有更好的排序方式吗？
-        if (_storyMetadataDict is not null)
+        if (metadataService.IsInitialized)
         {
             List<StoryInfo> storyList = [..Stories];
             storyList.Sort(new StoryInfoComparer());

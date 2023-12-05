@@ -195,4 +195,7 @@
   <data name="InvaildMetadataFile_WithPlaceholder" xml:space="preserve">
     <value>{0} 似乎不是有效的剧情元数据文件</value>
   </data>
+  <data name="PickMetadataFileButtonText" xml:space="preserve">
+    <value>选取 "story_review_table.json" 文件</value>
+  </data>
 </root>

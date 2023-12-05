@@ -59,6 +59,19 @@
                     </Flyout>
                 </AppBarButton.Flyout>
             </AppBarButton>
+
+            <CommandBar.SecondaryCommands>
+                <AppBarButton x:Uid="LoadStoryMetadata" Command="{x:Bind ViewModel.LoadStoryMetadataCommand}">
+                    <AppBarButton.Icon>
+                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE943;" />
+                    </AppBarButton.Icon>
+                </AppBarButton>
+                <AppBarSeparator />
+                <AppBarButton
+                    x:Uid="ClearStoryTexts"
+                    Command="{x:Bind ViewModel.ClearStoryTextsCommand}"
+                    Icon="Cancel" />
+            </CommandBar.SecondaryCommands>
         </CommandBar>
 
         <ListView
@@ -69,14 +82,14 @@
             Background="Transparent"
             CanReorderItems="True"
             IsItemClickEnabled="True"
-            ItemsSource="{x:Bind ViewModel.Files}"
+            ItemsSource="{x:Bind ViewModel.Files, Mode=OneWay}"
             ReorderMode="Enabled"
             SelectionMode="Single">
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="models:StoryFileInfo">
                     <Grid Margin="0,10,0,10">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition />
+                            <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
@@ -95,7 +108,7 @@
                             x:Uid="StoryTitleTextBox"
                             Grid.Row="2"
                             Grid.Column="0"
-                            Width="150"
+                            Width="200"
                             HorizontalAlignment="Left"
                             IsSpellCheckEnabled="False"
                             Text="{x:Bind Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />

@@ -1,4 +1,7 @@
-﻿using Windows.Storage.Pickers;
+﻿using System.IO;
+using ArknightsStoryText.UWP.Models;
+using ArknightsStoryText.UWP.Services;
+using Windows.Storage.Pickers;
 
 namespace ArknightsStoryText.UWP.ViewModels;
 
@@ -8,11 +11,15 @@ public class TextMergeViewModel : NotificationObject
     private string _doctorName = string.Empty;
     private bool _isParagraph = false;
     private bool _isMerging = false;
+    private ObservableCollection<StoryFileInfo> files = [];
+    private readonly StoryMetadataService metadataService = new();
 
     public TextMergeViewModel()
     {
         OpenStoryTextFileCommand = new DelegateCommand(async (obj) => await OpenStoryTextFileAsync());
         SaveStoryTextFileCommand = new DelegateCommand(async (obj) => await SaveStoryTextFileAsync());
+        LoadStoryMetadataCommand = new DelegateCommand(async obj => await OpenMetadataFileAsync());
+        ClearStoryTextsCommand = new DelegateCommand(obj => Files.Clear());
         RemoveStoryTextFileCommand = new DelegateCommand(obj =>
         {
             if (obj is StoryFileInfo fileInfo)
@@ -25,8 +32,18 @@ public class TextMergeViewModel : NotificationObject
     public ICommand OpenStoryTextFileCommand { get; }
     public ICommand SaveStoryTextFileCommand { get; }
     public ICommand RemoveStoryTextFileCommand { get; }
+    public ICommand ClearStoryTextsCommand { get; }
+    public ICommand LoadStoryMetadataCommand { get; }
 
-    public ObservableCollection<StoryFileInfo> Files { get; } = new();
+    public ObservableCollection<StoryFileInfo> Files
+    {
+        get => files;
+        private set
+        {
+            files = value;
+            OnPropertiesChanged();
+        }
+    }
 
     public string TransformedStoryText
     {
@@ -76,13 +93,48 @@ public class TextMergeViewModel : NotificationObject
 
         if (storageFiles is not null || !storageFiles.Any())
         {
-            foreach (StorageFile item in storageFiles)
+            foreach (StorageFile file in storageFiles)
             {
-                if (!Files.Any(fileInfo => fileInfo.File.Path == item.Path))
+                string storyDisplayName;
+                StoryMetadataInfo? metadata;
+                InfoUnlockData? detailInfo;
+
+                if (metadataService.TryGetMetadata(file.DisplayName, out (StoryMetadataInfo, InfoUnlockData) result))
                 {
-                    Files.Add(new StoryFileInfo(item, string.Empty));
+                    InfoUnlockData item2 = result.Item2;
+                    List<string> strParts = new(3);
+
+                    if (string.IsNullOrWhiteSpace(item2.StoryCode) != true)
+                    {
+                        strParts.Add(item2.StoryCode);
+                    }
+
+                    strParts.Add(item2.StoryName);
+
+                    if (item2.AvgTag != "幕间")
+                    {
+                        strParts.Add(item2.AvgTag);
+                    }
+
+                    storyDisplayName = string.Join(' ', strParts);
+
+                    metadata = result.Item1;
+                    detailInfo = result.Item2;
+                }
+                else
+                {
+                    storyDisplayName = string.Empty;
+                    metadata = null;
+                    detailInfo = null;
+                }
+
+                if (!Files.Any(fileInfo => fileInfo.File.Path == file.Path))
+                {
+                    Files.Add(new StoryFileInfo(file, storyDisplayName, metadata, detailInfo));
                 }
             }
+
+            SortFileList();
         }
     }
 
@@ -97,7 +149,7 @@ public class TextMergeViewModel : NotificationObject
             return;
         }
 
-        foreach (var item in Files)
+        foreach (StoryFileInfo item in Files)
         {
             string text;
             try
@@ -189,17 +241,142 @@ public class TextMergeViewModel : NotificationObject
 
         }
 
+        IEnumerable<string> names = (from info in Files
+                                     where info.MetadataInfo.HasValue
+                                     select info.MetadataInfo.Value.Name).Distinct();
+        int namesCount = names.Count();
+
         FileSavePicker fileSavePicker = new();
         fileSavePicker.FileTypeChoices.Add("TXT", new string[] { ".txt" });
+
+        if (namesCount == 1)
+        {
+            fileSavePicker.SuggestedFileName = names.First();
+        }
+
         StorageFile saveFile = await fileSavePicker.PickSaveFileAsync();
 
         if (saveFile is not null)
         {
             await FileIO.WriteTextAsync(saveFile, stringBuilder.ToString());
+            string fileSaveLocationTip = string.Format("FileSavePathTip_WithPlaceholder".GetLocalized(), saveFile.Path);
+            await ShowDialogAsync("FileSaveComplete".GetLocalized(), fileSaveLocationTip, closeText: "OK".GetLocalized());
+        }
+    }
+
+    private async Task OpenMetadataFileAsync()
+    {
+        FileOpenPicker fileOpenPicker = new();
+        fileOpenPicker.FileTypeFilter.Add(".json");
+        fileOpenPicker.CommitButtonText = "PickMetadataFileButtonText".GetLocalized();
+        StorageFile file = await fileOpenPicker.PickSingleFileAsync();
+
+        if (file is null)
+        {
+            //用户取消了文件选择
+            return;
         }
 
-        string fileSaveLocationTip = string.Format("FileSavePathTip_WithPlaceholder".GetLocalized(), saveFile.Path);
-        await ShowDialogAsync("FileSaveComplete".GetLocalized(), fileSaveLocationTip, closeText: "OK".GetLocalized());
+        Stream utf8Json = await file.OpenStreamForReadAsync();
+
+        if (metadataService.TryInitialize(utf8Json))
+        {
+            for (int i = 0; i < Files.Count; i++)
+            {
+                StoryFileInfo info = Files[i];
+                if (metadataService.TryGetMetadata(info.File.DisplayName, out (StoryMetadataInfo, InfoUnlockData) result))
+                {
+                    info.MetadataInfo = result.Item1;
+                    info.DetailInfo = result.Item2;
+
+                    List<string> strParts = new(3);
+
+                    if (string.IsNullOrWhiteSpace(result.Item2.StoryCode) != true)
+                    {
+                        strParts.Add(result.Item2.StoryCode);
+                    }
+
+                    strParts.Add(result.Item2.StoryName);
+
+                    if (result.Item2.AvgTag != "幕间")
+                    {
+                        strParts.Add(result.Item2.AvgTag);
+                    }
+
+                    info.Title = string.Join(' ', strParts);
+                }
+            }
+            SortFileList();
+        }
+        else
+        {
+            string title = string.Format("InvaildMetadataFile_WithPlaceholder".GetLocalized(), file.Name);
+            string message = "OpenAnotherFileInstead".GetLocalized();
+            await ShowDialogAsync(title, message, closeText: "OK".GetLocalized());
+        }
+    }
+
+    private void SortFileList()
+    {
+        //TODO: 有更好的排序方式吗？
+        if (metadataService.IsInitialized)
+        {
+            List<StoryFileInfo> fileList = [..Files];
+            fileList.Sort(CompareStoryInfo);
+
+            if (Files.SequenceEqual(fileList) != true)
+            {
+                Files = new(fileList);
+            }
+            else
+            {
+                fileList.Clear();
+                fileList = null;
+            }
+        }
+    }
+
+    private int CompareStoryInfo(StoryFileInfo x, StoryFileInfo y)
+    {
+        if (x.MetadataInfo.HasValue && y.MetadataInfo.HasValue != true)
+        {
+            return 1;
+        }
+        else if (x.MetadataInfo.HasValue != true && y.MetadataInfo.HasValue)
+        {
+            return -1;
+        }
+        else if (x.MetadataInfo.HasValue == false && y.MetadataInfo.HasValue == false)
+        {
+            return 0;
+        }
+
+        string xId = x.MetadataInfo.Value.Id;
+        string yId = y.MetadataInfo.Value.Id;
+
+        if (x.DetailInfo.HasValue == false || y.DetailInfo.HasValue == false)
+        {
+            return string.CompareOrdinal(xId, yId);
+        }
+
+        if (xId == yId)
+        {
+            int xSort = x.DetailInfo.Value.StorySort;
+            int ySort = y.DetailInfo.Value.StorySort;
+
+            if (xSort == ySort)
+            {
+                return 0;
+            }
+            else
+            {
+                return Comparer<int>.Default.Compare(xSort, ySort);
+            }
+        }
+        else
+        {
+            return string.CompareOrdinal(xId, yId);
+        }
     }
 
     /// <summary>
