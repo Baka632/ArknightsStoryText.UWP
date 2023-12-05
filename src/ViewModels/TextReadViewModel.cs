@@ -354,13 +354,21 @@ public sealed class TextReadViewModel : NotificationObject
 
     private void SortStoryList()
     {
-        //TODO: 优化一下
+        //TODO: 有更好的排序方式吗？
         if (_storyMetadataDict is not null)
         {
             List<StoryInfo> storyList = [..Stories];
             storyList.Sort(new StoryInfoComparer());
 
-            Stories = new(storyList);
+            if (Stories.SequenceEqual(storyList) != true)
+            {
+                Stories = new(storyList);
+            }
+            else
+            {
+                storyList.Clear();
+                storyList = null;
+            }
         }
     }
 
