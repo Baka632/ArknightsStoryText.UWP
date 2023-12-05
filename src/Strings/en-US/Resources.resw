@@ -189,4 +189,7 @@
   <data name="PickMetadataFileButtonText" xml:space="preserve">
     <value>Pick "story_review_table.json" file</value>
   </data>
+  <data name="MetadataAlreadyLoaded" xml:space="preserve">
+    <value>Story metadata file is already loaded</value>
+  </data>
 </root>

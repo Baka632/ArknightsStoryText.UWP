@@ -198,4 +198,7 @@
   <data name="PickMetadataFileButtonText" xml:space="preserve">
     <value>选取 "story_review_table.json" 文件</value>
   </data>
+  <data name="MetadataAlreadyLoaded" xml:space="preserve">
+    <value>剧情元数据文件已经加载</value>
+  </data>
 </root>

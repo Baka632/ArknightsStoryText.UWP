@@ -2,6 +2,8 @@
 using Windows.Storage.Pickers;
 using Windows.Globalization.Fonts;
 using ArknightsStoryText.UWP.Services;
+using System.ServiceModel.Channels;
+using System.Text;
 
 namespace ArknightsStoryText.UWP.ViewModels;
 
@@ -157,6 +159,17 @@ public sealed class TextReadViewModel : NotificationObject
 
     private async Task OpenMetadataFileAsync()
     {
+        if (metadataService.IsInitialized)
+        {
+            ContentDialogResult result = await ShowDialogAsync("MetadataAlreadyLoaded".GetLocalized(),
+                    "ContinueOrCancel".GetLocalized(), "Continue".GetLocalized(), closeText: "Cancel".GetLocalized());
+
+            if (result == ContentDialogResult.None)
+            {
+                return;
+            }
+        }
+
         FileOpenPicker fileOpenPicker = new();
         fileOpenPicker.FileTypeFilter.Add(".json");
         fileOpenPicker.CommitButtonText = "PickMetadataFileButtonText".GetLocalized();

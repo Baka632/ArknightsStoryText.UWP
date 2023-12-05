@@ -266,6 +266,17 @@ public class TextMergeViewModel : NotificationObject
 
     private async Task OpenMetadataFileAsync()
     {
+        if (metadataService.IsInitialized)
+        {
+            ContentDialogResult result = await ShowDialogAsync("MetadataAlreadyLoaded".GetLocalized(),
+                    "ContinueOrCancel".GetLocalized(), "Continue".GetLocalized(), closeText: "Cancel".GetLocalized());
+
+            if (result == ContentDialogResult.None)
+            {
+                return;
+            }
+        }
+
         FileOpenPicker fileOpenPicker = new();
         fileOpenPicker.FileTypeFilter.Add(".json");
         fileOpenPicker.CommitButtonText = "PickMetadataFileButtonText".GetLocalized();
