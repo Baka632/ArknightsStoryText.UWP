@@ -1,18 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using ArknightsStoryText.UWP.Commands;
-using Windows.Storage.Pickers;
-using Windows.Storage;
-using System.Collections.ObjectModel;
-using ArknightsStoryText.UWP.Models;
-using ArknightsResources.Stories.Models;
-using ArknightsResources.Utility;
-using ArknightsStoryText.UWP.Helpers;
-using Windows.UI.Xaml.Controls;
+﻿using Windows.Storage.Pickers;
 
 namespace ArknightsStoryText.UWP.ViewModels
 {

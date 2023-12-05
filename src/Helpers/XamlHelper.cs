@@ -1,6 +1,4 @@
-﻿using Windows.UI.Xaml;
-
-namespace ArknightsStoryText.UWP.Helpers;
+﻿namespace ArknightsStoryText.UWP.Helpers;
 
 public static class XamlHelper
 {

@@ -1,43 +1,39 @@
-﻿using System;
-using System.Windows.Input;
+﻿namespace ArknightsStoryText.UWP.Commands;
 
-namespace ArknightsStoryText.UWP.Commands
+public class DelegateCommand : ICommand
 {
-    public class DelegateCommand : ICommand
+    public event EventHandler CanExecuteChanged;
+    public Action<object> ExecuteAction { get; set; }
+    public Func<object,bool> CanExecuteFunc { get; set; }
+
+    public DelegateCommand()
     {
-        public event EventHandler CanExecuteChanged;
-        public Action<object> ExecuteAction { get; set; }
-        public Func<object,bool> CanExecuteFunc { get; set; }
 
-        public DelegateCommand()
+    }
+
+    public DelegateCommand(Action<object> action) => ExecuteAction = action;
+
+    public DelegateCommand(Action<object> action, Func<object, bool> func)
+    {
+        ExecuteAction = action;
+        CanExecuteFunc = func;
+    }
+
+    public bool CanExecute(object parameter)
+    {
+        if (CanExecuteFunc == null)
         {
-
+            return true;
         }
+        return CanExecuteFunc(parameter);
+    }
 
-        public DelegateCommand(Action<object> action) => ExecuteAction = action;
-
-        public DelegateCommand(Action<object> action, Func<object, bool> func)
+    public void Execute(object parameter)
+    {
+        if (ExecuteAction == null)
         {
-            ExecuteAction = action;
-            CanExecuteFunc = func;
+            return;
         }
-
-        public bool CanExecute(object parameter)
-        {
-            if (CanExecuteFunc == null)
-            {
-                return true;
-            }
-            return CanExecuteFunc(parameter);
-        }
-
-        public void Execute(object parameter)
-        {
-            if (ExecuteAction == null)
-            {
-                return;
-            }
-            ExecuteAction(parameter);
-        }
+        ExecuteAction(parameter);
     }
 }

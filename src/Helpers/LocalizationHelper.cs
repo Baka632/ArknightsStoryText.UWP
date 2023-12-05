@@ -1,10 +1,9 @@
-﻿namespace ArknightsStoryText.UWP.Helpers
+﻿namespace ArknightsStoryText.UWP.Helpers;
+
+public static class LocalizationHelper
 {
-    public static class LocalizationHelper
+    public static string GetLocalized(this string key)
     {
-        public static string GetLocalized(this string key)
-        {
-            return ReswHelper.GetReswString(key) ?? null;
-        }
+        return ReswHelper.GetReswString(key) ?? null;
     }
 }

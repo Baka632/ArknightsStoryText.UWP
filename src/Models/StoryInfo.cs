@@ -1,7 +1,4 @@
-﻿using ArknightsStoryText.UWP.Helpers;
-using Windows.Storage;
-
-namespace ArknightsStoryText.UWP.Models;
+﻿namespace ArknightsStoryText.UWP.Models;
 
 /// <summary>
 /// 表示剧情信息的类
