@@ -27,13 +27,11 @@
             DefaultLabelPosition="Right">
             <AppBarButton
                 x:Uid="OpenStoryText"
-                Margin="0,0,5,0"
                 Command="{x:Bind ViewModel.OpenStoryTextFileCommand}"
                 Icon="OpenFile" />
 
             <AppBarButton
                 x:Uid="SaveStoryText"
-                Margin="0,0,5,0"
                 Command="{x:Bind ViewModel.SaveStoryTextFileCommand}"
                 Icon="Save" />
 
@@ -41,7 +39,6 @@
 
             <AppBarToggleButton
                 x:Uid="TryAutoParagraph"
-                Margin="0,0,5,0"
                 Icon="ShowResults"
                 IsChecked="{x:Bind ViewModel.IsParagraph, Mode=TwoWay}" />
 

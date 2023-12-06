@@ -30,6 +30,7 @@
                 x:Name="OperationCommandBar"
                 x:Uid="DefaultCommandBar"
                 HorizontalAlignment="Stretch"
+                Background="Transparent"
                 DefaultLabelPosition="Right">
                 <AppBarButton
                     x:Uid="OpenStoryText"
@@ -45,7 +46,6 @@
 
                 <AppBarToggleButton
                     x:Uid="TryAutoParagraph"
-                    Margin="5,0,5,0"
                     Icon="ShowResults"
                     IsChecked="{x:Bind ViewModel.IsParagraph, Mode=TwoWay}" />
 
@@ -127,29 +127,71 @@
             ItemsSource="{x:Bind ViewModel.Stories, Mode=OneWay}"
             SelectionMode="None"
             Visibility="{x:Bind helper:XamlHelper.ReverseVisibility(ViewModel.IsLoading), Mode=OneWay}">
+
+            <ListView.Resources>
+                <SolidColorBrush x:Key="SystemControlTransparentRevealBackgroundBrush" Color="Transparent" />
+                <SolidColorBrush x:Key="SystemControlTransparentRevealBorderBrush" Color="Transparent" />
+                <Thickness x:Key="ListViewItemRevealBorderThemeThickness">0</Thickness>
+                <SolidColorBrush x:Key="ListViewItemRevealBackgroundSelectedPressed" Color="Transparent" />
+                <SolidColorBrush x:Key="ListViewItemRevealPlaceholderBackground" Color="Transparent" />
+            </ListView.Resources>
+
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="models:StoryInfo">
-                    <astc:StoryTextExpander
-                        Title="{x:Bind Title}"
-                        HorizontalAlignment="Stretch"
-                        Background="Transparent"
-                        FontFamily="{Binding ElementName=SetFontComboBox, Path=SelectedValue, Converter={StaticResource ObjToFontFamilyOrDouble}, Mode=OneWay}"
-                        FontSize="{Binding ElementName=SetFontSizeComboBox, Path=SelectedValue, Converter={StaticResource ObjToFontFamilyOrDouble}, Mode=OneWay}"
-                        Text="{x:Bind Text}">
-                        <astc:StoryTextExpander.ContextFlyout>
-                            <muxc:CommandBarFlyout>
-                                <muxc:CommandBarFlyout.SecondaryCommands>
-                                    <AppBarButton
-                                        x:Uid="RemoveSingleStoryInfo"
-                                        Command="{Binding ElementName=Self, Path=ViewModel.RemoveSingleStoryTextCommand}"
-                                        CommandParameter="{x:Bind}"
-                                        Icon="Delete" />
-                                </muxc:CommandBarFlyout.SecondaryCommands>
-                            </muxc:CommandBarFlyout>
-                        </astc:StoryTextExpander.ContextFlyout>
-                    </astc:StoryTextExpander>
+                    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <FontIcon
+                            Grid.Column="1"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontFamily="{StaticResource SymbolThemeFontFamily}"
+                            Glyph="&#xE784;" />
+
+                        <muxc:Expander
+                            Grid.Column="0"
+                            HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Stretch"
+                            VerticalContentAlignment="Stretch"
+                            Background="Transparent">
+                            <muxc:Expander.ContextFlyout>
+                                <muxc:CommandBarFlyout>
+                                    <muxc:CommandBarFlyout.SecondaryCommands>
+                                        <AppBarButton
+                                            x:Uid="RemoveSingleStoryInfo"
+                                            Command="{Binding ElementName=Self, Path=ViewModel.RemoveSingleStoryTextCommand}"
+                                            CommandParameter="{x:Bind}"
+                                            Icon="Delete" />
+                                    </muxc:CommandBarFlyout.SecondaryCommands>
+                                </muxc:CommandBarFlyout>
+                            </muxc:Expander.ContextFlyout>
+                            <muxc:Expander.Header>
+                                <TextBlock Text="{x:Bind Title}" />
+                            </muxc:Expander.Header>
+                            <muxc:Expander.Content>
+                                <TextBlock
+                                    FontFamily="{Binding ElementName=SetFontComboBox, Path=SelectedValue, Converter={StaticResource ObjToFontFamilyOrDouble}, Mode=OneWay}"
+                                    FontSize="{Binding ElementName=SetFontSizeComboBox, Path=SelectedValue, Converter={StaticResource ObjToFontFamilyOrDouble}, Mode=OneWay}"
+                                    IsTextSelectionEnabled="True"
+                                    Text="{x:Bind Text}"
+                                    TextWrapping="Wrap" />
+                            </muxc:Expander.Content>
+                        </muxc:Expander>
+                    </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
+
+            <ListView.ItemContainerStyle>
+                <Style BasedOn="{StaticResource DefaultListViewItemStyle}" TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    <Setter Property="VerticalContentAlignment" Value="Stretch" />
+                    <Setter Property="Padding" Value="0,0,10,0" />
+                    <Setter Property="Margin" Value="0,2,0,2" />
+                </Style>
+            </ListView.ItemContainerStyle>
         </ListView>
 
         <ProgressRing

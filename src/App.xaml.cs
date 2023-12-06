@@ -117,6 +117,14 @@ sealed partial class App : Application
 
             // 将框架放在当前窗口中
             Window.Current.Content = rootFrame;
+            XamlControlsResources muxcStyle = new()
+            {
+                ControlsResourcesVersion = Environment.OSVersion.Version.Build >= 22000
+                ? ControlsResourcesVersion.Version2
+                : ControlsResourcesVersion.Version1
+            };
+            Resources.MergedDictionaries.Add(muxcStyle);
+            SetTitleBar();
         }
 
         if (e.PrelaunchActivated == false)
@@ -129,20 +137,14 @@ sealed partial class App : Application
             // 确保当前窗口处于活动状态
             Window.Current.Activate();
         }
+    }
 
-        bool isMobile = AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Mobile";
-
-        XamlControlsResources muxcStyle = new()
-        {
-            ControlsResourcesVersion = isMobile ? ControlsResourcesVersion.Version1 : ControlsResourcesVersion.Version2
-        };
-        Resources.MergedDictionaries.Add(muxcStyle);
-
-        #region TitleBarColor
+    private static void SetTitleBar()
+    {
         ApplicationViewTitleBar PresentationTitleBar = ApplicationView.GetForCurrentView().TitleBar;
         PresentationTitleBar.ButtonBackgroundColor = Colors.Transparent;
         CoreApplicationViewTitleBar coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
-        coreTitleBar.ExtendViewIntoTitleBar = isMobile is not true;
+        coreTitleBar.ExtendViewIntoTitleBar = AnalyticsInfo.VersionInfo.DeviceFamily != "Windows.Mobile";
 
         Color ForegroundColor = Current.RequestedTheme switch
         {
@@ -151,7 +153,6 @@ sealed partial class App : Application
             _ => Colors.White,
         };
         PresentationTitleBar.ButtonForegroundColor = ForegroundColor;
-        #endregion
     }
 
     /// <summary>

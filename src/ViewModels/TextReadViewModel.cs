@@ -2,8 +2,6 @@
 using Windows.Storage.Pickers;
 using Windows.Globalization.Fonts;
 using ArknightsStoryText.UWP.Services;
-using System.ServiceModel.Channels;
-using System.Text;
 
 namespace ArknightsStoryText.UWP.ViewModels;
 
