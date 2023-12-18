@@ -189,4 +189,16 @@
   <data name="RemoveSingleStoryInfo.Label" xml:space="preserve">
     <value>移除此项</value>
   </data>
+  <data name="LoadStoryMetadata.Label" xml:space="preserve">
+    <value>加载剧情元数据文件</value>
+  </data>
+  <data name="InvaildMetadataFile_WithPlaceholder" xml:space="preserve">
+    <value>{0} 似乎不是有效的剧情元数据文件</value>
+  </data>
+  <data name="PickMetadataFileButtonText" xml:space="preserve">
+    <value>选取 "story_review_table.json" 文件</value>
+  </data>
+  <data name="MetadataAlreadyLoaded" xml:space="preserve">
+    <value>剧情元数据文件已经加载</value>
+  </data>
 </root>

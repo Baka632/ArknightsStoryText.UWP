@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using ArknightsStoryText.UWP.Models;
-
-namespace ArknightsStoryText.UWP.Helpers;
+﻿namespace ArknightsStoryText.UWP.Helpers;
 
 public static class FontHelper
 {

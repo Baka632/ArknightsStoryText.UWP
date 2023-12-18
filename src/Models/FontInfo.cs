@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using ArknightsStoryText.UWP.ViewModels;
-using Windows.UI.Xaml.Media;
-
-namespace ArknightsStoryText.UWP.Models;
+﻿namespace ArknightsStoryText.UWP.Models;
 
 /// <summary>
 /// 表示一个字体信息的类

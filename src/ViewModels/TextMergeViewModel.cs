@@ -1,247 +1,420 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using ArknightsStoryText.UWP.Commands;
-using Windows.Storage.Pickers;
-using Windows.Storage;
-using System.Collections.ObjectModel;
+﻿using System.IO;
 using ArknightsStoryText.UWP.Models;
-using ArknightsResources.Stories.Models;
-using ArknightsResources.Utility;
-using ArknightsStoryText.UWP.Helpers;
-using Windows.UI.Xaml.Controls;
+using ArknightsStoryText.UWP.Services;
+using Windows.Storage.Pickers;
 
-namespace ArknightsStoryText.UWP.ViewModels
+namespace ArknightsStoryText.UWP.ViewModels;
+
+public class TextMergeViewModel : NotificationObject
 {
-    public class TextMergeViewModel : NotificationObject
+    private string _transformedStoryText = string.Empty;
+    private string _doctorName = string.Empty;
+    private bool _isParagraph = false;
+    private bool _isMerging = false;
+    private ObservableCollection<StoryFileInfo> files = [];
+    private readonly StoryMetadataService metadataService = new();
+
+    public TextMergeViewModel()
     {
-        private string _transformedStoryText = string.Empty;
-        private string _doctorName = string.Empty;
-        private bool _isParagraph = false;
-        private bool _isMerging = false;
-
-        public TextMergeViewModel()
+        OpenStoryTextFileCommand = new DelegateCommand(async (obj) => await OpenStoryTextFileAsync());
+        SaveStoryTextFileCommand = new DelegateCommand(async (obj) => await SaveStoryTextFileAsync());
+        LoadStoryMetadataCommand = new DelegateCommand(async obj => await OpenMetadataFileAsync());
+        ClearStoryTextsCommand = new DelegateCommand(obj => Files.Clear());
+        RemoveStoryTextFileCommand = new DelegateCommand(obj =>
         {
-            OpenStoryTextFileCommand = new DelegateCommand(async (obj) => await OpenStoryTextFileAsync());
-            SaveStoryTextFileCommand = new DelegateCommand(async (obj) => await SaveStoryTextFileAsync());
-            RemoveStoryTextFileCommand = new DelegateCommand(obj =>
+            if (obj is StoryFileInfo fileInfo)
             {
-                if (obj is StoryFileInfo fileInfo)
+                Files.Remove(fileInfo);
+            }
+        });
+    }
+
+    public ICommand OpenStoryTextFileCommand { get; }
+    public ICommand SaveStoryTextFileCommand { get; }
+    public ICommand RemoveStoryTextFileCommand { get; }
+    public ICommand ClearStoryTextsCommand { get; }
+    public ICommand LoadStoryMetadataCommand { get; }
+
+    public ObservableCollection<StoryFileInfo> Files
+    {
+        get => files;
+        private set
+        {
+            files = value;
+            OnPropertiesChanged();
+        }
+    }
+
+    public string TransformedStoryText
+    {
+        get => _transformedStoryText;
+        set
+        {
+            _transformedStoryText = value;
+            OnPropertiesChanged();
+        }
+    }
+
+    public string DoctorName
+    {
+        get => _doctorName;
+        set
+        {
+            _doctorName = value;
+            OnPropertiesChanged();
+        }
+    }
+
+    public bool IsParagraph
+    {
+        get => _isParagraph;
+        set
+        {
+            _isParagraph = value;
+            OnPropertiesChanged();
+        }
+    }
+
+    public bool IsMerging
+    {
+        get => _isMerging;
+        set
+        {
+            _isMerging = value;
+            OnPropertiesChanged();
+        }
+    }
+
+    private async Task OpenStoryTextFileAsync()
+    {
+        FileOpenPicker fileOpenPicker = new();
+        fileOpenPicker.FileTypeFilter.Add(".txt");
+        IReadOnlyList<StorageFile> storageFiles = await fileOpenPicker.PickMultipleFilesAsync();
+
+        if (storageFiles is not null || !storageFiles.Any())
+        {
+            foreach (StorageFile file in storageFiles)
+            {
+                string storyDisplayName;
+                StoryMetadataInfo? metadata;
+                InfoUnlockData? detailInfo;
+
+                if (metadataService.TryGetMetadata(file.DisplayName, out (StoryMetadataInfo, InfoUnlockData) result))
                 {
-                    Files.Remove(fileInfo);
+                    InfoUnlockData item2 = result.Item2;
+                    List<string> strParts = new(3);
+
+                    if (string.IsNullOrWhiteSpace(item2.StoryCode) != true)
+                    {
+                        strParts.Add(item2.StoryCode);
+                    }
+
+                    strParts.Add(item2.StoryName);
+
+                    if (item2.AvgTag != "幕间")
+                    {
+                        strParts.Add(item2.AvgTag);
+                    }
+
+                    storyDisplayName = string.Join(' ', strParts);
+
+                    metadata = result.Item1;
+                    detailInfo = result.Item2;
                 }
-            });
+                else
+                {
+                    storyDisplayName = string.Empty;
+                    metadata = null;
+                    detailInfo = null;
+                }
+
+                if (!Files.Any(fileInfo => fileInfo.File.Path == file.Path))
+                {
+                    Files.Add(new StoryFileInfo(file, storyDisplayName, metadata, detailInfo));
+                }
+            }
+
+            SortFileList();
+        }
+    }
+
+    private async Task SaveStoryTextFileAsync()
+    {
+        StringBuilder stringBuilder = new(20);
+        int count = 0;
+
+        if (!Files.Any())
+        {
+            await ShowDialogAsync("NoFileImported".GetLocalized(), "AddSomeFiles".GetLocalized(), closeText:"Close".GetLocalized());
+            return;
         }
 
-        public ICommand OpenStoryTextFileCommand { get; }
-        public ICommand SaveStoryTextFileCommand { get; }
-        public ICommand RemoveStoryTextFileCommand { get; }
-
-        public ObservableCollection<StoryFileInfo> Files { get; } = new();
-
-        public string TransformedStoryText
+        foreach (StoryFileInfo item in Files)
         {
-            get => _transformedStoryText;
-            set
+            string text;
+            try
             {
-                _transformedStoryText = value;
-                OnPropertiesChanged();
+                text = await FileIO.ReadTextAsync(item.File);
             }
+            catch (ArgumentOutOfRangeException)
+            {
+                string title = string.Format("InvaildFile_WithPlaceholder".GetLocalized(), item.File.Name);
+                ContentDialogResult result = await ShowDialogAsync(title,
+                    "ContinueOrCancel".GetLocalized(), "Continue".GetLocalized(), closeText: "Cancel".GetLocalized());
+
+                if (result == ContentDialogResult.None)
+                {
+                    stringBuilder.Clear();
+                    return;
+                }
+                else
+                {
+                    continue;
+                }
+            }
+
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                string title = string.Format("FileIsEmpty_WithPlaceholder".GetLocalized(), item.File.Name);
+                ContentDialogResult result = await ShowDialogAsync(title,
+                    "ContinueOrCancel".GetLocalized(), "Continue".GetLocalized(), closeText: "Cancel".GetLocalized());
+
+                if (result == ContentDialogResult.None)
+                {
+                    stringBuilder.Clear();
+                    return;
+                }
+                else
+                {
+                    continue;
+                }
+            }
+
+            StoryReader sr = new(text, DoctorName);
+            StoryScene scene;
+            try
+            {
+                scene = sr.GetStoryScene();
+            }
+            catch (ArgumentException)
+            {
+                string title = string.Format("TutorialFileNotSupported_WithPlaceholder".GetLocalized(),item.File.Name);
+                ContentDialogResult result = await ShowDialogAsync(title,
+                    "ContinueOrCancel".GetLocalized(), "Continue".GetLocalized(), closeText: "Cancel".GetLocalized());
+
+                if (result == ContentDialogResult.None)
+                {
+                    stringBuilder.Clear();
+                    return;
+                }
+                else
+                {
+                    continue;
+                }
+            }
+            catch (Exception ex)
+            {
+                string title = string.Format("ErrorWhenParsing_WithPlaceholder".GetLocalized(), item.File.Name);
+                ContentDialogResult result = await ShowDialogAsync(title,
+                    $"{ex.Message}\n{"ContinueOrCancel".GetLocalized()}", "Continue".GetLocalized(), closeText: "Cancel".GetLocalized());
+
+                if (result == ContentDialogResult.None)
+                {
+                    stringBuilder.Clear();
+                    return;
+                }
+                else
+                {
+                    continue;
+                }
+            }
+
+            string storyText = StoryReader.GetStoryText(scene.StoryCommands, IsParagraph);
+
+            //TODO: 自定义
+            count++;
+
+            stringBuilder.AppendLine($"{count}. {item.Title}");
+            stringBuilder.AppendLine();
+            stringBuilder.AppendLine(storyText);
+            stringBuilder.AppendLine();
+
         }
 
-        public string DoctorName
+        IEnumerable<string> names = (from info in Files
+                                     where info.MetadataInfo.HasValue
+                                     select info.MetadataInfo.Value.Name).Distinct();
+        int namesCount = names.Count();
+
+        FileSavePicker fileSavePicker = new();
+        fileSavePicker.FileTypeChoices.Add("TXT", new string[] { ".txt" });
+
+        if (namesCount == 1)
         {
-            get => _doctorName;
-            set
-            {
-                _doctorName = value;
-                OnPropertiesChanged();
-            }
+            fileSavePicker.SuggestedFileName = names.First();
         }
 
-        public bool IsParagraph
+        StorageFile saveFile = await fileSavePicker.PickSaveFileAsync();
+
+        if (saveFile is not null)
         {
-            get => _isParagraph;
-            set
-            {
-                _isParagraph = value;
-                OnPropertiesChanged();
-            }
-        }
-
-        public bool IsMerging
-        {
-            get => _isMerging;
-            set
-            {
-                _isMerging = value;
-                OnPropertiesChanged();
-            }
-        }
-
-        private async Task OpenStoryTextFileAsync()
-        {
-            FileOpenPicker fileOpenPicker = new();
-            fileOpenPicker.FileTypeFilter.Add(".txt");
-            IReadOnlyList<StorageFile> storageFiles = await fileOpenPicker.PickMultipleFilesAsync();
-
-            if (storageFiles is not null || !storageFiles.Any())
-            {
-                foreach (StorageFile item in storageFiles)
-                {
-                    if (!Files.Any(fileInfo => fileInfo.File.Path == item.Path))
-                    {
-                        Files.Add(new StoryFileInfo(item, string.Empty));
-                    }
-                }
-            }
-        }
-
-        private async Task SaveStoryTextFileAsync()
-        {
-            StringBuilder stringBuilder = new(20);
-            int count = 0;
-
-            if (!Files.Any())
-            {
-                await ShowDialogAsync("NoFileImported".GetLocalized(), "AddSomeFiles".GetLocalized(), closeText:"Close".GetLocalized());
-                return;
-            }
-
-            foreach (var item in Files)
-            {
-                string text;
-                try
-                {
-                    text = await FileIO.ReadTextAsync(item.File);
-                }
-                catch (ArgumentOutOfRangeException)
-                {
-                    string title = string.Format("InvaildFile_WithPlaceholder".GetLocalized(), item.File.Name);
-                    ContentDialogResult result = await ShowDialogAsync(title,
-                        "ContinueOrCancel".GetLocalized(), "Continue".GetLocalized(), closeText: "Cancel".GetLocalized());
-
-                    if (result == ContentDialogResult.None)
-                    {
-                        stringBuilder.Clear();
-                        return;
-                    }
-                    else
-                    {
-                        continue;
-                    }
-                }
-
-                if (string.IsNullOrWhiteSpace(text))
-                {
-                    string title = string.Format("FileIsEmpty_WithPlaceholder".GetLocalized(), item.File.Name);
-                    ContentDialogResult result = await ShowDialogAsync(title,
-                        "ContinueOrCancel".GetLocalized(), "Continue".GetLocalized(), closeText: "Cancel".GetLocalized());
-
-                    if (result == ContentDialogResult.None)
-                    {
-                        stringBuilder.Clear();
-                        return;
-                    }
-                    else
-                    {
-                        continue;
-                    }
-                }
-
-                StoryReader sr = new(text, DoctorName);
-                StoryScene scene;
-                try
-                {
-                    scene = sr.GetStoryScene();
-                }
-                catch (ArgumentException)
-                {
-                    string title = string.Format("TutorialFileNotSupported_WithPlaceholder".GetLocalized(),item.File.Name);
-                    ContentDialogResult result = await ShowDialogAsync(title,
-                        "ContinueOrCancel".GetLocalized(), "Continue".GetLocalized(), closeText: "Cancel".GetLocalized());
-
-                    if (result == ContentDialogResult.None)
-                    {
-                        stringBuilder.Clear();
-                        return;
-                    }
-                    else
-                    {
-                        continue;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    string title = string.Format("ErrorWhenParsing_WithPlaceholder".GetLocalized(), item.File.Name);
-                    ContentDialogResult result = await ShowDialogAsync(title,
-                        $"{ex.Message}\n{"ContinueOrCancel".GetLocalized()}", "Continue".GetLocalized(), closeText: "Cancel".GetLocalized());
-
-                    if (result == ContentDialogResult.None)
-                    {
-                        stringBuilder.Clear();
-                        return;
-                    }
-                    else
-                    {
-                        continue;
-                    }
-                }
-
-                string storyText = StoryReader.GetStoryText(scene.StoryCommands, IsParagraph);
-
-                //TODO: 自定义
-                count++;
-
-                stringBuilder.AppendLine($"{count}. {item.Title}");
-                stringBuilder.AppendLine();
-                stringBuilder.AppendLine(storyText);
-                stringBuilder.AppendLine();
-
-            }
-
-            FileSavePicker fileSavePicker = new();
-            fileSavePicker.FileTypeChoices.Add("TXT", new string[] { ".txt" });
-            StorageFile saveFile = await fileSavePicker.PickSaveFileAsync();
-
-            if (saveFile is not null)
-            {
-                await FileIO.WriteTextAsync(saveFile, stringBuilder.ToString());
-            }
-
+            await FileIO.WriteTextAsync(saveFile, stringBuilder.ToString());
             string fileSaveLocationTip = string.Format("FileSavePathTip_WithPlaceholder".GetLocalized(), saveFile.Path);
             await ShowDialogAsync("FileSaveComplete".GetLocalized(), fileSaveLocationTip, closeText: "OK".GetLocalized());
         }
+    }
 
-        /// <summary>
-        /// 显示一个对话框
-        /// </summary>
-        /// <param name="title">对话框标题</param>
-        /// <param name="message">要在对话框中显示的信息</param>
-        /// <param name="primaryText">主按钮文本</param>
-        /// <param name="secondaryText">第二按钮文本</param>
-        /// <param name="closeText">关闭按钮文本</param>
-        /// <returns>指示对话框结果的<seealso cref="ContentDialogResult"/></returns>
-        private static async Task<ContentDialogResult> ShowDialogAsync(string title, string message, string primaryText = null, string secondaryText = null, string closeText = null)
+    private async Task OpenMetadataFileAsync()
+    {
+        if (metadataService.IsInitialized)
         {
-            //null-coalescing操作符——当closeText为空时才赋值
-            closeText ??= "Close".GetLocalized();
-            primaryText ??= string.Empty;
-            secondaryText ??= string.Empty;
+            ContentDialogResult result = await ShowDialogAsync("MetadataAlreadyLoaded".GetLocalized(),
+                    "ContinueOrCancel".GetLocalized(), "Continue".GetLocalized(), closeText: "Cancel".GetLocalized());
 
-            ContentDialog dialog = new()
+            if (result == ContentDialogResult.None)
             {
-                Title = title,
-                Content = message,
-                PrimaryButtonText = primaryText,
-                SecondaryButtonText = secondaryText,
-                CloseButtonText = closeText
-            };
-
-            return await dialog.ShowAsync();
+                return;
+            }
         }
+
+        FileOpenPicker fileOpenPicker = new();
+        fileOpenPicker.FileTypeFilter.Add(".json");
+        fileOpenPicker.CommitButtonText = "PickMetadataFileButtonText".GetLocalized();
+        StorageFile file = await fileOpenPicker.PickSingleFileAsync();
+
+        if (file is null)
+        {
+            //用户取消了文件选择
+            return;
+        }
+
+        Stream utf8Json = await file.OpenStreamForReadAsync();
+
+        if (metadataService.TryInitialize(utf8Json))
+        {
+            for (int i = 0; i < Files.Count; i++)
+            {
+                StoryFileInfo info = Files[i];
+                if (metadataService.TryGetMetadata(info.File.DisplayName, out (StoryMetadataInfo, InfoUnlockData) result))
+                {
+                    info.MetadataInfo = result.Item1;
+                    info.DetailInfo = result.Item2;
+
+                    List<string> strParts = new(3);
+
+                    if (string.IsNullOrWhiteSpace(result.Item2.StoryCode) != true)
+                    {
+                        strParts.Add(result.Item2.StoryCode);
+                    }
+
+                    strParts.Add(result.Item2.StoryName);
+
+                    if (result.Item2.AvgTag != "幕间")
+                    {
+                        strParts.Add(result.Item2.AvgTag);
+                    }
+
+                    info.Title = string.Join(' ', strParts);
+                }
+            }
+            SortFileList();
+        }
+        else
+        {
+            string title = string.Format("InvaildMetadataFile_WithPlaceholder".GetLocalized(), file.Name);
+            string message = "OpenAnotherFileInstead".GetLocalized();
+            await ShowDialogAsync(title, message, closeText: "OK".GetLocalized());
+        }
+    }
+
+    private void SortFileList()
+    {
+        //TODO: 有更好的排序方式吗？
+        if (metadataService.IsInitialized)
+        {
+            List<StoryFileInfo> fileList = [..Files];
+            fileList.Sort(CompareStoryInfo);
+
+            if (Files.SequenceEqual(fileList) != true)
+            {
+                Files = new(fileList);
+            }
+            else
+            {
+                fileList.Clear();
+                fileList = null;
+            }
+        }
+    }
+
+    private int CompareStoryInfo(StoryFileInfo x, StoryFileInfo y)
+    {
+        if (x.MetadataInfo.HasValue && y.MetadataInfo.HasValue != true)
+        {
+            return 1;
+        }
+        else if (x.MetadataInfo.HasValue != true && y.MetadataInfo.HasValue)
+        {
+            return -1;
+        }
+        else if (x.MetadataInfo.HasValue == false && y.MetadataInfo.HasValue == false)
+        {
+            return 0;
+        }
+
+        string xId = x.MetadataInfo.Value.Id;
+        string yId = y.MetadataInfo.Value.Id;
+
+        if (x.DetailInfo.HasValue == false || y.DetailInfo.HasValue == false)
+        {
+            return string.CompareOrdinal(xId, yId);
+        }
+
+        if (xId == yId)
+        {
+            int xSort = x.DetailInfo.Value.StorySort;
+            int ySort = y.DetailInfo.Value.StorySort;
+
+            if (xSort == ySort)
+            {
+                return 0;
+            }
+            else
+            {
+                return Comparer<int>.Default.Compare(xSort, ySort);
+            }
+        }
+        else
+        {
+            return string.CompareOrdinal(xId, yId);
+        }
+    }
+
+    /// <summary>
+    /// 显示一个对话框
+    /// </summary>
+    /// <param name="title">对话框标题</param>
+    /// <param name="message">要在对话框中显示的信息</param>
+    /// <param name="primaryText">主按钮文本</param>
+    /// <param name="secondaryText">第二按钮文本</param>
+    /// <param name="closeText">关闭按钮文本</param>
+    /// <returns>指示对话框结果的<seealso cref="ContentDialogResult"/></returns>
+    private static async Task<ContentDialogResult> ShowDialogAsync(string title, string message, string primaryText = null, string secondaryText = null, string closeText = null)
+    {
+        //null-coalescing操作符——当closeText为空时才赋值
+        closeText ??= "Close".GetLocalized();
+        primaryText ??= string.Empty;
+        secondaryText ??= string.Empty;
+
+        ContentDialog dialog = new()
+        {
+            Title = title,
+            Content = message,
+            PrimaryButtonText = primaryText,
+            SecondaryButtonText = secondaryText,
+            CloseButtonText = closeText
+        };
+
+        return await dialog.ShowAsync();
     }
 }

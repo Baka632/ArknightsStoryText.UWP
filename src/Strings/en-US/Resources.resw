@@ -64,7 +64,7 @@
     <value>This file is empty</value>
   </data>
   <data name="InvaildFile" xml:space="preserve">
-    <value>This file seems invalid</value>
+    <value>This file seems to be invalid story file</value>
   </data>
   <data name="ReadPivotItem.Header" xml:space="preserve">
     <value>Read</value>
@@ -115,7 +115,7 @@
     <value>{0} is a not supported tutorial file</value>
   </data>
   <data name="InvaildFile_WithPlaceholder" xml:space="preserve">
-    <value>{0} seems invalid</value>
+    <value>{0} seems to be invalid story file</value>
   </data>
   <data name="ChangeFontAndSize.Label" xml:space="preserve">
     <value>Change font and font size</value>
@@ -179,5 +179,17 @@
   </data>
   <data name="RemoveSingleStoryInfo.Label" xml:space="preserve">
     <value>Remove this item</value>
+  </data>
+  <data name="LoadStoryMetadata.Label" xml:space="preserve">
+    <value>Load story metadata file</value>
+  </data>
+  <data name="InvaildMetadataFile_WithPlaceholder" xml:space="preserve">
+    <value>{0} seems to be invalid story metadata file</value>
+  </data>
+  <data name="PickMetadataFileButtonText" xml:space="preserve">
+    <value>Pick "story_review_table.json" file</value>
+  </data>
+  <data name="MetadataAlreadyLoaded" xml:space="preserve">
+    <value>Story metadata file is already loaded</value>
   </data>
 </root>
