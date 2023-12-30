@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using ArknightsStoryText.UWP.Models;
 using ArknightsStoryText.UWP.Services;
 using Windows.Storage.Pickers;
 

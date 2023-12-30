@@ -177,6 +177,7 @@
     <Compile Include="Models\StoryMetadataInfo.cs" />
     <Compile Include="Services\StoryMetadataService.cs" />
     <Compile Include="ViewModels\NotificationObject.cs" />
+    <Compile Include="ViewModels\StoryGlanceViewModel.cs" />
     <Compile Include="ViewModels\TextMergeViewModel.cs" />
     <Compile Include="ViewModels\TextReadViewModel.cs" />
     <Compile Include="Views\MainPage.xaml.cs">
@@ -184,6 +185,9 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\StoryReader.cs" />
+    <Compile Include="Views\StoryGlancePage.xaml.cs">
+      <DependentUpon>StoryGlancePage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\TextMergePage.xaml.cs">
       <DependentUpon>TextMergePage.xaml</DependentUpon>
     </Compile>
@@ -267,6 +271,10 @@
     <Page Include="Views\MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\StoryGlancePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\TextMergePage.xaml">
       <SubType>Designer</SubType>

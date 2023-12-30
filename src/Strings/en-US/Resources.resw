@@ -192,4 +192,7 @@
   <data name="MetadataAlreadyLoaded" xml:space="preserve">
     <value>Story metadata file is already loaded</value>
   </data>
+  <data name="GlancePivotItem.Header" xml:space="preserve">
+    <value>Glance</value>
+  </data>
 </root>

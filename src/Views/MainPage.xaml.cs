@@ -30,5 +30,6 @@ public sealed partial class MainPage : Page
 
         TextReadPageFrame.Navigate(typeof(TextReadPage));
         TextMergePageFrame.Navigate(typeof(TextMergePage));
+        StoryGlancePageFrame.Navigate(typeof(StoryGlancePage));
     }
 }
