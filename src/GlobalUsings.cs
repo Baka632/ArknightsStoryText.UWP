@@ -22,7 +22,6 @@ global using CommunityToolkit.Mvvm.ComponentModel;
 
 global using ArknightsStoryText.UWP.Views;
 global using ArknightsStoryText.UWP.Helpers;
-global using ArknightsStoryText.UWP.Commands;
 global using ArknightsStoryText.UWP.ViewModels;
 global using ArknightsStoryText.UWP.Models;
 global using ArknightsResources.Utility;
