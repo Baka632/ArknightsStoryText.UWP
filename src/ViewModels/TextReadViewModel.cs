@@ -5,116 +5,55 @@ using ArknightsStoryText.UWP.Services;
 
 namespace ArknightsStoryText.UWP.ViewModels;
 
-public sealed class TextReadViewModel : NotificationObject
+public sealed partial class TextReadViewModel : ObservableObject
 {
-    private string _doctorName = string.Empty;
-    private bool _isParagraph = false;
-    private bool _isLoading = false;
-    private ObservableCollection<StoryInfo> stories = [];
     private readonly StoryMetadataService metadataService = new();
+
+    [ObservableProperty]
+    private string _doctorName = string.Empty;
+    [ObservableProperty]
+    private bool _isParagraph = false;
+    [ObservableProperty]
+    private bool _isLoading = false;
+    [ObservableProperty]
+    private ObservableCollection<StoryInfo> stories = [];
+
+    public List<double> FontSizes { get; } = [8d, 9d, 10d, 11d, 12d, 14d, 16d, 18d, 20d, 24d, 28d, 36d, 48d, 72d];
+    public IReadOnlyList<FontInfo> Fonts { get; }
+    public static FontInfo DefaultFont { get; }
+    public static double DefaultFontSize => 16;
 
     public TextReadViewModel()
     {
-        OpenStoryTextFileCommand = new DelegateCommand(async obj => await OpenStoryTextFileAsync());
-        OpenStoryTextFolderCommand = new DelegateCommand(async obj => await OpenStoryTextFolderAsync());
-        LoadStoryMetadataCommand = new DelegateCommand(async obj => await OpenMetadataFileAsync());
-        ClearStoryTextsCommand = new DelegateCommand(obj => ClearStoryTexts());
-        RemoveSingleStoryTextCommand = new DelegateCommand(obj =>
-        {
-            if (obj is StoryInfo info)
-            {
-                RemoveSingleStoryText(info);
-            }
-        });
-
         IReadOnlyList<FontInfo> fonts = FontHelper.GetSystemFonts();
-
         Fonts = fonts;
     }
 
-    public ICommand OpenStoryTextFileCommand { get; }
-    public ICommand OpenStoryTextFolderCommand { get; }
-    public ICommand ClearStoryTextsCommand { get; }
-    public ICommand RemoveSingleStoryTextCommand { get; }
-    public ICommand LoadStoryMetadataCommand { get; }
-
-    public ObservableCollection<StoryInfo> Stories
+    static TextReadViewModel()
     {
-        get => stories;
-        set
-        {
-            stories = value;
-            OnPropertiesChanged();
-        }
+        LanguageFontGroup languageFontGroup = new(CultureInfo.CurrentUICulture.Name);
+        FontFamily defaultFont = new(languageFontGroup.ModernDocumentFont.FontFamily);
+        DefaultFont = new(defaultFont.Source, defaultFont);
     }
 
-    public string DoctorName
+    async partial void OnDoctorNameChanged(string value)
     {
-        get => _doctorName;
-        set
-        {
-            if (_doctorName == value)
-            {
-                return;
-            }
-
-            _doctorName = value;
-            OnPropertiesChanged();
-
-            _ = ReParseStoryTextAsync();
-        }
+        await ReParseStoryTextAsync();
     }
 
-    public bool IsParagraph
+    async partial void OnIsParagraphChanged(bool value)
     {
-        get => _isParagraph;
-        set
-        {
-            if (_isParagraph == value)
-            {
-                return;
-            }
-
-            _isParagraph = value;
-            OnPropertiesChanged();
-
-            _ = ReParseStoryTextAsync();
-        }
+        await ReParseStoryTextAsync();
     }
 
-    public bool IsLoading
-    {
-        get => _isLoading;
-        set
-        {
-            _isLoading = value;
-            OnPropertiesChanged();
-        }
-    }
-
-    public List<double> FontSizes { get; } = [8d, 9d, 10d, 11d, 12d, 14d, 16d, 18d, 20d, 24d, 28d, 36d, 48d, 72d];
-
-    public IReadOnlyList<FontInfo> Fonts { get; }
-
-    public static FontInfo DefaultFont
-    {
-        get
-        {
-            LanguageFontGroup languageFontGroup = new(CultureInfo.CurrentUICulture.Name);
-            FontFamily defaultFont = new(languageFontGroup.ModernDocumentFont.FontFamily);
-            return new(defaultFont.Source, defaultFont);
-        }
-    }
-
-    public static double DefaultFontSize => 16;
-
+    [RelayCommand]
     private async Task OpenStoryTextFileAsync()
     {
         FileOpenPicker fileOpenPicker = new();
         fileOpenPicker.FileTypeFilter.Add(".txt");
         IReadOnlyList<StorageFile> files = await fileOpenPicker.PickMultipleFilesAsync();
 
-        if (files is null || files.Any() != true)
+        if (files is null || files.Count <= 0)
         {
             //用户取消了文件选择，或者文件列表为空
             return;
@@ -131,6 +70,7 @@ public sealed class TextReadViewModel : NotificationObject
         IsLoading = false;
     }
 
+    [RelayCommand]
     private async Task OpenStoryTextFolderAsync()
     {
         FolderPicker folderPicker = new();
@@ -155,7 +95,8 @@ public sealed class TextReadViewModel : NotificationObject
         IsLoading = false;
     }
 
-    private async Task OpenMetadataFileAsync()
+    [RelayCommand]
+    private async Task LoadStoryMetadataAsync()
     {
         if (metadataService.IsInitialized)
         {
@@ -197,16 +138,21 @@ public sealed class TextReadViewModel : NotificationObject
         IsLoading = false;
     }
 
+    [RelayCommand]
+    private void RemoveSingleStoryText(object obj)
+    {
+        if (obj is StoryInfo info)
+        {
+            Stories.Remove(info);
+        }
+    }
+
+    [RelayCommand]
     private void ClearStoryTexts()
     {
         IsLoading = true;
         Stories.Clear();
         IsLoading = false;
-    }
-
-    private void RemoveSingleStoryText(StoryInfo target)
-    {
-        Stories.Remove(target);
     }
 
     private async Task<bool> ParseOriginTextFromStorageFileAsync(StorageFile file)

@@ -9,7 +9,20 @@
     d:DataContext="{d:DesignInstance Type=viewmodels:StoryGlanceViewModel}"
     mc:Ignorable="d">
 
-    <Grid>
-        <TextBlock Text="Test" />
+    <Grid Background="Transparent">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <CommandBar
+            x:Name="OperationCommandBar"
+            x:Uid="DefaultCommandBar"
+            Grid.Row="0"
+            Margin="0,0,0,5"
+            HorizontalAlignment="Left"
+            DefaultLabelPosition="Right">
+            <AppBarButton x:Uid="OpenGameDataFolder" Icon="OpenLocal" />
+        </CommandBar>
     </Grid>
 </Page>

@@ -204,4 +204,10 @@
   <data name="GlancePivotItem.Header" xml:space="preserve">
     <value>概览</value>
   </data>
+  <data name="OpenGameDataFolder.Label" xml:space="preserve">
+    <value>打开“GameData”文件夹</value>
+  </data>
+  <data name="StoryTxtFileDescription" xml:space="preserve">
+    <value>剧情文本文件</value>
+  </data>
 </root>

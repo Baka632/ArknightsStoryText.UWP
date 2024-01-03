@@ -4,93 +4,30 @@ using Windows.Storage.Pickers;
 
 namespace ArknightsStoryText.UWP.ViewModels;
 
-public class TextMergeViewModel : NotificationObject
+public partial class TextMergeViewModel : ObservableObject
 {
-    private string _transformedStoryText = string.Empty;
-    private string _doctorName = string.Empty;
-    private bool _isParagraph = false;
-    private bool _isMerging = false;
-    private ObservableCollection<StoryFileInfo> files = [];
     private readonly StoryMetadataService metadataService = new();
+    private static readonly string[] defaultFileExtensions = [".txt"];
 
-    public TextMergeViewModel()
-    {
-        OpenStoryTextFileCommand = new DelegateCommand(async (obj) => await OpenStoryTextFileAsync());
-        SaveStoryTextFileCommand = new DelegateCommand(async (obj) => await SaveStoryTextFileAsync());
-        LoadStoryMetadataCommand = new DelegateCommand(async obj => await OpenMetadataFileAsync());
-        ClearStoryTextsCommand = new DelegateCommand(obj => Files.Clear());
-        RemoveStoryTextFileCommand = new DelegateCommand(obj =>
-        {
-            if (obj is StoryFileInfo fileInfo)
-            {
-                Files.Remove(fileInfo);
-            }
-        });
-    }
+    [ObservableProperty]
+    private string _transformedStoryText = string.Empty;
+    [ObservableProperty]
+    private string _doctorName = string.Empty;
+    [ObservableProperty]
+    private bool _isParagraph = false;
+    [ObservableProperty]
+    private bool _isMerging = false;
+    [ObservableProperty]
+    private ObservableCollection<StoryFileInfo> files = [];
 
-    public ICommand OpenStoryTextFileCommand { get; }
-    public ICommand SaveStoryTextFileCommand { get; }
-    public ICommand RemoveStoryTextFileCommand { get; }
-    public ICommand ClearStoryTextsCommand { get; }
-    public ICommand LoadStoryMetadataCommand { get; }
-
-    public ObservableCollection<StoryFileInfo> Files
-    {
-        get => files;
-        private set
-        {
-            files = value;
-            OnPropertiesChanged();
-        }
-    }
-
-    public string TransformedStoryText
-    {
-        get => _transformedStoryText;
-        set
-        {
-            _transformedStoryText = value;
-            OnPropertiesChanged();
-        }
-    }
-
-    public string DoctorName
-    {
-        get => _doctorName;
-        set
-        {
-            _doctorName = value;
-            OnPropertiesChanged();
-        }
-    }
-
-    public bool IsParagraph
-    {
-        get => _isParagraph;
-        set
-        {
-            _isParagraph = value;
-            OnPropertiesChanged();
-        }
-    }
-
-    public bool IsMerging
-    {
-        get => _isMerging;
-        set
-        {
-            _isMerging = value;
-            OnPropertiesChanged();
-        }
-    }
-
+    [RelayCommand]
     private async Task OpenStoryTextFileAsync()
     {
         FileOpenPicker fileOpenPicker = new();
         fileOpenPicker.FileTypeFilter.Add(".txt");
         IReadOnlyList<StorageFile> storageFiles = await fileOpenPicker.PickMultipleFilesAsync();
 
-        if (storageFiles is not null || !storageFiles.Any())
+        if (storageFiles is not null && storageFiles.Count > 0)
         {
             foreach (StorageFile file in storageFiles)
             {
@@ -137,6 +74,7 @@ public class TextMergeViewModel : NotificationObject
         }
     }
 
+    [RelayCommand]
     private async Task SaveStoryTextFileAsync()
     {
         StringBuilder stringBuilder = new(20);
@@ -246,7 +184,7 @@ public class TextMergeViewModel : NotificationObject
         int namesCount = names.Count();
 
         FileSavePicker fileSavePicker = new();
-        fileSavePicker.FileTypeChoices.Add("TXT", new string[] { ".txt" });
+        fileSavePicker.FileTypeChoices.Add("StoryTxtFileDescription".GetLocalized(), defaultFileExtensions);
 
         if (namesCount == 1)
         {
@@ -263,7 +201,8 @@ public class TextMergeViewModel : NotificationObject
         }
     }
 
-    private async Task OpenMetadataFileAsync()
+    [RelayCommand]
+    private async Task LoadStoryMetadataAsync()
     {
         if (metadataService.IsInitialized)
         {
@@ -323,6 +262,21 @@ public class TextMergeViewModel : NotificationObject
             string title = string.Format("InvaildMetadataFile_WithPlaceholder".GetLocalized(), file.Name);
             string message = "OpenAnotherFileInstead".GetLocalized();
             await ShowDialogAsync(title, message, closeText: "OK".GetLocalized());
+        }
+    }
+
+    [RelayCommand]
+    private void ClearStoryTexts()
+    {
+        Files.Clear();
+    }
+
+    [RelayCommand]
+    private void RemoveStoryTextFile(object obj)
+    {
+        if (obj is StoryFileInfo fileInfo)
+        {
+            Files.Remove(fileInfo);
         }
     }
 

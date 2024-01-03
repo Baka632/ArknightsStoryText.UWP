@@ -195,4 +195,10 @@
   <data name="GlancePivotItem.Header" xml:space="preserve">
     <value>Glance</value>
   </data>
+  <data name="OpenGameDataFolder.Label" xml:space="preserve">
+    <value>Open "GameData" Folder</value>
+  </data>
+  <data name="StoryTxtFileDescription" xml:space="preserve">
+    <value>Story text file</value>
+  </data>
 </root>

@@ -1,6 +1,13 @@
-﻿namespace ArknightsStoryText.UWP.ViewModels;
+﻿using ArknightsStoryText.UWP.Services;
 
-public sealed class StoryGlanceViewModel : NotificationObject
+namespace ArknightsStoryText.UWP.ViewModels;
+
+public sealed class StoryGlanceViewModel : ObservableObject
 {
+    private readonly StoryMetadataService metadataService = new();
 
+    private static void OpenGameDataFolder(StorageFolder gamedataFolder)
+    {
+
+    }
 }

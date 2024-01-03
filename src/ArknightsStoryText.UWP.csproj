@@ -11,6 +11,7 @@
     <AssemblyName>ArknightsStoryText.UWP</AssemblyName>
     <DefaultLanguage>zh-CN</DefaultLanguage>
     <LangVersion>latest</LangVersion>
+    <AnalysisLevel>latest-recommended</AnalysisLevel>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.22000.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.16299.0</TargetPlatformMinVersion>
@@ -130,7 +131,6 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Commands\DelegateCommand.cs" />
     <Compile Include="Controls\StoryTextExpander.xaml.cs">
       <DependentUpon>StoryTextExpander.xaml</DependentUpon>
     </Compile>
@@ -176,7 +176,6 @@
     <Compile Include="Models\StoryInfo.cs" />
     <Compile Include="Models\StoryMetadataInfo.cs" />
     <Compile Include="Services\StoryMetadataService.cs" />
-    <Compile Include="ViewModels\NotificationObject.cs" />
     <Compile Include="ViewModels\StoryGlanceViewModel.cs" />
     <Compile Include="ViewModels\TextMergeViewModel.cs" />
     <Compile Include="ViewModels\TextReadViewModel.cs" />
@@ -286,6 +285,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm">
+      <Version>8.2.2</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers">
       <Version>8.0.0</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
