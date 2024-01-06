@@ -201,7 +201,7 @@ public sealed partial class TextReadViewModel : ObservableObject
             string message = "OpenAnotherFileInstead".GetLocalized();
             await ShowDialogAsync(title, message, closeText: "OK".GetLocalized());
 
-            Stories.Add(new($"{storyDisplayName} [{"ParseFailed".GetLocalized()}]", $"{title}\n{message}", file, metadata, detailInfo));
+            Stories.Add(new($"{storyDisplayName} [{"ParseFailed".GetLocalized()}]", $"{title}\n{message}", string.Empty, file, metadata, detailInfo));
             return false;
         }
 
@@ -211,7 +211,7 @@ public sealed partial class TextReadViewModel : ObservableObject
             string message = "OpenAnotherFileInstead".GetLocalized();
             await ShowDialogAsync(title, message, closeText: "OK".GetLocalized());
 
-            Stories.Add(new($"{storyDisplayName} [{"ParseFailed".GetLocalized()}]", $"{title}\n{message}", file, metadata, detailInfo));
+            Stories.Add(new($"{storyDisplayName} [{"ParseFailed".GetLocalized()}]", $"{title}\n{message}", string.Empty, file, metadata, detailInfo));
             return false;
         }
 
@@ -227,7 +227,7 @@ public sealed partial class TextReadViewModel : ObservableObject
             string message = "OpenAnotherFileInstead".GetLocalized();
             await ShowDialogAsync(title, message, closeText: "OK".GetLocalized());
 
-            Stories.Add(new($"{storyDisplayName} [{"ParseFailed".GetLocalized()}]", $"{title}\n{message}", file, metadata, detailInfo));
+            Stories.Add(new($"{storyDisplayName} [{"ParseFailed".GetLocalized()}]", $"{title}\n{message}", string.Empty, file, metadata, detailInfo));
             return false;
         }
         catch (Exception ex)
@@ -236,7 +236,7 @@ public sealed partial class TextReadViewModel : ObservableObject
             string message = $"{ex.Message}\n{"OpenAnotherFileInstead".GetLocalized()}";
             await ShowDialogAsync(title, message, closeText: "OK".GetLocalized());
 
-            Stories.Add(new($"{storyDisplayName} [{"ParseFailed".GetLocalized()}]", $"{title}\n{message}", file, metadata, detailInfo));
+            Stories.Add(new($"{storyDisplayName} [{"ParseFailed".GetLocalized()}]", $"{title}\n{message}", string.Empty, file, metadata, detailInfo));
             return false;
         }
 
@@ -244,11 +244,11 @@ public sealed partial class TextReadViewModel : ObservableObject
 
         if (string.IsNullOrWhiteSpace(storyText))
         {
-            Stories.Add(new($"{storyDisplayName} [{"ResultIsEmpty".GetLocalized()}]", storyText, file, metadata, detailInfo));
+            Stories.Add(new($"{storyDisplayName} [{"ResultIsEmpty".GetLocalized()}]", storyText, string.Empty, file, metadata, detailInfo));
             return false;
         }
 
-        Stories.Add(new(storyDisplayName, storyText, file, metadata, detailInfo));
+        Stories.Add(new(storyDisplayName, storyText, string.Empty, file, metadata, detailInfo));
 
         return true;
     }

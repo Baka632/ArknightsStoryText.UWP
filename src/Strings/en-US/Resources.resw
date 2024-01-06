@@ -64,7 +64,7 @@
     <value>This file is empty</value>
   </data>
   <data name="InvaildFile" xml:space="preserve">
-    <value>This file seems to be invalid story file</value>
+    <value>This file seems to be an invalid story file</value>
   </data>
   <data name="ReadPivotItem.Header" xml:space="preserve">
     <value>Read</value>
@@ -115,7 +115,7 @@
     <value>{0} is a not supported tutorial file</value>
   </data>
   <data name="InvaildFile_WithPlaceholder" xml:space="preserve">
-    <value>{0} seems to be invalid story file</value>
+    <value>{0} seems to be an invalid story file</value>
   </data>
   <data name="ChangeFontAndSize.Label" xml:space="preserve">
     <value>Change font and font size</value>
@@ -196,9 +196,33 @@
     <value>Glance</value>
   </data>
   <data name="OpenGameDataFolder.Label" xml:space="preserve">
-    <value>Open "GameData" Folder</value>
+    <value>Open "GameData" folder</value>
   </data>
   <data name="StoryTxtFileDescription" xml:space="preserve">
     <value>Story text file</value>
+  </data>
+  <data name="OpenAnotherFolderInstead" xml:space="preserve">
+    <value>Please open another folder.</value>
+  </data>
+  <data name="RequiredFileOrFolderNotFoundInGameDataFolder" xml:space="preserve">
+    <value>Cannot find required file or folder in the specified folder</value>
+  </data>
+  <data name="InvaildFileInGameDataFolder_WithPlaceholder" xml:space="preserve">
+    <value>File {0} found in the folder seemed to be an invalid file</value>
+  </data>
+  <data name="NowProcessingFor.Text" xml:space="preserve">
+    <value>Processing for:</value>
+  </data>
+  <data name="MainStory" xml:space="preserve">
+    <value>Main Stories</value>
+  </data>
+  <data name="ActivityStory" xml:space="preserve">
+    <value>Activity Stories</value>
+  </data>
+  <data name="MiniStory" xml:space="preserve">
+    <value>Vignette Stories</value>
+  </data>
+  <data name="OtherStory" xml:space="preserve">
+    <value>Other Stories</value>
   </data>
 </root>

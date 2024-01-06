@@ -210,4 +210,28 @@
   <data name="StoryTxtFileDescription" xml:space="preserve">
     <value>剧情文本文件</value>
   </data>
+  <data name="OpenAnotherFolderInstead" xml:space="preserve">
+    <value>请打开其他文件夹。</value>
+  </data>
+  <data name="RequiredFileOrFolderNotFoundInGameDataFolder" xml:space="preserve">
+    <value>在指定的文件夹中找不到需要的文件或文件夹</value>
+  </data>
+  <data name="InvaildFileInGameDataFolder_WithPlaceholder" xml:space="preserve">
+    <value>在文件夹中找到的 {0} 似乎不是有效的文件</value>
+  </data>
+  <data name="NowProcessingFor.Text" xml:space="preserve">
+    <value>正在处理：</value>
+  </data>
+  <data name="MainStory" xml:space="preserve">
+    <value>主线剧情</value>
+  </data>
+  <data name="ActivityStory" xml:space="preserve">
+    <value>活动剧情</value>
+  </data>
+  <data name="MiniStory" xml:space="preserve">
+    <value>故事集剧情</value>
+  </data>
+  <data name="OtherStory" xml:space="preserve">
+    <value>其他剧情</value>
+  </data>
 </root>

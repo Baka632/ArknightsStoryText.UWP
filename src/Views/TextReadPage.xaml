@@ -194,7 +194,7 @@
             </ListView.ItemContainerStyle>
         </ListView>
 
-        <ProgressRing
+        <muxc:ProgressRing
             Grid.Row="1"
             Width="50"
             Height="50"
