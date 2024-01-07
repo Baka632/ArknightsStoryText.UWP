@@ -5,6 +5,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:ArknightsStoryText.UWP"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewmodels="using:ArknightsStoryText.UWP.ViewModels"
+    d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModel}"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
 
@@ -24,7 +26,11 @@
             Style="{StaticResource CaptionTextBlockStyle}"
             Text="Arknights Story Text" />
 
-        <Pivot x:Uid="MainPagePivot" Grid.Row="1">
+        <Pivot
+            x:Name="MainPagePivot"
+            x:FieldModifier="Internal"
+            x:Uid="MainPagePivot"
+            Grid.Row="1">
             <PivotItem x:Uid="ReadPivotItem">
                 <Frame x:Name="TextReadPageFrame" />
             </PivotItem>

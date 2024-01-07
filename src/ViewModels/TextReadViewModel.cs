@@ -2,13 +2,12 @@
 using Windows.Storage.Pickers;
 using Windows.Globalization.Fonts;
 using ArknightsStoryText.UWP.Services;
+using CommunityToolkit.Mvvm.Messaging;
 
 namespace ArknightsStoryText.UWP.ViewModels;
 
-public sealed partial class TextReadViewModel : ObservableObject
+public sealed partial class TextReadViewModel : ObservableRecipient
 {
-    private readonly StoryMetadataService metadataService = new();
-
     [ObservableProperty]
     private string _doctorName = string.Empty;
     [ObservableProperty]
@@ -20,6 +19,7 @@ public sealed partial class TextReadViewModel : ObservableObject
 
     public List<double> FontSizes { get; } = [8d, 9d, 10d, 11d, 12d, 14d, 16d, 18d, 20d, 24d, 28d, 36d, 48d, 72d];
     public IReadOnlyList<FontInfo> Fonts { get; }
+    public StoryMetadataService MetadataService { get; set; } = new();
     public static FontInfo DefaultFont { get; }
     public static double DefaultFontSize => 16;
 
@@ -27,6 +27,7 @@ public sealed partial class TextReadViewModel : ObservableObject
     {
         IReadOnlyList<FontInfo> fonts = FontHelper.GetSystemFonts();
         Fonts = fonts;
+        IsActive = true;
     }
 
     static TextReadViewModel()
@@ -34,6 +35,19 @@ public sealed partial class TextReadViewModel : ObservableObject
         LanguageFontGroup languageFontGroup = new(CultureInfo.CurrentUICulture.Name);
         FontFamily defaultFont = new(languageFontGroup.ModernDocumentFont.FontFamily);
         DefaultFont = new(defaultFont.Source, defaultFont);
+    }
+
+    protected override void OnActivated()
+    {
+        base.OnActivated();
+        WeakReferenceMessenger.Default.Register<Tuple<IEnumerable<StoryInfo>, StoryMetadataService>, string>(this, CommonValues.NotifyUpdateStoriesMessageToken, OnUpdateStories);
+    }
+
+    private async void OnUpdateStories(object recipient, Tuple<IEnumerable<StoryInfo>, StoryMetadataService> message)
+    {
+        MetadataService = message.Item2;
+        AppendStoryInfos(message.Item1, true);
+        await ReParseStoryTextAsync();
     }
 
     async partial void OnDoctorNameChanged(string value)
@@ -59,15 +73,7 @@ public sealed partial class TextReadViewModel : ObservableObject
             return;
         }
 
-        IsLoading = true;
-
-        foreach (StorageFile file in files)
-        {
-            await ParseOriginTextFromStorageFileAsync(file);
-        }
-        SortStoryList();
-
-        IsLoading = false;
+        await ParseStoriesCore(files);
     }
 
     [RelayCommand]
@@ -82,11 +88,24 @@ public sealed partial class TextReadViewModel : ObservableObject
             return;
         }
 
+        IEnumerable<StorageFile> fileList = (await folder.GetFilesAsync()).Where(file => file.Name.EndsWith(".txt", StringComparison.OrdinalIgnoreCase));
+
+        if (fileList.Any())
+        {
+            await ParseStoriesCore(fileList, true);
+        }
+    }
+
+    public async Task ParseStoriesCore(IEnumerable<StorageFile> files, bool clearOriginalCollection = false)
+    {
         IsLoading = true;
 
-        Stories.Clear();
-        IEnumerable<StorageFile> fileList = (await folder.GetFilesAsync()).Where(file => file.Name.EndsWith(".txt", StringComparison.OrdinalIgnoreCase));
-        foreach (StorageFile file in fileList)
+        if (clearOriginalCollection)
+        {
+            Stories.Clear();
+        }
+
+        foreach (StorageFile file in files)
         {
             await ParseOriginTextFromStorageFileAsync(file);
         }
@@ -95,10 +114,23 @@ public sealed partial class TextReadViewModel : ObservableObject
         IsLoading = false;
     }
 
+    public void AppendStoryInfos(IEnumerable<StoryInfo> stories, bool clearOriginalCollection = false)
+    {
+        if (clearOriginalCollection)
+        {
+            Stories.Clear();
+        }
+
+        foreach (StoryInfo item in stories)
+        {
+            Stories.Add(item);
+        }
+    }
+
     [RelayCommand]
     private async Task LoadStoryMetadataAsync()
     {
-        if (metadataService.IsInitialized)
+        if (MetadataService.IsInitialized)
         {
             ContentDialogResult result = await ShowDialogAsync("MetadataAlreadyLoaded".GetLocalized(),
                     "ContinueOrCancel".GetLocalized(), "Continue".GetLocalized(), closeText: "Cancel".GetLocalized());
@@ -124,7 +156,7 @@ public sealed partial class TextReadViewModel : ObservableObject
 
         Stream utf8Json = await file.OpenStreamForReadAsync();
 
-        if (metadataService.TryInitialize(utf8Json))
+        if (MetadataService.TryInitialize(utf8Json))
         {
             await ReParseStoryTextAsync();
         }
@@ -155,13 +187,33 @@ public sealed partial class TextReadViewModel : ObservableObject
         IsLoading = false;
     }
 
+    public async Task ReParseStoryTextAsync()
+    {
+        IsLoading = true;
+
+        if (Stories.Count > 0)
+        {
+            StorageFile[] _originalFileList = (from info in Stories select info.File).ToArray();
+            Stories.Clear();
+
+            foreach (StorageFile file in _originalFileList)
+            {
+                await ParseOriginTextFromStorageFileAsync(file);
+            }
+
+            SortStoryList();
+        }
+
+        IsLoading = false;
+    }
+
     private async Task<bool> ParseOriginTextFromStorageFileAsync(StorageFile file)
     {
         string storyDisplayName;
         StoryMetadataInfo? metadata;
         InfoUnlockData? detailInfo;
 
-        if (metadataService.TryGetMetadata(file.DisplayName, out (StoryMetadataInfo, InfoUnlockData) result))
+        if (MetadataService.TryGetMetadata(file.DisplayName, out (StoryMetadataInfo, InfoUnlockData) result))
         {
             InfoUnlockData item2 = result.Item2;
             List<string> strParts = new(3);
@@ -253,30 +305,10 @@ public sealed partial class TextReadViewModel : ObservableObject
         return true;
     }
 
-    private async Task ReParseStoryTextAsync()
-    {
-        IsLoading = true;
-
-        if (Stories.Count > 0)
-        {
-            StorageFile[] _originalFileList = (from info in Stories select info.File).ToArray();
-            Stories.Clear();
-
-            foreach (StorageFile file in _originalFileList)
-            {
-                await ParseOriginTextFromStorageFileAsync(file);
-            }
-
-            SortStoryList();
-        }
-
-        IsLoading = false;
-    }
-
     private void SortStoryList()
     {
         //TODO: 有更好的排序方式吗？
-        if (metadataService.IsInitialized)
+        if (MetadataService.IsInitialized)
         {
             List<StoryInfo> storyList = [..Stories];
             storyList.Sort(new StoryInfoComparer());
@@ -304,7 +336,7 @@ public sealed partial class TextReadViewModel : ObservableObject
     /// <returns>指示对话框结果的<seealso cref="ContentDialogResult"/></returns>
     private static async Task<ContentDialogResult> ShowDialogAsync(string title, string message, string primaryText = null, string secondaryText = null, string closeText = null)
     {
-        //null-coalescing操作符——当closeText为空时才赋值
+        // null-coalescing 操作符——当 closeText 为空时才赋值
         closeText ??= "Close".GetLocalized();
         primaryText ??= string.Empty;
         secondaryText ??= string.Empty;

@@ -234,4 +234,10 @@
   <data name="OtherStory" xml:space="preserve">
     <value>其他剧情</value>
   </data>
+  <data name="GoToReadPage.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>在阅读页查看</value>
+  </data>
+  <data name="GoToMergePage.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>添加到合并页</value>
+  </data>
 </root>

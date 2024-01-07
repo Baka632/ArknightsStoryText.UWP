@@ -131,6 +131,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CommonValues.cs" />
     <Compile Include="Controls\StoryTextExpander.xaml.cs">
       <DependentUpon>StoryTextExpander.xaml</DependentUpon>
     </Compile>
@@ -173,12 +174,14 @@
     <Compile Include="Models\ArknightsResources.Stories.Models\Commands\TextCommand\TextCommand.cs" />
     <Compile Include="Models\ArknightsResources.Stories.Models\StoryScene.cs" />
     <Compile Include="Models\FontInfo.cs" />
+    <Compile Include="Models\PivotItemIdentify.cs" />
     <Compile Include="Models\StoryFileInfo.cs" />
     <Compile Include="Models\StoryGroup.cs" />
     <Compile Include="Models\StoryInfo.cs" />
     <Compile Include="Models\StoryMetadataInfo.cs" />
     <Compile Include="Services\StoryMetadataService.cs" />
     <Compile Include="Models\StoryDataPack.cs" />
+    <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\StoryGlanceViewModel.cs" />
     <Compile Include="ViewModels\TextMergeViewModel.cs" />
     <Compile Include="ViewModels\TextReadViewModel.cs" />

@@ -225,4 +225,10 @@
   <data name="OtherStory" xml:space="preserve">
     <value>Other Stories</value>
   </data>
+  <data name="GoToReadPage.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>View in Read page</value>
+  </data>
+  <data name="GoToMergePage.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Add to Merge page</value>
+  </data>
 </root>

@@ -11,6 +11,7 @@
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:viewmodels="using:ArknightsStoryText.UWP.ViewModels"
     xmlns:wuxdata="using:Windows.UI.Xaml.Data"
+    x:Name="Self"
     d:DataContext="{d:DesignInstance Type=viewmodels:StoryGlanceViewModel}"
     mc:Ignorable="d">
 
@@ -90,7 +91,53 @@
 
                     <ListView.ItemTemplate>
                         <DataTemplate x:DataType="models:StoryDataPack">
-                            <muxc:Expander Header="{x:Bind Name}">
+                            <muxc:Expander>
+                                <muxc:Expander.Header>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition />
+                                        </Grid.ColumnDefinitions>
+
+                                        <TextBlock
+                                            Grid.Column="0"
+                                            Margin="0,0,10,0"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="{x:Bind Name}" />
+                                        <StackPanel
+                                            Grid.Column="1"
+                                            HorizontalAlignment="Right"
+                                            VerticalAlignment="Center"
+                                            Orientation="Horizontal">
+                                            <StackPanel.Resources>
+                                                <Style BasedOn="{StaticResource DefaultButtonStyle}" TargetType="Button">
+                                                    <Setter Property="Width" Value="40" />
+                                                    <Setter Property="Height" Value="40" />
+                                                    <Setter Property="Padding" Value="0" />
+                                                    <Setter Property="Background" Value="Transparent" />
+                                                    <Setter Property="BorderThickness" Value="0" />
+                                                    <Setter Property="VerticalAlignment" Value="Center" />
+                                                </Style>
+                                            </StackPanel.Resources>
+
+                                            <Button
+                                                x:Uid="GoToReadPage"
+                                                Command="{Binding ElementName=Self, Path=ViewModel.GoToStoryViewPageCommand}"
+                                                CommandParameter="{x:Bind Stories}">
+                                                <FontIcon Glyph="&#xE736;" />
+                                            </Button>
+
+                                            <Button
+                                                x:Uid="GoToMergePage"
+                                                Command="{Binding ElementName=Self, Path=ViewModel.GoToStoryMergePageCommand}"
+                                                CommandParameter="{x:Bind Stories}">
+                                                <FontIcon Glyph="&#xEA3C;" />
+                                            </Button>
+                                        </StackPanel>
+                                    </Grid>
+                                </muxc:Expander.Header>
+
                                 <Grid>
                                     <ListView
                                         x:Name="MultipleStoryView"
@@ -98,11 +145,43 @@
                                         ItemsSource="{x:Bind Stories}">
                                         <ListView.ItemTemplate>
                                             <DataTemplate x:DataType="models:StoryInfo">
-                                                <muxc:Expander Header="{x:Bind Title}">
+                                                <muxc:Expander>
+                                                    <muxc:Expander.Header>
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="Auto" />
+                                                                <ColumnDefinition />
+                                                            </Grid.ColumnDefinitions>
+
+                                                            <TextBlock
+                                                                Grid.Column="0"
+                                                                Margin="0,0,10,0"
+                                                                HorizontalAlignment="Left"
+                                                                VerticalAlignment="Center"
+                                                                Text="{x:Bind Title}" />
+                                                            <Button
+                                                                x:Name="ReadButton"
+                                                                x:Uid="GoToReadPage"
+                                                                Grid.Column="1"
+                                                                Width="40"
+                                                                Height="40"
+                                                                Padding="0"
+                                                                HorizontalAlignment="Right"
+                                                                VerticalAlignment="Center"
+                                                                Background="Transparent"
+                                                                BorderThickness="0"
+                                                                Command="{Binding ElementName=Self, Path=ViewModel.GoToStoryViewPageCommand}"
+                                                                CommandParameter="{x:Bind}">
+                                                                <FontIcon Glyph="&#xE736;" />
+                                                            </Button>
+                                                        </Grid>
+                                                    </muxc:Expander.Header>
+
                                                     <TextBlock
                                                         HorizontalAlignment="Center"
                                                         IsTextSelectionEnabled="True"
-                                                        Text="{x:Bind Description}" />
+                                                        Text="{x:Bind Description}"
+                                                        TextWrapping="Wrap" />
                                                 </muxc:Expander>
                                             </DataTemplate>
                                         </ListView.ItemTemplate>
@@ -112,7 +191,8 @@
                                         HorizontalAlignment="Center"
                                         x:Load="{x:Bind IsSingleStory}"
                                         IsTextSelectionEnabled="True"
-                                        Text="{x:Bind Stories[0].Description}" />
+                                        Text="{x:Bind Stories[0].Description}"
+                                        TextWrapping="Wrap" />
                                 </Grid>
                             </muxc:Expander>
                         </DataTemplate>
@@ -135,6 +215,7 @@
                 </ListView>
             </SemanticZoom.ZoomedOutView>
         </SemanticZoom>
+
         <StackPanel
             Grid.Row="1"
             HorizontalAlignment="Center"

@@ -1,6 +1,8 @@
 ﻿using System.IO;
 using ArknightsStoryText.UWP.Services;
 using Windows.Storage.Pickers;
+using System.Linq;
+using CommunityToolkit.Mvvm.Messaging;
 
 namespace ArknightsStoryText.UWP.ViewModels;
 
@@ -116,6 +118,83 @@ public sealed partial class StoryGlanceViewModel : ObservableObject
         {
             IsLoading = false;
         }
+    }
+
+    [RelayCommand]
+    private async Task GoToStoryViewPage(object obj)
+    {
+        if (obj is not IEnumerable<StoryInfo> storyInfos)
+        {
+            if (obj is StoryInfo info)
+            {
+                storyInfos = new List<StoryInfo>(1) { info };
+            }
+            else
+            {
+                return;
+            }
+        }
+
+        if (storyInfos.Any() != true)
+        {
+            return;
+        }
+
+        IList<StoryInfo> stories = storyInfos is IList<StoryInfo> list ? list : storyInfos.ToArray();
+        for (int i = 0; i < stories.Count; i++)
+        {
+            StoryInfo info = stories[i];
+
+            string storyTxtPath = $"{info.DetailInfo.Value.StoryTxt.Replace('/', Path.DirectorySeparatorChar)}.txt";
+            StorageFile txtFile = await GetStorageFileByPath(storyTxtPath, storyTextFolder);
+            string text = await FileIO.ReadTextAsync(txtFile);
+
+            stories[i] = info with { File = txtFile, Text = text };
+        }
+
+        var result = Tuple.Create((IEnumerable<StoryInfo>)stories, metadataService);
+        PivotItemIdentifier targetPageIdentifier = new(PivotItemType.ReadPage);
+
+        WeakReferenceMessenger.Default.Send(result, CommonValues.NotifyUpdateStoriesMessageToken);
+        WeakReferenceMessenger.Default.Send(targetPageIdentifier, CommonValues.NotifyPivotNavigationMessageToken);
+    }
+    
+    [RelayCommand]
+    private async Task GoToStoryMergePage(object obj)
+    {
+        if (obj is not IEnumerable<StoryInfo> storyInfos)
+        {
+            if (obj is StoryInfo info)
+            {
+                storyInfos = new List<StoryInfo>(1) { info };
+            }
+            else
+            {
+                return;
+            }
+        }
+
+        if (storyInfos.Any() != true)
+        {
+            return;
+        }
+
+        List<StoryFileInfo> storyFileInfos = new(storyInfos.Count());
+
+        foreach (StoryInfo info in storyInfos)
+        {
+            string storyTxtPath = $"{info.DetailInfo.Value.StoryTxt.Replace('/', Path.DirectorySeparatorChar)}.txt";
+            StorageFile txtFile = await GetStorageFileByPath(storyTxtPath, storyTextFolder);
+
+            StoryFileInfo fileInfo = new(txtFile, info.Title, info.MetadataInfo, info.DetailInfo);
+            storyFileInfos.Add(fileInfo);
+        }
+
+        var result = Tuple.Create((IEnumerable<StoryFileInfo>)storyFileInfos, metadataService);
+        PivotItemIdentifier targetPageIdentifier = new(PivotItemType.MergePage);
+
+        WeakReferenceMessenger.Default.Send(result, CommonValues.NotifyUpdateStoryFileInfosMessageToken);
+        WeakReferenceMessenger.Default.Send(targetPageIdentifier, CommonValues.NotifyPivotNavigationMessageToken);
     }
 
     private static async Task<StorageFile> GetStorageFileByPath(string path, StorageFolder baseFolder)

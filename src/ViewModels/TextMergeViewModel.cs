@@ -1,12 +1,12 @@
 ﻿using System.IO;
 using ArknightsStoryText.UWP.Services;
+using CommunityToolkit.Mvvm.Messaging;
 using Windows.Storage.Pickers;
 
 namespace ArknightsStoryText.UWP.ViewModels;
 
-public partial class TextMergeViewModel : ObservableObject
+public partial class TextMergeViewModel : ObservableRecipient
 {
-    private readonly StoryMetadataService metadataService = new();
     private static readonly string[] defaultFileExtensions = [".txt"];
 
     [ObservableProperty]
@@ -19,6 +19,29 @@ public partial class TextMergeViewModel : ObservableObject
     private bool _isMerging = false;
     [ObservableProperty]
     private ObservableCollection<StoryFileInfo> files = [];
+
+    public StoryMetadataService MetadataService { get; set; } = new();
+
+    public TextMergeViewModel()
+    {
+        IsActive = true;
+    }
+
+    protected override void OnActivated()
+    {
+        base.OnActivated();
+        WeakReferenceMessenger.Default.Register<Tuple<IEnumerable<StoryFileInfo>, StoryMetadataService>, string>(this, CommonValues.NotifyUpdateStoryFileInfosMessageToken, OnUpdateStoryFileInfo);
+    }
+
+    private void OnUpdateStoryFileInfo(object recipient, Tuple<IEnumerable<StoryFileInfo>, StoryMetadataService> message)
+    {
+        MetadataService = message.Item2;
+        Files.Clear();
+        foreach (StoryFileInfo file in message.Item1)
+        {
+            Files.Add(file);
+        }
+    }
 
     [RelayCommand]
     private async Task OpenStoryTextFileAsync()
@@ -35,7 +58,7 @@ public partial class TextMergeViewModel : ObservableObject
                 StoryMetadataInfo? metadata;
                 InfoUnlockData? detailInfo;
 
-                if (metadataService.TryGetMetadata(file.DisplayName, out (StoryMetadataInfo, InfoUnlockData) result))
+                if (MetadataService.TryGetMetadata(file.DisplayName, out (StoryMetadataInfo, InfoUnlockData) result))
                 {
                     InfoUnlockData item2 = result.Item2;
                     List<string> strParts = new(3);
@@ -204,7 +227,7 @@ public partial class TextMergeViewModel : ObservableObject
     [RelayCommand]
     private async Task LoadStoryMetadataAsync()
     {
-        if (metadataService.IsInitialized)
+        if (MetadataService.IsInitialized)
         {
             ContentDialogResult result = await ShowDialogAsync("MetadataAlreadyLoaded".GetLocalized(),
                     "ContinueOrCancel".GetLocalized(), "Continue".GetLocalized(), closeText: "Cancel".GetLocalized());
@@ -228,12 +251,12 @@ public partial class TextMergeViewModel : ObservableObject
 
         Stream utf8Json = await file.OpenStreamForReadAsync();
 
-        if (metadataService.TryInitialize(utf8Json))
+        if (MetadataService.TryInitialize(utf8Json))
         {
             for (int i = 0; i < Files.Count; i++)
             {
                 StoryFileInfo info = Files[i];
-                if (metadataService.TryGetMetadata(info.File.DisplayName, out (StoryMetadataInfo, InfoUnlockData) result))
+                if (MetadataService.TryGetMetadata(info.File.DisplayName, out (StoryMetadataInfo, InfoUnlockData) result))
                 {
                     info.MetadataInfo = result.Item1;
                     info.DetailInfo = result.Item2;
@@ -283,7 +306,7 @@ public partial class TextMergeViewModel : ObservableObject
     private void SortFileList()
     {
         //TODO: 有更好的排序方式吗？
-        if (metadataService.IsInitialized)
+        if (MetadataService.IsInitialized)
         {
             List<StoryFileInfo> fileList = [..Files];
             fileList.Sort(CompareStoryInfo);
