@@ -1,0 +1,274 @@
+﻿<Page
+    x:Class="ArknightsStoryText.UWP.Views.StoryGlancePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:app="using:ArknightsStoryText.UWP"
+    xmlns:contract8NotPresent="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract,8)"
+    xmlns:contract8Present="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract,8)"
+    xmlns:converters="using:ArknightsStoryText.UWP.Helpers.Converter"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="using:ArknightsStoryText.UWP.Helpers"
+    xmlns:local="using:ArknightsStoryText.UWP.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:ArknightsStoryText.UWP.Models"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:viewmodels="using:ArknightsStoryText.UWP.ViewModels"
+    xmlns:wuxdata="using:Windows.UI.Xaml.Data"
+    x:Name="Self"
+    d:DataContext="{d:DesignInstance Type=viewmodels:StoryGlanceViewModel}"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <CollectionViewSource
+            x:Name="GroupedStories"
+            IsSourceGrouped="True"
+            Source="{x:Bind ViewModel.StoryGroups, Mode=OneWay}" />
+        <converters:ActTypeToStringConverter x:Key="ActTypeToStringConverter" />
+    </Page.Resources>
+
+    <Grid Background="Transparent">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <CommandBar
+            x:Name="OperationCommandBar"
+            x:Uid="DefaultCommandBar"
+            Grid.Row="0"
+            Margin="0,0,0,5"
+            HorizontalAlignment="Left"
+            Background="Transparent"
+            DefaultLabelPosition="Right">
+            <AppBarButton
+                x:Uid="OpenGameDataFolder"
+                Command="{x:Bind ViewModel.OpenGameDataFolderCommand}"
+                Icon="OpenLocal" />
+        </CommandBar>
+
+        <SemanticZoom
+            Grid.Row="1"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch">
+            <SemanticZoom.ZoomedInView>
+                <ListView
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    CanDragItems="False"
+                    CanReorderItems="False"
+                    ItemsSource="{x:Bind GroupedStories.View, Mode=OneWay}"
+                    SelectionMode="None"
+                    Visibility="{x:Bind helpers:XamlHelper.ReverseVisibility(ViewModel.IsLoading), Mode=OneWay}">
+                    <ListView.Resources>
+                        <Style BasedOn="{StaticResource DefaultListViewItemStyle}" TargetType="ListViewItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                            <Setter Property="VerticalContentAlignment" Value="Stretch" />
+                            <Setter Property="Margin" Value="0,2,0,2" />
+                        </Style>
+                        <Style TargetType="ListView">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                            <Setter Property="HorizontalAlignment" Value="Stretch" />
+                            <Setter Property="VerticalContentAlignment" Value="Stretch" />
+                            <Setter Property="VerticalAlignment" Value="Stretch" />
+                            <Setter Property="CanDrag" Value="False" />
+                            <Setter Property="CanDragItems" Value="False" />
+                            <Setter Property="CanReorderItems" Value="False" />
+                            <Setter Property="SelectionMode" Value="None" />
+                        </Style>
+                        <Style TargetType="muxc:Expander">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                            <Setter Property="HorizontalAlignment" Value="Stretch" />
+                            <Setter Property="VerticalContentAlignment" Value="Stretch" />
+                            <Setter Property="VerticalAlignment" Value="Stretch" />
+                        </Style>
+                    </ListView.Resources>
+
+                    <ListView.GroupStyle>
+                        <GroupStyle>
+                            <GroupStyle.HeaderTemplate>
+                                <DataTemplate x:DataType="models:StoryGroup">
+                                    <TextBlock Text="{x:Bind Key, Converter={StaticResource ActTypeToStringConverter}}" />
+                                </DataTemplate>
+                            </GroupStyle.HeaderTemplate>
+                        </GroupStyle>
+                    </ListView.GroupStyle>
+
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="models:StoryDataPack">
+                            <muxc:Expander>
+                                <muxc:Expander.Header>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition />
+                                        </Grid.ColumnDefinitions>
+
+                                        <TextBlock
+                                            Grid.Column="0"
+                                            Margin="0,0,10,0"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="{x:Bind Name}" />
+                                        <StackPanel
+                                            Grid.Column="1"
+                                            HorizontalAlignment="Right"
+                                            VerticalAlignment="Center"
+                                            Orientation="Horizontal">
+                                            <StackPanel.Resources>
+                                                <Style BasedOn="{StaticResource DefaultButtonStyle}" TargetType="Button">
+                                                    <Setter Property="Width" Value="40" />
+                                                    <Setter Property="Height" Value="40" />
+                                                    <Setter Property="Padding" Value="0" />
+                                                    <Setter Property="Background" Value="Transparent" />
+                                                    <Setter Property="BorderThickness" Value="0" />
+                                                    <Setter Property="VerticalAlignment" Value="Center" />
+                                                </Style>
+                                            </StackPanel.Resources>
+
+                                            <Button
+                                                x:Uid="GoToReadPage"
+                                                Command="{Binding ElementName=Self, Path=ViewModel.GoToStoryViewPageCommand}"
+                                                CommandParameter="{x:Bind Stories}">
+                                                <Grid>
+                                                    <contract8Present:FontIcon Glyph="&#xE736;" />
+                                                    <contract8NotPresent:PathIcon
+                                                        HorizontalAlignment="Center"
+                                                        VerticalAlignment="Center"
+                                                        Data="F1 M 18.75 2.5 L 18.75 18.75 L 0 18.75 L 0 2.5 L 2.5 2.5 L 2.5 1.25 L 6.25 1.25 C 6.822917 1.25 7.374674 1.337891 7.905273 1.513672 C 8.435872 1.689453 8.925781 1.953125 9.375 2.304688 C 9.824219 1.953125 10.314127 1.689453 10.844727 1.513672 C 11.375325 1.337891 11.927083 1.25 12.5 1.25 L 16.25 1.25 L 16.25 2.5 Z M 12.5 2.5 C 12.044271 2.5 11.601562 2.576498 11.171875 2.729492 C 10.742188 2.882488 10.351562 3.105469 10 3.398438 L 10 15.644531 C 10.384114 15.429688 10.78776 15.268555 11.210938 15.161133 C 11.634114 15.053711 12.063802 15 12.5 15 L 15 15 L 15 2.5 Z M 3.75 15 L 6.25 15 C 6.686198 15 7.115885 15.053711 7.539062 15.161133 C 7.962239 15.268555 8.365885 15.429688 8.75 15.644531 L 8.75 3.398438 C 8.398438 3.105469 8.007812 2.882488 7.578125 2.729492 C 7.148438 2.576498 6.705729 2.5 6.25 2.5 L 3.75 2.5 Z M 1.25 17.5 L 9.121094 17.5 C 8.91276 17.298178 8.701172 17.120768 8.486328 16.967773 C 8.271484 16.814779 8.048502 16.68457 7.817383 16.577148 C 7.586263 16.469727 7.342122 16.388346 7.084961 16.333008 C 6.827799 16.27767 6.549479 16.25 6.25 16.25 L 2.5 16.25 L 2.5 3.75 L 1.25 3.75 Z M 17.5 3.75 L 16.25 3.75 L 16.25 16.25 L 12.5 16.25 C 12.200521 16.25 11.9222 16.27767 11.665039 16.333008 C 11.407877 16.388346 11.163736 16.469727 10.932617 16.577148 C 10.701497 16.68457 10.478516 16.814779 10.263672 16.967773 C 10.048828 17.120768 9.837239 17.298178 9.628906 17.5 L 17.5 17.5 Z " />
+                                                </Grid>
+                                            </Button>
+
+                                            <Button
+                                                x:Uid="GoToMergePage"
+                                                Command="{Binding ElementName=Self, Path=ViewModel.GoToStoryMergePageCommand}"
+                                                CommandParameter="{x:Bind Stories}">
+                                                <Grid>
+                                                    <contract8Present:FontIcon Glyph="&#xEA3C;" />
+                                                    <contract8NotPresent:PathIcon
+                                                        HorizontalAlignment="Center"
+                                                        VerticalAlignment="Center"
+                                                        Data="F1 M 10 12.5 C 10 13.072917 10.074869 13.626303 10.224609 14.160156 C 10.374349 14.694011 10.58431 15.192058 10.854492 15.654297 C 11.124674 16.116537 11.450195 16.538086 11.831055 16.918945 C 12.211914 17.299805 12.633463 17.625326 13.095703 17.895508 C 13.557942 18.165689 14.055989 18.37565 14.589844 18.525391 C 15.123697 18.675131 15.677083 18.75 16.25 18.75 L 16.25 20 C 15.501302 20 14.778646 19.894205 14.082031 19.682617 C 13.385416 19.471029 12.737629 19.168295 12.138672 18.774414 C 11.539713 18.380533 11.004231 17.905273 10.532227 17.348633 C 10.060221 16.791992 9.674479 16.171875 9.375 15.488281 C 9.075521 16.171875 8.689778 16.791992 8.217773 17.348633 C 7.745768 17.905273 7.210286 18.380533 6.611328 18.774414 C 6.01237 19.168295 5.364583 19.471029 4.667969 19.682617 C 3.971354 19.894205 3.248698 20 2.5 20 L 2.5 18.75 C 3.072917 18.75 3.626302 18.675131 4.160156 18.525391 C 4.69401 18.37565 5.192057 18.165689 5.654297 17.895508 C 6.116536 17.625326 6.538086 17.299805 6.918945 16.918945 C 7.299805 16.538086 7.625325 16.116537 7.895508 15.654297 C 8.165689 15.192058 8.37565 14.694011 8.525391 14.160156 C 8.67513 13.626303 8.75 13.072917 8.75 12.5 L 8.75 3.388672 L 5.908203 6.220703 L 5.029297 5.341797 L 9.375 0.996094 L 13.720703 5.341797 L 12.841797 6.220703 L 10 3.388672 L 10 12.5 Z " />
+                                                </Grid>
+                                            </Button>
+                                        </StackPanel>
+                                    </Grid>
+                                </muxc:Expander.Header>
+
+                                <Grid>
+                                    <ListView
+                                        x:Name="MultipleStoryView"
+                                        x:Load="{x:Bind helpers:XamlHelper.ReverseBoolean(IsSingleStory)}"
+                                        ItemsSource="{x:Bind Stories}">
+                                        <ListView.ItemTemplate>
+                                            <DataTemplate x:DataType="models:StoryInfo">
+                                                <muxc:Expander>
+                                                    <muxc:Expander.Header>
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="Auto" />
+                                                                <ColumnDefinition />
+                                                            </Grid.ColumnDefinitions>
+
+                                                            <TextBlock
+                                                                Grid.Column="0"
+                                                                Margin="0,0,10,0"
+                                                                HorizontalAlignment="Left"
+                                                                VerticalAlignment="Center"
+                                                                Text="{x:Bind Title}" />
+                                                            <Button
+                                                                x:Name="ReadButton"
+                                                                x:Uid="GoToReadPage"
+                                                                Grid.Column="1"
+                                                                Width="40"
+                                                                Height="40"
+                                                                Padding="0"
+                                                                HorizontalAlignment="Right"
+                                                                VerticalAlignment="Center"
+                                                                Background="Transparent"
+                                                                BorderThickness="0"
+                                                                Command="{Binding ElementName=Self, Path=ViewModel.GoToStoryViewPageCommand}"
+                                                                CommandParameter="{x:Bind}">
+                                                                <Grid>
+                                                                    <contract8Present:FontIcon Glyph="&#xE736;" />
+                                                                    <contract8NotPresent:PathIcon
+                                                                        HorizontalAlignment="Center"
+                                                                        VerticalAlignment="Center"
+                                                                        Data="F1 M 18.75 2.5 L 18.75 18.75 L 0 18.75 L 0 2.5 L 2.5 2.5 L 2.5 1.25 L 6.25 1.25 C 6.822917 1.25 7.374674 1.337891 7.905273 1.513672 C 8.435872 1.689453 8.925781 1.953125 9.375 2.304688 C 9.824219 1.953125 10.314127 1.689453 10.844727 1.513672 C 11.375325 1.337891 11.927083 1.25 12.5 1.25 L 16.25 1.25 L 16.25 2.5 Z M 12.5 2.5 C 12.044271 2.5 11.601562 2.576498 11.171875 2.729492 C 10.742188 2.882488 10.351562 3.105469 10 3.398438 L 10 15.644531 C 10.384114 15.429688 10.78776 15.268555 11.210938 15.161133 C 11.634114 15.053711 12.063802 15 12.5 15 L 15 15 L 15 2.5 Z M 3.75 15 L 6.25 15 C 6.686198 15 7.115885 15.053711 7.539062 15.161133 C 7.962239 15.268555 8.365885 15.429688 8.75 15.644531 L 8.75 3.398438 C 8.398438 3.105469 8.007812 2.882488 7.578125 2.729492 C 7.148438 2.576498 6.705729 2.5 6.25 2.5 L 3.75 2.5 Z M 1.25 17.5 L 9.121094 17.5 C 8.91276 17.298178 8.701172 17.120768 8.486328 16.967773 C 8.271484 16.814779 8.048502 16.68457 7.817383 16.577148 C 7.586263 16.469727 7.342122 16.388346 7.084961 16.333008 C 6.827799 16.27767 6.549479 16.25 6.25 16.25 L 2.5 16.25 L 2.5 3.75 L 1.25 3.75 Z M 17.5 3.75 L 16.25 3.75 L 16.25 16.25 L 12.5 16.25 C 12.200521 16.25 11.9222 16.27767 11.665039 16.333008 C 11.407877 16.388346 11.163736 16.469727 10.932617 16.577148 C 10.701497 16.68457 10.478516 16.814779 10.263672 16.967773 C 10.048828 17.120768 9.837239 17.298178 9.628906 17.5 L 17.5 17.5 Z " />
+                                                                </Grid>
+                                                            </Button>
+                                                        </Grid>
+                                                    </muxc:Expander.Header>
+
+                                                    <TextBlock
+                                                        HorizontalAlignment="Center"
+                                                        IsTextSelectionEnabled="True"
+                                                        Text="{x:Bind Description}"
+                                                        TextWrapping="Wrap" />
+                                                </muxc:Expander>
+                                            </DataTemplate>
+                                        </ListView.ItemTemplate>
+                                    </ListView>
+                                    <TextBlock
+                                        x:Name="SingleStoryView"
+                                        HorizontalAlignment="Center"
+                                        x:Load="{x:Bind IsSingleStory}"
+                                        IsTextSelectionEnabled="True"
+                                        Text="{x:Bind Stories[0].Description}"
+                                        TextWrapping="Wrap" />
+                                </Grid>
+                            </muxc:Expander>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </SemanticZoom.ZoomedInView>
+            <SemanticZoom.ZoomedOutView>
+                <ListView
+                    HorizontalAlignment="Stretch"
+                    ItemsSource="{x:Bind GroupedStories.View.CollectionGroups, Mode=OneWay}"
+                    SelectionMode="None">
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="wuxdata:ICollectionViewGroup">
+                            <TextBlock
+                                Style="{StaticResource SubtitleTextBlockStyle}"
+                                Text="{x:Bind ((models:StoryGroup)Group).Key, Converter={StaticResource ActTypeToStringConverter}}"
+                                TextWrapping="Wrap" />
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </SemanticZoom.ZoomedOutView>
+        </SemanticZoom>
+
+        <StackPanel
+            Grid.Row="1"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Visibility="{x:Bind helpers:XamlHelper.ToVisibility(ViewModel.IsLoading), Mode=OneWay}">
+            <muxc:ProgressRing
+                Width="50"
+                Height="50"
+                Margin="0,0,0,10"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                AutomationProperties.AccessibilityView="Raw"
+                IsActive="{x:Bind ViewModel.IsLoading, Mode=OneWay}"
+                Visibility="{x:Bind helpers:XamlHelper.ToVisibility(app:App.IsGreaterThan18362)}" />
+            <ProgressRing
+                Width="50"
+                Height="50"
+                Margin="0,0,0,10"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                AutomationProperties.AccessibilityView="Raw"
+                IsActive="{x:Bind ViewModel.IsLoading, Mode=OneWay}"
+                Visibility="{x:Bind helpers:XamlHelper.ReverseVisibility(app:App.IsGreaterThan18362)}" />
+            <TextBlock
+                x:Uid="NowProcessingFor"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center" />
+            <TextBlock
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Text="{x:Bind ViewModel.FileNameLoading, Mode=OneWay}" />
+        </StackPanel>
+    </Grid>
+</Page>

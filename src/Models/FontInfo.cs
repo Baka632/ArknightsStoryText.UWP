@@ -3,7 +3,7 @@
 /// <summary>
 /// 表示一个字体信息的类
 /// </summary>
-public sealed class FontInfo : NotificationObject, IEquatable<FontInfo>
+public sealed class FontInfo : IEquatable<FontInfo>
 {
     /// <summary>
     /// 显示用字体名称

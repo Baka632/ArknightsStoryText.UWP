@@ -10,6 +10,8 @@ namespace ArknightsStoryText.UWP.Views;
 /// </summary>
 public sealed partial class MainPage : Page
 {
+    public MainViewModel ViewModel { get; }
+
     public MainPage()
     {
         this.InitializeComponent();
@@ -30,5 +32,8 @@ public sealed partial class MainPage : Page
 
         TextReadPageFrame.Navigate(typeof(TextReadPage));
         TextMergePageFrame.Navigate(typeof(TextMergePage));
+        StoryGlancePageFrame.Navigate(typeof(StoryGlancePage));
+
+        ViewModel = new(this);
     }
 }

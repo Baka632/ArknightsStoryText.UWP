@@ -132,7 +132,7 @@
   <data name="ErrorWhenParsing_WithPlaceholder" xml:space="preserve">
     <value>解析文件 {0} 时出错</value>
   </data>
-  <data name="StoryTitleTextBox.PlaceholderText" xml:space="preserve">
+  <data name="StoryTitleTextBox.Header" xml:space="preserve">
     <value>剧情标题</value>
   </data>
   <data name="DeleteStoryTextButton.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
@@ -186,7 +186,7 @@
   <data name="ClearStoryTexts.Label" xml:space="preserve">
     <value>清空所有项</value>
   </data>
-  <data name="RemoveSingleStoryInfo.Label" xml:space="preserve">
+  <data name="RemoveSingleStoryInfo.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
     <value>移除此项</value>
   </data>
   <data name="LoadStoryMetadata.Label" xml:space="preserve">
@@ -200,5 +200,50 @@
   </data>
   <data name="MetadataAlreadyLoaded" xml:space="preserve">
     <value>剧情元数据文件已经加载</value>
+  </data>
+  <data name="GlancePivotItem.Header" xml:space="preserve">
+    <value>概览</value>
+  </data>
+  <data name="OpenGameDataFolder.Label" xml:space="preserve">
+    <value>打开“GameData”文件夹</value>
+  </data>
+  <data name="StoryTxtFileDescription" xml:space="preserve">
+    <value>剧情文本文件</value>
+  </data>
+  <data name="OpenAnotherFolderInstead" xml:space="preserve">
+    <value>请打开其他文件夹。</value>
+  </data>
+  <data name="RequiredFileOrFolderNotFoundInGameDataFolder" xml:space="preserve">
+    <value>在指定的文件夹中找不到需要的文件或文件夹</value>
+  </data>
+  <data name="InvaildFileInGameDataFolder_WithPlaceholder" xml:space="preserve">
+    <value>在文件夹中找到的 {0} 似乎不是有效的文件</value>
+  </data>
+  <data name="NowProcessingFor.Text" xml:space="preserve">
+    <value>正在处理：</value>
+  </data>
+  <data name="MainStory" xml:space="preserve">
+    <value>主线剧情</value>
+  </data>
+  <data name="ActivityStory" xml:space="preserve">
+    <value>活动剧情</value>
+  </data>
+  <data name="MiniStory" xml:space="preserve">
+    <value>故事集剧情</value>
+  </data>
+  <data name="OtherStory" xml:space="preserve">
+    <value>其他剧情</value>
+  </data>
+  <data name="GoToReadPage.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>在阅读页查看</value>
+  </data>
+  <data name="GoToMergePage.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>添加到合并页</value>
+  </data>
+  <data name="DescriptionControl.Header" xml:space="preserve">
+    <value>剧情简介</value>
+  </data>
+  <data name="DeleteStoryTextButton.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>移除此剧情文件</value>
   </data>
 </root>

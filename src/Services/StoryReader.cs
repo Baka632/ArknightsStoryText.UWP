@@ -79,7 +79,7 @@ namespace ArknightsResources.Utility
                     break;
                 }
                 string strToAnalyse = ReadText();
-                if (strToAnalyse.StartsWith("["))
+                if (strToAnalyse.StartsWith('['))
                 {
                     var matchHeader = GetMatchByPattern(strToAnalyse, "HEADER");
                     if (IsHeaderInfoAdded == false && matchHeader.Success)

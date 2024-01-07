@@ -1,4 +1,6 @@
-﻿namespace ArknightsStoryText.UWP.Models;
+﻿using System.Text.Json.Serialization;
+
+namespace ArknightsStoryText.UWP.Models;
 
 /// <summary>
 /// 表示剧情元数据的结构
@@ -20,7 +22,7 @@ public struct StoryMetadataInfo
     /// <summary>
     /// 剧情类型
     /// </summary>
-    public string ActType { get; set; }
+    public ActType ActType { get; set; }
     /// <summary>
     /// 活动开始时间的 Unix 时间戳
     /// </summary>
@@ -164,4 +166,32 @@ public struct RewardsInfo
     /// 奖励物品的类型
     /// </summary>
     public string Type { get; set; }
+}
+
+/// <summary>
+/// 剧情类型的枚举
+/// </summary>
+[JsonConverter(typeof(JsonStringEnumMemberConverter))]
+public enum ActType
+{
+    /// <summary>
+    /// 主线剧情
+    /// </summary>
+    [JsonPropertyName("MAIN_STORY")]
+    MainStory,
+    /// <summary>
+    /// 活动剧情
+    /// </summary>
+    [JsonPropertyName("ACTIVITY_STORY")]
+    Activity,
+    /// <summary>
+    /// 故事集
+    /// </summary>
+    [JsonPropertyName("MINI_STORY")]
+    MiniStory,
+    /// <summary>
+    /// 其他（如干员密录）
+    /// </summary>
+    [JsonPropertyName( "NONE")]
+    Others,
 }
