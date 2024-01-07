@@ -189,7 +189,6 @@ public partial class TextMergeViewModel : ObservableRecipient
             stringBuilder.AppendLine();
             stringBuilder.AppendLine(storyText);
             stringBuilder.AppendLine();
-
         }
 
         IEnumerable<string> names = (from info in Files

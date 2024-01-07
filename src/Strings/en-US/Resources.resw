@@ -177,7 +177,7 @@
   <data name="ClearStoryTexts.Label" xml:space="preserve">
     <value>Clear all items</value>
   </data>
-  <data name="RemoveSingleStoryInfo.Label" xml:space="preserve">
+  <data name="RemoveSingleStoryInfo.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
     <value>Remove this item</value>
   </data>
   <data name="LoadStoryMetadata.Label" xml:space="preserve">

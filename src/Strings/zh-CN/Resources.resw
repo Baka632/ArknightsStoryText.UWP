@@ -186,7 +186,7 @@
   <data name="ClearStoryTexts.Label" xml:space="preserve">
     <value>清空所有项</value>
   </data>
-  <data name="RemoveSingleStoryInfo.Label" xml:space="preserve">
+  <data name="RemoveSingleStoryInfo.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
     <value>移除此项</value>
   </data>
   <data name="LoadStoryMetadata.Label" xml:space="preserve">

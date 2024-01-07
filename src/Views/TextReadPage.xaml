@@ -156,19 +156,35 @@
                             HorizontalContentAlignment="Stretch"
                             VerticalContentAlignment="Stretch"
                             Background="Transparent">
-                            <muxc:Expander.ContextFlyout>
-                                <muxc:CommandBarFlyout>
-                                    <muxc:CommandBarFlyout.SecondaryCommands>
-                                        <AppBarButton
-                                            x:Uid="RemoveSingleStoryInfo"
-                                            Command="{Binding ElementName=Self, Path=ViewModel.RemoveSingleStoryTextCommand}"
-                                            CommandParameter="{x:Bind}"
-                                            Icon="Delete" />
-                                    </muxc:CommandBarFlyout.SecondaryCommands>
-                                </muxc:CommandBarFlyout>
-                            </muxc:Expander.ContextFlyout>
                             <muxc:Expander.Header>
-                                <TextBlock Text="{x:Bind Title}" />
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        Margin="0,0,10,0"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        Text="{x:Bind Title}" />
+                                    <Button
+                                        x:Uid="RemoveSingleStoryInfo"
+                                        Grid.Column="1"
+                                        Width="40"
+                                        Height="40"
+                                        Margin="10,0,0,0"
+                                        Padding="0"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Center"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        Command="{Binding ElementName=Self, Path=ViewModel.RemoveSingleStoryTextCommand}"
+                                        CommandParameter="{x:Bind}">
+                                        <FontIcon Glyph="&#xE74D;" />
+                                    </Button>
+                                </Grid>
                             </muxc:Expander.Header>
 
                             <Grid>
