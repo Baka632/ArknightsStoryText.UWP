@@ -26,6 +26,7 @@
             Grid.Row="0"
             Margin="0,0,0,5"
             HorizontalAlignment="Left"
+            Background="Transparent"
             DefaultLabelPosition="Right">
             <AppBarButton
                 x:Uid="OpenStoryText"
@@ -171,6 +172,7 @@
                                     HorizontalAlignment="Stretch"
                                     VerticalAlignment="Stretch"
                                     IsSpellCheckEnabled="False"
+                                    Margin="0,0,0,5"
                                     Text="{x:Bind Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                     TextWrapping="Wrap" />
                             </Grid>

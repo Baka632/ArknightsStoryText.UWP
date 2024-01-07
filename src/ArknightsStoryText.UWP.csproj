@@ -138,6 +138,7 @@
     <Compile Include="GlobalUsings.cs" />
     <Compile Include="Helpers\Converter\ActTypeToStringConverter.cs" />
     <Compile Include="Helpers\Converter\ObjectToFontFamilyOrFontSizeConverter.cs" />
+    <Compile Include="Helpers\EnvironmentHelper.cs" />
     <Compile Include="Helpers\FontHelper.cs" />
     <Compile Include="Helpers\LocalizationHelper.cs" />
     <Compile Include="Helpers\ReswHelper.cs" />

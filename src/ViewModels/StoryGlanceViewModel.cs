@@ -22,6 +22,7 @@ public sealed partial class StoryGlanceViewModel : ObservableObject
     private async Task OpenGameDataFolder()
     {
         FolderPicker folderPicker = new();
+        folderPicker.FileTypeFilter.Add("*");
         StorageFolder gamedataFolder = await folderPicker.PickSingleFolderAsync();
 
         if (gamedataFolder is null)
