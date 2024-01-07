@@ -240,4 +240,7 @@
   <data name="GoToMergePage.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
     <value>添加到合并页</value>
   </data>
+  <data name="DescriptionExpander.Header" xml:space="preserve">
+    <value>剧情简介</value>
+  </data>
 </root>

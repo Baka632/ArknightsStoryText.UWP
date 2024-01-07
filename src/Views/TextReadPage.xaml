@@ -172,12 +172,33 @@
                                 <TextBlock Text="{x:Bind Title}" />
                             </muxc:Expander.Header>
                             <muxc:Expander.Content>
-                                <TextBlock
-                                    FontFamily="{Binding ElementName=SetFontComboBox, Path=SelectedValue, Converter={StaticResource ObjToFontFamilyOrDouble}, Mode=OneWay}"
-                                    FontSize="{Binding ElementName=SetFontSizeComboBox, Path=SelectedValue, Converter={StaticResource ObjToFontFamilyOrDouble}, Mode=OneWay}"
-                                    IsTextSelectionEnabled="True"
-                                    Text="{x:Bind Text}"
-                                    TextWrapping="Wrap" />
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition />
+                                    </Grid.RowDefinitions>
+
+                                    <muxc:Expander
+                                        x:Uid="DescriptionExpander"
+                                        Grid.Row="0"
+                                        Margin="0,0,0,10"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Stretch"
+                                        Visibility="{x:Bind helper:XamlHelper.IsStringNullOrEmptyReverseVisibility(Description)}">
+                                        <TextBlock
+                                            HorizontalAlignment="Center"
+                                            IsTextSelectionEnabled="True"
+                                            Text="{x:Bind Description}"
+                                            TextWrapping="Wrap" />
+                                    </muxc:Expander>
+                                    <TextBlock
+                                        Grid.Row="1"
+                                        FontFamily="{Binding ElementName=SetFontComboBox, Path=SelectedValue, Converter={StaticResource ObjToFontFamilyOrDouble}, Mode=OneWay}"
+                                        FontSize="{Binding ElementName=SetFontSizeComboBox, Path=SelectedValue, Converter={StaticResource ObjToFontFamilyOrDouble}, Mode=OneWay}"
+                                        IsTextSelectionEnabled="True"
+                                        Text="{x:Bind Text}"
+                                        TextWrapping="Wrap" />
+                                </Grid>
                             </muxc:Expander.Content>
                         </muxc:Expander>
                     </Grid>

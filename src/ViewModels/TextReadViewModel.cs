@@ -193,12 +193,14 @@ public sealed partial class TextReadViewModel : ObservableRecipient
 
         if (Stories.Count > 0)
         {
-            StorageFile[] _originalFileList = (from info in Stories select info.File).ToArray();
+            StoryInfo[] _originalStoryInfos = [..Stories];
             Stories.Clear();
 
-            foreach (StorageFile file in _originalFileList)
+            for (int i = 0; i < _originalStoryInfos.Length; i++)
             {
-                await ParseOriginTextFromStorageFileAsync(file);
+                StoryInfo info = _originalStoryInfos[i];
+                await ParseOriginTextFromStorageFileAsync(info.File);
+                Stories[i] = Stories[i] with { Description = info.Description };
             }
 
             SortStoryList();
