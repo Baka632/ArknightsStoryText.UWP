@@ -186,7 +186,7 @@ public sealed partial class StoryGlanceViewModel : ObservableObject
             string storyTxtPath = $"{info.DetailInfo.Value.StoryTxt.Replace('/', Path.DirectorySeparatorChar)}.txt";
             StorageFile txtFile = await GetStorageFileByPath(storyTxtPath, storyTextFolder);
 
-            StoryFileInfo fileInfo = new(txtFile, info.Title, info.MetadataInfo, info.DetailInfo);
+            StoryFileInfo fileInfo = new(txtFile, info.Title, info.Description, info.MetadataInfo, info.DetailInfo);
             storyFileInfos.Add(fileInfo);
         }
 

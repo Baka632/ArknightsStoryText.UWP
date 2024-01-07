@@ -132,7 +132,7 @@
   <data name="ErrorWhenParsing_WithPlaceholder" xml:space="preserve">
     <value>解析文件 {0} 时出错</value>
   </data>
-  <data name="StoryTitleTextBox.PlaceholderText" xml:space="preserve">
+  <data name="StoryTitleTextBox.Header" xml:space="preserve">
     <value>剧情标题</value>
   </data>
   <data name="DeleteStoryTextButton.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
@@ -240,7 +240,10 @@
   <data name="GoToMergePage.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
     <value>添加到合并页</value>
   </data>
-  <data name="DescriptionExpander.Header" xml:space="preserve">
+  <data name="DescriptionControl.Header" xml:space="preserve">
     <value>剧情简介</value>
+  </data>
+  <data name="DeleteStoryTextButton.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>移除此剧情文件</value>
   </data>
 </root>

@@ -60,36 +60,20 @@ public partial class TextMergeViewModel : ObservableRecipient
 
                 if (MetadataService.TryGetMetadata(file.DisplayName, out (StoryMetadataInfo, InfoUnlockData) result))
                 {
-                    InfoUnlockData item2 = result.Item2;
-                    List<string> strParts = new(3);
-
-                    if (string.IsNullOrWhiteSpace(item2.StoryCode) != true)
-                    {
-                        strParts.Add(item2.StoryCode);
-                    }
-
-                    strParts.Add(item2.StoryName);
-
-                    if (item2.AvgTag != "幕间")
-                    {
-                        strParts.Add(item2.AvgTag);
-                    }
-
-                    storyDisplayName = string.Join(' ', strParts);
-
+                    storyDisplayName = GetStoryDisplayName(result.Item2);
                     metadata = result.Item1;
                     detailInfo = result.Item2;
                 }
                 else
                 {
-                    storyDisplayName = string.Empty;
+                    storyDisplayName = file.DisplayName;
                     metadata = null;
                     detailInfo = null;
                 }
 
                 if (!Files.Any(fileInfo => fileInfo.File.Path == file.Path))
                 {
-                    Files.Add(new StoryFileInfo(file, storyDisplayName, metadata, detailInfo));
+                    Files.Add(new StoryFileInfo(file, storyDisplayName, string.Empty, metadata, detailInfo));
                 }
             }
 
@@ -109,16 +93,16 @@ public partial class TextMergeViewModel : ObservableRecipient
             return;
         }
 
-        foreach (StoryFileInfo item in Files)
+        foreach (StoryFileInfo fileInfo in Files)
         {
             string text;
             try
             {
-                text = await FileIO.ReadTextAsync(item.File);
+                text = await FileIO.ReadTextAsync(fileInfo.File);
             }
             catch (ArgumentOutOfRangeException)
             {
-                string title = string.Format("InvaildFile_WithPlaceholder".GetLocalized(), item.File.Name);
+                string title = string.Format("InvaildFile_WithPlaceholder".GetLocalized(), fileInfo.File.Name);
                 ContentDialogResult result = await ShowDialogAsync(title,
                     "ContinueOrCancel".GetLocalized(), "Continue".GetLocalized(), closeText: "Cancel".GetLocalized());
 
@@ -135,7 +119,7 @@ public partial class TextMergeViewModel : ObservableRecipient
 
             if (string.IsNullOrWhiteSpace(text))
             {
-                string title = string.Format("FileIsEmpty_WithPlaceholder".GetLocalized(), item.File.Name);
+                string title = string.Format("FileIsEmpty_WithPlaceholder".GetLocalized(), fileInfo.File.Name);
                 ContentDialogResult result = await ShowDialogAsync(title,
                     "ContinueOrCancel".GetLocalized(), "Continue".GetLocalized(), closeText: "Cancel".GetLocalized());
 
@@ -158,7 +142,7 @@ public partial class TextMergeViewModel : ObservableRecipient
             }
             catch (ArgumentException)
             {
-                string title = string.Format("TutorialFileNotSupported_WithPlaceholder".GetLocalized(),item.File.Name);
+                string title = string.Format("TutorialFileNotSupported_WithPlaceholder".GetLocalized(),fileInfo.File.Name);
                 ContentDialogResult result = await ShowDialogAsync(title,
                     "ContinueOrCancel".GetLocalized(), "Continue".GetLocalized(), closeText: "Cancel".GetLocalized());
 
@@ -174,7 +158,7 @@ public partial class TextMergeViewModel : ObservableRecipient
             }
             catch (Exception ex)
             {
-                string title = string.Format("ErrorWhenParsing_WithPlaceholder".GetLocalized(), item.File.Name);
+                string title = string.Format("ErrorWhenParsing_WithPlaceholder".GetLocalized(), fileInfo.File.Name);
                 ContentDialogResult result = await ShowDialogAsync(title,
                     $"{ex.Message}\n{"ContinueOrCancel".GetLocalized()}", "Continue".GetLocalized(), closeText: "Cancel".GetLocalized());
 
@@ -194,7 +178,14 @@ public partial class TextMergeViewModel : ObservableRecipient
             //TODO: 自定义
             count++;
 
-            stringBuilder.AppendLine($"{count}. {item.Title}");
+            stringBuilder.AppendLine($"{count}. {fileInfo.Title}");
+
+            if (string.IsNullOrWhiteSpace(fileInfo.Description) != true)
+            {
+                stringBuilder.AppendLine();
+                stringBuilder.AppendLine(fileInfo.Description);
+            }
+
             stringBuilder.AppendLine();
             stringBuilder.AppendLine(storyText);
             stringBuilder.AppendLine();
@@ -301,6 +292,27 @@ public partial class TextMergeViewModel : ObservableRecipient
         {
             Files.Remove(fileInfo);
         }
+    }
+
+    public static string GetStoryDisplayName(InfoUnlockData info)
+    {
+        string storyDisplayName;
+        List<string> strParts = new(3);
+
+        if (string.IsNullOrWhiteSpace(info.StoryCode) != true)
+        {
+            strParts.Add(info.StoryCode);
+        }
+
+        strParts.Add(info.StoryName);
+
+        if (info.AvgTag != "幕间")
+        {
+            strParts.Add(info.AvgTag);
+        }
+
+        storyDisplayName = string.Join(' ', strParts);
+        return storyDisplayName;
     }
 
     private void SortFileList()

@@ -217,23 +217,7 @@ public sealed partial class TextReadViewModel : ObservableRecipient
 
         if (MetadataService.TryGetMetadata(file.DisplayName, out (StoryMetadataInfo, InfoUnlockData) result))
         {
-            InfoUnlockData item2 = result.Item2;
-            List<string> strParts = new(3);
-
-            if (string.IsNullOrWhiteSpace(item2.StoryCode) != true)
-            {
-                strParts.Add(item2.StoryCode);
-            }
-
-            strParts.Add(item2.StoryName);
-
-            if (item2.AvgTag != "幕间")
-            {
-                strParts.Add(item2.AvgTag);
-            }
-
-            storyDisplayName = string.Join(' ', strParts);
-
+            storyDisplayName = GetStoryDisplayName(result.Item2);
             metadata = result.Item1;
             detailInfo = result.Item2;
         }
@@ -305,6 +289,27 @@ public sealed partial class TextReadViewModel : ObservableRecipient
         Stories.Add(new(storyDisplayName, storyText, string.Empty, file, metadata, detailInfo));
 
         return true;
+    }
+
+    public static string GetStoryDisplayName(InfoUnlockData info)
+    {
+        string storyDisplayName;
+        List<string> strParts = new(3);
+
+        if (string.IsNullOrWhiteSpace(info.StoryCode) != true)
+        {
+            strParts.Add(info.StoryCode);
+        }
+
+        strParts.Add(info.StoryName);
+
+        if (info.AvgTag != "幕间")
+        {
+            strParts.Add(info.AvgTag);
+        }
+
+        storyDisplayName = string.Join(' ', strParts);
+        return storyDisplayName;
     }
 
     private void SortStoryList()
