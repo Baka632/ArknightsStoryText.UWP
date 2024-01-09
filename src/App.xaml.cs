@@ -16,6 +16,8 @@ namespace ArknightsStoryText.UWP;
 /// </summary>
 sealed partial class App : Application
 {
+    public static bool IsGreaterThan18362 => EnvironmentHelper.IsSystemBuildVersionEqualOrGreaterThan(18362);
+
     /// <summary>
     /// 初始化单一实例应用程序对象。这是执行的创作代码的第一行，已执行，逻辑上等同于 main() 或 WinMain()。
     /// </summary>
@@ -42,15 +44,15 @@ sealed partial class App : Application
                     {
                         new AdaptiveText()
                         {
-                            Text = exception.GetType().Name
+                            Text = exception?.GetType()?.Name
                         },
                         new AdaptiveText()
                         {
-                            Text = exception.Message
+                            Text = exception?.Message
                         },
                         new AdaptiveText()
                         {
-                            Text = exception.StackTrace
+                            Text = exception?.StackTrace
                         }
                     }
                 }
@@ -71,16 +73,16 @@ sealed partial class App : Application
         using StreamWriter writer = new(target);
         await writer.WriteAsync($"""
             [Exception Detail]
-            {exception.GetType().Name}: {exception.Message}
+            {exception?.GetType()?.Name}: {exception?.Message}
             ======
-            Source: {exception.Source}
-            HResult: {exception.HResult}
+            Source: {exception?.Source}
+            HResult: {exception?.HResult}
             TargetSite Info:
                 Name: {exception?.TargetSite.Name}
                 Module Name: {exception?.TargetSite?.Module.Name}
                 DeclaringType: {exception?.TargetSite?.DeclaringType.Name}
             StackTrace:
-            {exception.StackTrace}
+            {exception?.StackTrace}
             """);
         await writer.FlushAsync();
 

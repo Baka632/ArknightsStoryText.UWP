@@ -2,7 +2,7 @@
     x:Class="ArknightsStoryText.UWP.Views.TextReadPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:astc="using:ArknightsStoryText.UWP.Controls"
+    xmlns:app="using:ArknightsStoryText.UWP"
     xmlns:converter="using:ArknightsStoryText.UWP.Helpers.Converter"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:helper="using:ArknightsStoryText.UWP.Helpers"
@@ -148,7 +148,6 @@
                             Grid.Column="1"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
-                            FontFamily="{StaticResource SymbolThemeFontFamily}"
                             Glyph="&#xE784;" />
 
                         <muxc:Expander
@@ -157,28 +156,64 @@
                             HorizontalContentAlignment="Stretch"
                             VerticalContentAlignment="Stretch"
                             Background="Transparent">
-                            <muxc:Expander.ContextFlyout>
-                                <muxc:CommandBarFlyout>
-                                    <muxc:CommandBarFlyout.SecondaryCommands>
-                                        <AppBarButton
-                                            x:Uid="RemoveSingleStoryInfo"
-                                            Command="{Binding ElementName=Self, Path=ViewModel.RemoveSingleStoryTextCommand}"
-                                            CommandParameter="{x:Bind}"
-                                            Icon="Delete" />
-                                    </muxc:CommandBarFlyout.SecondaryCommands>
-                                </muxc:CommandBarFlyout>
-                            </muxc:Expander.ContextFlyout>
                             <muxc:Expander.Header>
-                                <TextBlock Text="{x:Bind Title}" />
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        Margin="0,0,10,0"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        Text="{x:Bind Title}" />
+                                    <Button
+                                        x:Uid="RemoveSingleStoryInfo"
+                                        Grid.Column="1"
+                                        Width="40"
+                                        Height="40"
+                                        Margin="10,0,0,0"
+                                        Padding="0"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Center"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        Command="{Binding ElementName=Self, Path=ViewModel.RemoveSingleStoryTextCommand}"
+                                        CommandParameter="{x:Bind}">
+                                        <FontIcon Glyph="&#xE74D;" />
+                                    </Button>
+                                </Grid>
                             </muxc:Expander.Header>
-                            <muxc:Expander.Content>
+
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+
+                                <muxc:Expander
+                                    x:Uid="DescriptionControl"
+                                    Grid.Row="0"
+                                    Margin="0,0,0,10"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Center"
+                                    Visibility="{x:Bind helper:XamlHelper.IsStringNullOrEmptyReverseVisibility(Description)}">
+                                    <TextBlock
+                                        HorizontalAlignment="Center"
+                                        IsTextSelectionEnabled="True"
+                                        Text="{x:Bind Description}"
+                                        TextWrapping="Wrap" />
+                                </muxc:Expander>
                                 <TextBlock
+                                    Grid.Row="1"
                                     FontFamily="{Binding ElementName=SetFontComboBox, Path=SelectedValue, Converter={StaticResource ObjToFontFamilyOrDouble}, Mode=OneWay}"
                                     FontSize="{Binding ElementName=SetFontSizeComboBox, Path=SelectedValue, Converter={StaticResource ObjToFontFamilyOrDouble}, Mode=OneWay}"
                                     IsTextSelectionEnabled="True"
                                     Text="{x:Bind Text}"
                                     TextWrapping="Wrap" />
-                            </muxc:Expander.Content>
+                            </Grid>
                         </muxc:Expander>
                     </Grid>
                 </DataTemplate>
@@ -194,6 +229,16 @@
             </ListView.ItemContainerStyle>
         </ListView>
 
+        <muxc:ProgressRing
+            Grid.Row="1"
+            Width="50"
+            Height="50"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            AutomationProperties.AccessibilityView="Raw"
+            IsActive="{x:Bind ViewModel.IsLoading, Mode=OneWay}"
+            Visibility="{x:Bind helper:XamlHelper.ToVisibility(app:App.IsGreaterThan18362)}" />
+
         <ProgressRing
             Grid.Row="1"
             Width="50"
@@ -201,6 +246,7 @@
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             AutomationProperties.AccessibilityView="Raw"
-            IsActive="{x:Bind ViewModel.IsLoading, Mode=OneWay}" />
+            IsActive="{x:Bind ViewModel.IsLoading, Mode=OneWay}"
+            Visibility="{x:Bind helper:XamlHelper.ReverseVisibility(app:App.IsGreaterThan18362)}" />
     </Grid>
 </Page>

@@ -1,97 +1,56 @@
 ﻿using System.IO;
-using ArknightsStoryText.UWP.Models;
 using ArknightsStoryText.UWP.Services;
+using CommunityToolkit.Mvvm.Messaging;
 using Windows.Storage.Pickers;
 
 namespace ArknightsStoryText.UWP.ViewModels;
 
-public class TextMergeViewModel : NotificationObject
+public partial class TextMergeViewModel : ObservableRecipient
 {
+    private static readonly string[] defaultFileExtensions = [".txt"];
+
+    [ObservableProperty]
     private string _transformedStoryText = string.Empty;
+    [ObservableProperty]
     private string _doctorName = string.Empty;
+    [ObservableProperty]
     private bool _isParagraph = false;
+    [ObservableProperty]
     private bool _isMerging = false;
+    [ObservableProperty]
     private ObservableCollection<StoryFileInfo> files = [];
-    private readonly StoryMetadataService metadataService = new();
+
+    public StoryMetadataService MetadataService { get; set; } = new();
 
     public TextMergeViewModel()
     {
-        OpenStoryTextFileCommand = new DelegateCommand(async (obj) => await OpenStoryTextFileAsync());
-        SaveStoryTextFileCommand = new DelegateCommand(async (obj) => await SaveStoryTextFileAsync());
-        LoadStoryMetadataCommand = new DelegateCommand(async obj => await OpenMetadataFileAsync());
-        ClearStoryTextsCommand = new DelegateCommand(obj => Files.Clear());
-        RemoveStoryTextFileCommand = new DelegateCommand(obj =>
-        {
-            if (obj is StoryFileInfo fileInfo)
-            {
-                Files.Remove(fileInfo);
-            }
-        });
+        IsActive = true;
     }
 
-    public ICommand OpenStoryTextFileCommand { get; }
-    public ICommand SaveStoryTextFileCommand { get; }
-    public ICommand RemoveStoryTextFileCommand { get; }
-    public ICommand ClearStoryTextsCommand { get; }
-    public ICommand LoadStoryMetadataCommand { get; }
-
-    public ObservableCollection<StoryFileInfo> Files
+    protected override void OnActivated()
     {
-        get => files;
-        private set
+        base.OnActivated();
+        WeakReferenceMessenger.Default.Register<Tuple<IEnumerable<StoryFileInfo>, StoryMetadataService>, string>(this, CommonValues.NotifyUpdateStoryFileInfosMessageToken, OnUpdateStoryFileInfo);
+    }
+
+    private void OnUpdateStoryFileInfo(object recipient, Tuple<IEnumerable<StoryFileInfo>, StoryMetadataService> message)
+    {
+        MetadataService = message.Item2;
+        Files.Clear();
+        foreach (StoryFileInfo file in message.Item1)
         {
-            files = value;
-            OnPropertiesChanged();
+            Files.Add(file);
         }
     }
 
-    public string TransformedStoryText
-    {
-        get => _transformedStoryText;
-        set
-        {
-            _transformedStoryText = value;
-            OnPropertiesChanged();
-        }
-    }
-
-    public string DoctorName
-    {
-        get => _doctorName;
-        set
-        {
-            _doctorName = value;
-            OnPropertiesChanged();
-        }
-    }
-
-    public bool IsParagraph
-    {
-        get => _isParagraph;
-        set
-        {
-            _isParagraph = value;
-            OnPropertiesChanged();
-        }
-    }
-
-    public bool IsMerging
-    {
-        get => _isMerging;
-        set
-        {
-            _isMerging = value;
-            OnPropertiesChanged();
-        }
-    }
-
+    [RelayCommand]
     private async Task OpenStoryTextFileAsync()
     {
         FileOpenPicker fileOpenPicker = new();
         fileOpenPicker.FileTypeFilter.Add(".txt");
         IReadOnlyList<StorageFile> storageFiles = await fileOpenPicker.PickMultipleFilesAsync();
 
-        if (storageFiles is not null || !storageFiles.Any())
+        if (storageFiles is not null && storageFiles.Count > 0)
         {
             foreach (StorageFile file in storageFiles)
             {
@@ -99,38 +58,22 @@ public class TextMergeViewModel : NotificationObject
                 StoryMetadataInfo? metadata;
                 InfoUnlockData? detailInfo;
 
-                if (metadataService.TryGetMetadata(file.DisplayName, out (StoryMetadataInfo, InfoUnlockData) result))
+                if (MetadataService.TryGetMetadata(file.DisplayName, out (StoryMetadataInfo, InfoUnlockData) result))
                 {
-                    InfoUnlockData item2 = result.Item2;
-                    List<string> strParts = new(3);
-
-                    if (string.IsNullOrWhiteSpace(item2.StoryCode) != true)
-                    {
-                        strParts.Add(item2.StoryCode);
-                    }
-
-                    strParts.Add(item2.StoryName);
-
-                    if (item2.AvgTag != "幕间")
-                    {
-                        strParts.Add(item2.AvgTag);
-                    }
-
-                    storyDisplayName = string.Join(' ', strParts);
-
+                    storyDisplayName = GetStoryDisplayName(result.Item2);
                     metadata = result.Item1;
                     detailInfo = result.Item2;
                 }
                 else
                 {
-                    storyDisplayName = string.Empty;
+                    storyDisplayName = file.DisplayName;
                     metadata = null;
                     detailInfo = null;
                 }
 
                 if (!Files.Any(fileInfo => fileInfo.File.Path == file.Path))
                 {
-                    Files.Add(new StoryFileInfo(file, storyDisplayName, metadata, detailInfo));
+                    Files.Add(new StoryFileInfo(file, storyDisplayName, string.Empty, metadata, detailInfo));
                 }
             }
 
@@ -138,6 +81,7 @@ public class TextMergeViewModel : NotificationObject
         }
     }
 
+    [RelayCommand]
     private async Task SaveStoryTextFileAsync()
     {
         StringBuilder stringBuilder = new(20);
@@ -149,16 +93,16 @@ public class TextMergeViewModel : NotificationObject
             return;
         }
 
-        foreach (StoryFileInfo item in Files)
+        foreach (StoryFileInfo fileInfo in Files)
         {
             string text;
             try
             {
-                text = await FileIO.ReadTextAsync(item.File);
+                text = await FileIO.ReadTextAsync(fileInfo.File);
             }
             catch (ArgumentOutOfRangeException)
             {
-                string title = string.Format("InvaildFile_WithPlaceholder".GetLocalized(), item.File.Name);
+                string title = string.Format("InvaildFile_WithPlaceholder".GetLocalized(), fileInfo.File.Name);
                 ContentDialogResult result = await ShowDialogAsync(title,
                     "ContinueOrCancel".GetLocalized(), "Continue".GetLocalized(), closeText: "Cancel".GetLocalized());
 
@@ -175,7 +119,7 @@ public class TextMergeViewModel : NotificationObject
 
             if (string.IsNullOrWhiteSpace(text))
             {
-                string title = string.Format("FileIsEmpty_WithPlaceholder".GetLocalized(), item.File.Name);
+                string title = string.Format("FileIsEmpty_WithPlaceholder".GetLocalized(), fileInfo.File.Name);
                 ContentDialogResult result = await ShowDialogAsync(title,
                     "ContinueOrCancel".GetLocalized(), "Continue".GetLocalized(), closeText: "Cancel".GetLocalized());
 
@@ -198,7 +142,7 @@ public class TextMergeViewModel : NotificationObject
             }
             catch (ArgumentException)
             {
-                string title = string.Format("TutorialFileNotSupported_WithPlaceholder".GetLocalized(),item.File.Name);
+                string title = string.Format("TutorialFileNotSupported_WithPlaceholder".GetLocalized(),fileInfo.File.Name);
                 ContentDialogResult result = await ShowDialogAsync(title,
                     "ContinueOrCancel".GetLocalized(), "Continue".GetLocalized(), closeText: "Cancel".GetLocalized());
 
@@ -214,7 +158,7 @@ public class TextMergeViewModel : NotificationObject
             }
             catch (Exception ex)
             {
-                string title = string.Format("ErrorWhenParsing_WithPlaceholder".GetLocalized(), item.File.Name);
+                string title = string.Format("ErrorWhenParsing_WithPlaceholder".GetLocalized(), fileInfo.File.Name);
                 ContentDialogResult result = await ShowDialogAsync(title,
                     $"{ex.Message}\n{"ContinueOrCancel".GetLocalized()}", "Continue".GetLocalized(), closeText: "Cancel".GetLocalized());
 
@@ -234,11 +178,17 @@ public class TextMergeViewModel : NotificationObject
             //TODO: 自定义
             count++;
 
-            stringBuilder.AppendLine($"{count}. {item.Title}");
+            stringBuilder.AppendLine($"{count}. {fileInfo.Title}");
+
+            if (string.IsNullOrWhiteSpace(fileInfo.Description) != true)
+            {
+                stringBuilder.AppendLine();
+                stringBuilder.AppendLine(fileInfo.Description);
+            }
+
             stringBuilder.AppendLine();
             stringBuilder.AppendLine(storyText);
             stringBuilder.AppendLine();
-
         }
 
         IEnumerable<string> names = (from info in Files
@@ -247,7 +197,7 @@ public class TextMergeViewModel : NotificationObject
         int namesCount = names.Count();
 
         FileSavePicker fileSavePicker = new();
-        fileSavePicker.FileTypeChoices.Add("TXT", new string[] { ".txt" });
+        fileSavePicker.FileTypeChoices.Add("StoryTxtFileDescription".GetLocalized(), defaultFileExtensions);
 
         if (namesCount == 1)
         {
@@ -264,9 +214,10 @@ public class TextMergeViewModel : NotificationObject
         }
     }
 
-    private async Task OpenMetadataFileAsync()
+    [RelayCommand]
+    private async Task LoadStoryMetadataAsync()
     {
-        if (metadataService.IsInitialized)
+        if (MetadataService.IsInitialized)
         {
             ContentDialogResult result = await ShowDialogAsync("MetadataAlreadyLoaded".GetLocalized(),
                     "ContinueOrCancel".GetLocalized(), "Continue".GetLocalized(), closeText: "Cancel".GetLocalized());
@@ -290,12 +241,12 @@ public class TextMergeViewModel : NotificationObject
 
         Stream utf8Json = await file.OpenStreamForReadAsync();
 
-        if (metadataService.TryInitialize(utf8Json))
+        if (MetadataService.TryInitialize(utf8Json))
         {
             for (int i = 0; i < Files.Count; i++)
             {
                 StoryFileInfo info = Files[i];
-                if (metadataService.TryGetMetadata(info.File.DisplayName, out (StoryMetadataInfo, InfoUnlockData) result))
+                if (MetadataService.TryGetMetadata(info.File.DisplayName, out (StoryMetadataInfo, InfoUnlockData) result))
                 {
                     info.MetadataInfo = result.Item1;
                     info.DetailInfo = result.Item2;
@@ -327,10 +278,46 @@ public class TextMergeViewModel : NotificationObject
         }
     }
 
+    [RelayCommand]
+    private void ClearStoryTexts()
+    {
+        Files.Clear();
+    }
+
+    [RelayCommand]
+    private void RemoveStoryTextFile(object obj)
+    {
+        if (obj is StoryFileInfo fileInfo)
+        {
+            Files.Remove(fileInfo);
+        }
+    }
+
+    public static string GetStoryDisplayName(InfoUnlockData info)
+    {
+        string storyDisplayName;
+        List<string> strParts = new(3);
+
+        if (string.IsNullOrWhiteSpace(info.StoryCode) != true)
+        {
+            strParts.Add(info.StoryCode);
+        }
+
+        strParts.Add(info.StoryName);
+
+        if (info.AvgTag != "幕间")
+        {
+            strParts.Add(info.AvgTag);
+        }
+
+        storyDisplayName = string.Join(' ', strParts);
+        return storyDisplayName;
+    }
+
     private void SortFileList()
     {
         //TODO: 有更好的排序方式吗？
-        if (metadataService.IsInitialized)
+        if (MetadataService.IsInitialized)
         {
             List<StoryFileInfo> fileList = [..Files];
             fileList.Sort(CompareStoryInfo);
