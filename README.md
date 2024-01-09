@@ -10,17 +10,12 @@
 </div>
 
 ## 最低支持平台
-~~Windows 10 1607 (14393)~~（仅 4.2.0.0 以下版本）
 
-Windows 10 1703 (15063) - 4.2.0.0 及以上版本
-
-> 升级原因：为了使用 [WinUI 2](https://github.com/microsoft/microsoft-ui-xaml) 库。
->
->WinUI 2 库能让此程序在新版本系统上获得新外观，在旧版本系统上使用新版本的控件。
+Windows 10 1703 (15063)
 
 ## 构建需求
 - Visual Studio 2022 及以上
-- .NET 7 SDK（为了使用最新的 C# 语言版本）
+- .NET 8 SDK（为了使用最新的 C# 语言版本）
 - Windows 10 SDK (至少为 16299，因为需要生成 ARM64 版本的程序)
     - 需安装 Windows SDK for UWP Managed Apps
 
