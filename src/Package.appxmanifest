@@ -9,7 +9,7 @@
   <Identity
     Name="Baka632.ArknightsStoryText.Uwp"
     Publisher="CN=Baka632"
-    Version="4.6.0.0" />
+    Version="4.6.1.0" />
 
   <mp:PhoneIdentity PhoneProductId="e34e41f8-8622-4faf-9f0b-7b69d6c25374" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
