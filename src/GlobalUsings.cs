@@ -20,6 +20,8 @@ global using CommunityToolkit.Mvvm;
 global using CommunityToolkit.Mvvm.Input;
 global using CommunityToolkit.Mvvm.ComponentModel;
 
+global using Baka632.Library.Uwp.CSharp.Helpers;
+
 global using ArknightsStoryText.UWP.Views;
 global using ArknightsStoryText.UWP.Helpers;
 global using ArknightsStoryText.UWP.ViewModels;

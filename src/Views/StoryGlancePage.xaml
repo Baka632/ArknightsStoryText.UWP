@@ -7,7 +7,7 @@
     xmlns:contract8Present="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract,8)"
     xmlns:converters="using:ArknightsStoryText.UWP.Helpers.Converter"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:helpers="using:ArknightsStoryText.UWP.Helpers"
+    xmlns:helpers="using:Baka632.Library.Uwp.CSharp.Helpers"
     xmlns:local="using:ArknightsStoryText.UWP.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:ArknightsStoryText.UWP.Models"

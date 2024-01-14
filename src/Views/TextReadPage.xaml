@@ -5,7 +5,7 @@
     xmlns:app="using:ArknightsStoryText.UWP"
     xmlns:converter="using:ArknightsStoryText.UWP.Helpers.Converter"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:helper="using:ArknightsStoryText.UWP.Helpers"
+    xmlns:helpers="using:Baka632.Library.Uwp.CSharp.Helpers"
     xmlns:local="using:ArknightsStoryText.UWP.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:ArknightsStoryText.UWP.Models"
@@ -46,6 +46,7 @@
 
                 <AppBarToggleButton
                     x:Uid="TryAutoParagraph"
+                    HorizontalAlignment="Stretch"
                     Icon="ShowResults"
                     IsChecked="{x:Bind ViewModel.IsParagraph, Mode=TwoWay}" />
 
@@ -112,7 +113,7 @@
                         x:Uid="ClearStoryTexts"
                         Command="{x:Bind ViewModel.ClearStoryTextsCommand}"
                         Icon="Cancel"
-                        IsEnabled="{x:Bind helper:XamlHelper.ReverseBoolean(ViewModel.IsLoading), Mode=OneWay}" />
+                        IsEnabled="{x:Bind helpers:XamlHelper.ReverseBoolean(ViewModel.IsLoading), Mode=OneWay}" />
                 </CommandBar.SecondaryCommands>
             </CommandBar>
         </Grid>
@@ -126,7 +127,7 @@
             CanReorderItems="True"
             ItemsSource="{x:Bind ViewModel.Stories, Mode=OneWay}"
             SelectionMode="None"
-            Visibility="{x:Bind helper:XamlHelper.ReverseVisibility(ViewModel.IsLoading), Mode=OneWay}">
+            Visibility="{x:Bind helpers:XamlHelper.ReverseVisibility(ViewModel.IsLoading), Mode=OneWay}">
 
             <ListView.Resources>
                 <SolidColorBrush x:Key="SystemControlTransparentRevealBackgroundBrush" Color="Transparent" />
@@ -199,7 +200,7 @@
                                     Margin="0,0,0,10"
                                     HorizontalAlignment="Stretch"
                                     VerticalAlignment="Center"
-                                    Visibility="{x:Bind helper:XamlHelper.IsStringNullOrEmptyReverseVisibility(Description)}">
+                                    Visibility="{x:Bind helpers:XamlHelper.IsStringNullOrEmptyReverseVisibility(Description)}">
                                     <TextBlock
                                         HorizontalAlignment="Center"
                                         IsTextSelectionEnabled="True"
@@ -237,7 +238,7 @@
             VerticalAlignment="Center"
             AutomationProperties.AccessibilityView="Raw"
             IsActive="{x:Bind ViewModel.IsLoading, Mode=OneWay}"
-            Visibility="{x:Bind helper:XamlHelper.ToVisibility(app:App.IsGreaterThan18362)}" />
+            Visibility="{x:Bind helpers:XamlHelper.ToVisibility(app:App.IsGreaterThan18362)}" />
 
         <ProgressRing
             Grid.Row="1"
@@ -247,6 +248,6 @@
             VerticalAlignment="Center"
             AutomationProperties.AccessibilityView="Raw"
             IsActive="{x:Bind ViewModel.IsLoading, Mode=OneWay}"
-            Visibility="{x:Bind helper:XamlHelper.ReverseVisibility(app:App.IsGreaterThan18362)}" />
+            Visibility="{x:Bind helpers:XamlHelper.ReverseVisibility(app:App.IsGreaterThan18362)}" />
     </Grid>
 </Page>

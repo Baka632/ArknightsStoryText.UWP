@@ -1,7 +1,4 @@
-﻿using Windows.System.Profile;
-using Windows.Foundation.Metadata;
-
-// https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x804 上介绍了“空白页”项模板
+﻿// https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x804 上介绍了“空白页”项模板
 
 namespace ArknightsStoryText.UWP.Views;
 
@@ -16,16 +13,16 @@ public sealed partial class MainPage : Page
     {
         this.InitializeComponent();
 
-        if (ApiInformation.IsTypePresent(typeof(AcrylicBrush).FullName))
+        if (MicaHelper.IsSupported())
         {
-            if (Application.Current.Resources["SystemControlAcrylicWindowBrush"] is AcrylicBrush brush)
-            {
-                this.Background = brush;
-            }
+            MicaHelper.TrySetMica(this);
+        }
+        else if (AcrylicHelper.IsSupported())
+        {
+            AcrylicHelper.TrySetAcrylicBrush(this);
         }
 
-        bool isMobile = AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Mobile";
-        if (isMobile)
+        if (EnvironmentHelper.IsWindowsMobile)
         {
             TitleBarTextBlock.Visibility = Visibility.Collapsed;
         }

@@ -1,13 +1,10 @@
 ﻿using System.IO;
-using Microsoft.UI.Xaml.Controls;
 using Microsoft.Toolkit.Uwp.Notifications;
-using Windows.System.Profile;
 using Windows.UI.Xaml.Navigation;
-using Windows.UI.ViewManagement;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
-using Windows.ApplicationModel.Core;
 using Windows.UI.Notifications;
+using Microsoft.UI.Xaml.Controls;
 
 namespace ArknightsStoryText.UWP;
 
@@ -119,6 +116,7 @@ sealed partial class App : Application
 
             // 将框架放在当前窗口中
             Window.Current.Content = rootFrame;
+
             XamlControlsResources muxcStyle = new()
             {
                 ControlsResourcesVersion = Environment.OSVersion.Version.Build >= 22000
@@ -126,7 +124,8 @@ sealed partial class App : Application
                 : ControlsResourcesVersion.Version1
             };
             Resources.MergedDictionaries.Add(muxcStyle);
-            SetTitleBar();
+
+            TitleBarHelper.SetTitleBarAppearance();
         }
 
         if (e.PrelaunchActivated == false)
@@ -139,22 +138,6 @@ sealed partial class App : Application
             // 确保当前窗口处于活动状态
             Window.Current.Activate();
         }
-    }
-
-    private static void SetTitleBar()
-    {
-        ApplicationViewTitleBar PresentationTitleBar = ApplicationView.GetForCurrentView().TitleBar;
-        PresentationTitleBar.ButtonBackgroundColor = Colors.Transparent;
-        CoreApplicationViewTitleBar coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
-        coreTitleBar.ExtendViewIntoTitleBar = AnalyticsInfo.VersionInfo.DeviceFamily != "Windows.Mobile";
-
-        Color ForegroundColor = Current.RequestedTheme switch
-        {
-            ApplicationTheme.Light => Colors.Black,
-            ApplicationTheme.Dark => Colors.White,
-            _ => Colors.White,
-        };
-        PresentationTitleBar.ButtonForegroundColor = ForegroundColor;
     }
 
     /// <summary>
