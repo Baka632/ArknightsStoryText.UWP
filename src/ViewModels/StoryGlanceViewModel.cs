@@ -10,6 +10,7 @@ public sealed partial class StoryGlanceViewModel : ObservableObject
 {
     private readonly StoryMetadataService metadataService = new();
     private StorageFolder storyTextFolder = null;
+    private readonly List<string> interludeTextList = ["幕间", "Interlude", "幕間", "브릿지"];
 
     [ObservableProperty]
     private bool _isLoading = false;
@@ -72,22 +73,37 @@ public sealed partial class StoryGlanceViewModel : ObservableObject
 
                     strParts.Add(data.StoryName);
 
-                    if (data.AvgTag != "幕间")
+                    if (interludeTextList.Contains(data.AvgTag) != true)
                     {
+                        strParts.Add("-");
                         strParts.Add(data.AvgTag);
                     }
 
                     string storyDisplayName = string.Join(' ', strParts);
                     string storyDescription = string.Empty;
 
-                    string path = $"{data.StoryInfo.Replace('/', Path.DirectorySeparatorChar).Replace($"info{Path.DirectorySeparatorChar}", $"[uc]info{Path.DirectorySeparatorChar}")}.txt";
-
-                    StorageFile storyDescFile = await GetStorageFileByPath(path, storyInfoFolder);
-
-                    if (storyDescFile != null)
+                    if (data.StoryInfo is not null)
                     {
-                        FileNameLoading = storyDescFile.Name;
-                        storyDescription = await FileIO.ReadTextAsync(storyDescFile);
+                        string path = $"{data.StoryInfo.Replace('/', Path.DirectorySeparatorChar).Replace($"info{Path.DirectorySeparatorChar}", $"[uc]info{Path.DirectorySeparatorChar}")}.txt";
+
+                        try
+                        {
+                            StorageFile storyDescFile = await GetStorageFileByPath(path, storyInfoFolder);
+
+                            if (storyDescFile != null)
+                            {
+                                FileNameLoading = storyDescFile.Name;
+                                storyDescription = await FileIO.ReadTextAsync(storyDescFile);
+                            }
+                        }
+                        catch (FileNotFoundException)
+                        {
+                            storyDescription = "<空>";
+                        }
+                    }
+                    else
+                    {
+                        storyDescription = "<空>";
                     }
 
                     StoryInfo storyInfo = new(storyDisplayName, string.Empty, storyDescription, null, info, data);
