@@ -246,4 +246,10 @@
   <data name="DeleteStoryTextButton.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
     <value>移除此剧情文件</value>
   </data>
+  <data name="StoryDescriptionFileNotFound" xml:space="preserve">
+    <value>&lt;找不到剧情简介&gt;</value>
+  </data>
+  <data name="StoryDescriptionEmpty" xml:space="preserve">
+    <value>&lt;空&gt;</value>
+  </data>
 </root>

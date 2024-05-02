@@ -897,7 +897,7 @@ namespace ArknightsResources.Utility
             }
             #endregion
             return new NoOperationCommand();
-            //throw new ArgumentException($@"无法分析参数""{nameof(strToAnalyse)}"",原始文件行:第{textLine}行,原始文本:""{strToAnalyse}""");
+            //throw new ArgumentException($@"无法分析参数""{nameof(strToAnalyse)}"",原始文本:""{strToAnalyse}""");
         }
 
         /// <summary>

@@ -98,12 +98,12 @@ public sealed partial class StoryGlanceViewModel : ObservableObject
                         }
                         catch (FileNotFoundException)
                         {
-                            storyDescription = "<空>";
+                            storyDescription = "StoryDescriptionFileNotFound".GetLocalized();
                         }
                     }
                     else
                     {
-                        storyDescription = "<空>";
+                        storyDescription = "StoryDescriptionEmpty".GetLocalized();
                     }
 
                     StoryInfo storyInfo = new(storyDisplayName, string.Empty, storyDescription, null, info, data);
