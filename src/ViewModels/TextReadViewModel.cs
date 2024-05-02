@@ -266,7 +266,7 @@ public sealed partial class TextReadViewModel : ObservableRecipient
         {
             scene = sr.GetStoryScene();
         }
-        catch (ArgumentException)
+        catch (ArgumentException ex) when (ex is not ArgumentNullException)
         {
             string title = string.Format("TutorialFileNotSupported_WithPlaceholder".GetLocalized(), file.Name);
             string message = "OpenAnotherFileInstead".GetLocalized();
