@@ -16,10 +16,19 @@ public class MainViewModel : ObservableRecipient
     {
         base.OnActivated();
         WeakReferenceMessenger.Default.Register<PivotItemIdentifier, string>(this, CommonValues.NotifyPivotNavigationMessageToken, OnPivotNavigationRequested);
+        WeakReferenceMessenger.Default.Register<string, string>(this, CommonValues.NotifyAppBackgroundChangedMessageToken, OnAppBackgroundChanged);
     }
 
     private void OnPivotNavigationRequested(object recipient, PivotItemIdentifier message)
     {
         View.MainPagePivot.SelectedIndex = (int)message.Index;
+    }
+
+    private void OnAppBackgroundChanged(object recipient, string message)
+    {
+        if (Enum.TryParse(message, out AppBackgroundMode mode))
+        {
+            View.SetMainPageBackground(mode);
+        }
     }
 }

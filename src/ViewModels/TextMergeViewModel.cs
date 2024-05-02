@@ -293,6 +293,13 @@ public partial class TextMergeViewModel : ObservableRecipient
         }
     }
 
+    [RelayCommand]
+    private static async Task OpenSettingDialog()
+    {
+        SettingsDialog dialog = new();
+        await dialog.ShowAsync();
+    }
+
     public static string GetStoryDisplayName(InfoUnlockData info)
     {
         string storyDisplayName;

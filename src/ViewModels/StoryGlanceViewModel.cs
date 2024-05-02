@@ -214,6 +214,13 @@ public sealed partial class StoryGlanceViewModel : ObservableObject
         WeakReferenceMessenger.Default.Send(targetPageIdentifier, CommonValues.NotifyPivotNavigationMessageToken);
     }
 
+    [RelayCommand]
+    private static async Task OpenSettingDialog()
+    {
+        SettingsDialog dialog = new();
+        await dialog.ShowAsync();
+    }
+
     private static async Task<StorageFile> GetStorageFileByPath(string path, StorageFolder baseFolder)
     {
         string[] pathParts = path.Split(Path.DirectorySeparatorChar);

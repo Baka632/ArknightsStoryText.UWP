@@ -187,6 +187,13 @@ public sealed partial class TextReadViewModel : ObservableRecipient
         IsLoading = false;
     }
 
+    [RelayCommand]
+    private static async Task OpenSettingDialog()
+    {
+        SettingsDialog dialog = new();
+        await dialog.ShowAsync();
+    }
+
     public async Task ReParseStoryTextAsync()
     {
         IsLoading = true;

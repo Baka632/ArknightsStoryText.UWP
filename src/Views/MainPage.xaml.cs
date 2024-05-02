@@ -13,14 +13,7 @@ public sealed partial class MainPage : Page
     {
         this.InitializeComponent();
 
-        if (MicaHelper.IsSupported())
-        {
-            MicaHelper.TrySetMica(this);
-        }
-        else if (AcrylicHelper.IsSupported())
-        {
-            AcrylicHelper.TrySetAcrylicBrush(this);
-        }
+        AutoSetMainPageBackground();
 
         if (EnvironmentHelper.IsWindowsMobile)
         {
@@ -32,5 +25,47 @@ public sealed partial class MainPage : Page
         StoryGlancePageFrame.Navigate(typeof(StoryGlancePage));
 
         ViewModel = new(this);
+    }
+
+    private void AutoSetMainPageBackground()
+    {
+        if (SettingsHelper.TryGet(CommonValues.AppBackgroundModeSettingsKey, out string modeString) && Enum.TryParse(modeString, out AppBackgroundMode mode))
+        {
+            // :D
+        }
+        else
+        {
+            if (MicaHelper.IsSupported())
+            {
+                mode = AppBackgroundMode.Mica;
+            }
+            else if (AcrylicHelper.IsSupported())
+            {
+                mode = AppBackgroundMode.Acrylic;
+            }
+            else
+            {
+                mode = AppBackgroundMode.PureColor;
+            }
+        }
+
+        SetMainPageBackground(mode);
+    }
+
+    public bool SetMainPageBackground(AppBackgroundMode mode)
+    {
+        switch (mode)
+        {
+            case AppBackgroundMode.Acrylic:
+                return AcrylicHelper.TrySetAcrylicBrush(this);
+            case AppBackgroundMode.Mica:
+                // 设置 Mica 时，要将控件背景设置为透明
+                Background = new SolidColorBrush(Colors.Transparent);
+                return MicaHelper.TrySetMica(this);
+            case AppBackgroundMode.PureColor:
+            default:
+                Background = Resources["ApplicationPageBackgroundThemeBrush"] as Brush;
+                return true;
+        }
     }
 }
