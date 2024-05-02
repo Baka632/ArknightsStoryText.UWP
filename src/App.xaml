@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:contract5NotPresent="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract,5)"
+    xmlns:converter="using:ArknightsStoryText.UWP.Helpers.Converter"
     xmlns:local="using:ArknightsStoryText.UWP">
     <Application.Resources>
         <contract5NotPresent:Style BasedOn="{x:Null}" TargetType="AppBarButton" />
@@ -10,5 +11,6 @@
         <contract5NotPresent:Style BasedOn="{x:Null}" TargetType="CommandBar">
             <Setter Property="Background" Value="Transparent" />
         </contract5NotPresent:Style>
+        <converter:AppBackgroundModeToStringConverter x:Key="AppBackgroundModeToStringConverter" />
     </Application.Resources>
 </Application>

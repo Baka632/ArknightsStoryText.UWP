@@ -72,6 +72,11 @@
                     x:Uid="ClearStoryTexts"
                     Command="{x:Bind ViewModel.ClearStoryTextsCommand}"
                     Icon="Cancel" />
+                <AppBarSeparator />
+                <AppBarButton
+                    x:Uid="SettingsAppBarButton"
+                    Command="{x:Bind ViewModel.OpenSettingDialogCommand}"
+                    Icon="Setting" />
             </CommandBar.SecondaryCommands>
         </CommandBar>
 

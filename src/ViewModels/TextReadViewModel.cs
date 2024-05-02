@@ -187,6 +187,13 @@ public sealed partial class TextReadViewModel : ObservableRecipient
         IsLoading = false;
     }
 
+    [RelayCommand]
+    private static async Task OpenSettingDialog()
+    {
+        SettingsDialog dialog = new();
+        await dialog.ShowAsync();
+    }
+
     public async Task ReParseStoryTextAsync()
     {
         IsLoading = true;
@@ -259,7 +266,7 @@ public sealed partial class TextReadViewModel : ObservableRecipient
         {
             scene = sr.GetStoryScene();
         }
-        catch (ArgumentException)
+        catch (ArgumentException ex) when (ex is not ArgumentNullException)
         {
             string title = string.Format("TutorialFileNotSupported_WithPlaceholder".GetLocalized(), file.Name);
             string message = "OpenAnotherFileInstead".GetLocalized();

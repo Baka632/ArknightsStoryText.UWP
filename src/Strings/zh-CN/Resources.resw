@@ -246,4 +246,40 @@
   <data name="DeleteStoryTextButton.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
     <value>移除此剧情文件</value>
   </data>
+  <data name="StoryDescriptionFileNotFound" xml:space="preserve">
+    <value>&lt;找不到剧情简介&gt;</value>
+  </data>
+  <data name="StoryDescriptionEmpty" xml:space="preserve">
+    <value>&lt;空&gt;</value>
+  </data>
+  <data name="SettingsAppBarButton.Label" xml:space="preserve">
+    <value>设置</value>
+  </data>
+  <data name="SettingsDialog.CloseButtonText" xml:space="preserve">
+    <value>关闭</value>
+  </data>
+  <data name="SettingsDialogSettingsPivotItem.Header" xml:space="preserve">
+    <value>设置</value>
+  </data>
+  <data name="SettingsDialogAboutPivotItem.Header" xml:space="preserve">
+    <value>关于</value>
+  </data>
+  <data name="AppVersion_WithPlaceholder" xml:space="preserve">
+    <value>版本：{0}</value>
+  </data>
+  <data name="RepoAddress.Text" xml:space="preserve">
+    <value>仓库地址</value>
+  </data>
+  <data name="BackgroundTypeComboBox.Header" xml:space="preserve">
+    <value>应用背景</value>
+  </data>
+  <data name="MicaBackground" xml:space="preserve">
+    <value>云母</value>
+  </data>
+  <data name="AcrylicBackground" xml:space="preserve">
+    <value>亚克力</value>
+  </data>
+  <data name="PureColorBackground" xml:space="preserve">
+    <value>纯色</value>
+  </data>
 </root>

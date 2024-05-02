@@ -114,6 +114,11 @@
                         Command="{x:Bind ViewModel.ClearStoryTextsCommand}"
                         Icon="Cancel"
                         IsEnabled="{x:Bind helpers:XamlHelper.ReverseBoolean(ViewModel.IsLoading), Mode=OneWay}" />
+                    <AppBarSeparator />
+                    <AppBarButton
+                        x:Uid="SettingsAppBarButton"
+                        Command="{x:Bind ViewModel.OpenSettingDialogCommand}"
+                        Icon="Setting" />
                 </CommandBar.SecondaryCommands>
             </CommandBar>
         </Grid>

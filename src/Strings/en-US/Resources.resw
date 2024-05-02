@@ -237,4 +237,40 @@
   <data name="DeleteStoryTextButton.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
     <value>Remove this story file</value>
   </data>
+  <data name="StoryDescriptionFileNotFound" xml:space="preserve">
+    <value>&lt;Story description not found&gt;</value>
+  </data>
+  <data name="StoryDescriptionEmpty" xml:space="preserve">
+    <value>&lt;Empty&gt;</value>
+  </data>
+  <data name="SettingsAppBarButton.Label" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="SettingsDialog.CloseButtonText" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="SettingsDialogSettingsPivotItem.Header" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="SettingsDialogAboutPivotItem.Header" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="AppVersion_WithPlaceholder" xml:space="preserve">
+    <value>Version: {0}</value>
+  </data>
+  <data name="RepoAddress.Text" xml:space="preserve">
+    <value>Repo address</value>
+  </data>
+  <data name="BackgroundTypeComboBox.Header" xml:space="preserve">
+    <value>App background</value>
+  </data>
+  <data name="MicaBackground" xml:space="preserve">
+    <value>Mica</value>
+  </data>
+  <data name="AcrylicBackground" xml:space="preserve">
+    <value>Acrylic</value>
+  </data>
+  <data name="PureColorBackground" xml:space="preserve">
+    <value>Plain color</value>
+  </data>
 </root>

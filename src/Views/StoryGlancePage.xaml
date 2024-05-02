@@ -44,6 +44,13 @@
                 x:Uid="OpenGameDataFolder"
                 Command="{x:Bind ViewModel.OpenGameDataFolderCommand}"
                 Icon="OpenLocal" />
+
+            <CommandBar.SecondaryCommands>
+                <AppBarButton
+                    x:Uid="SettingsAppBarButton"
+                    Command="{x:Bind ViewModel.OpenSettingDialogCommand}"
+                    Icon="Setting" />
+            </CommandBar.SecondaryCommands>
         </CommandBar>
 
         <SemanticZoom
